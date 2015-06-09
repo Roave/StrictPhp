@@ -4,6 +4,7 @@ namespace StrictPhp;
 
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
+use StrictPhp\Aspect\PropertyWriteTypeCheck;
 
 class StrictPhpKernel extends AspectKernel
 {
@@ -12,6 +13,6 @@ class StrictPhpKernel extends AspectKernel
      */
     protected function configureAop(AspectContainer $container)
     {
-        // @TODO
+        $container->registerAspect(new PropertyWriteTypeCheck());
     }
 }
