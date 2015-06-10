@@ -5,6 +5,8 @@ namespace StrictPhp\Aspect;
 use Go\Aop\Aspect;
 use Go\Aop\Intercept\FieldAccess;
 use Go\Lang\Annotation as Go;
+use StrictPhp\TypeChecker\TypeChecker;
+use StrictPhp\TypeFinder\PropertyTypeFinder;
 
 class PropertyWriteTypeCheck implements Aspect
 {
@@ -13,7 +15,10 @@ class PropertyWriteTypeCheck implements Aspect
      */
     public function beforePropertyAccess(FieldAccess $access)
     {
-        var_dump(get_class($access->getThis()) . '#' . $access->getField()->getName());
+        (new TypeChecker())->__invoke(
+            (new PropertyTypeFinder())->__invoke($access->getField()),
+            $access->getValueToSet()
+        );
 
         return $access->proceed();
     }

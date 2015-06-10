@@ -5,9 +5,9 @@ Verifies that writing a non-object to an object-typed property causes a fatal er
 
 require_once __DIR__ . '/init.php';
 
-$object = new \StrictPhpTestAsset\ClassWithGenericObjectTypedProperty();
+$object = new \StrictPhpTestAsset\ClassWithGenericArrayTypedProperty();
 
-$object->property = 'non-object';
+$object->property = 'non-array';
 ?>
 --EXPECT--
 PHP Catchable fatal error:%a
