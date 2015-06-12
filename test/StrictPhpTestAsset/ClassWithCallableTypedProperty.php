@@ -5,7 +5,7 @@ namespace StrictPhpTestAsset;
 class ClassWithCallableTypedProperty
 {
     /**
-     * @var \stdClass
+     * @var callable
      */
     public $property;
 }
