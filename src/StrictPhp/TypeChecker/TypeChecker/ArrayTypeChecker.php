@@ -6,6 +6,9 @@ use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class ArrayTypeChecker implements TypeCheckerInterface
 {
+    /**
+     * @var callable|null
+     */
     private static $failingCallback;
 
     /**
