@@ -34,7 +34,7 @@ final class ObjectTypeChecker implements TypeCheckerInterface
         }
 
         /* @var $callback callable */
-        $callback = eval(sprintf('return function (%s $value) {};'));
+        $callback = eval(sprintf('return function (%s $value) {};', $type));
 
         $callback($value);
     }
