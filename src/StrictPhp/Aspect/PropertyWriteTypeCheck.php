@@ -7,6 +7,7 @@ use Go\Aop\Intercept\FieldAccess;
 use Go\Lang\Annotation as Go;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 use StrictPhp\TypeFinder\PropertyTypeFinder;
@@ -24,6 +25,7 @@ class PropertyWriteTypeCheck implements Aspect
             new IntegerTypeChecker(),
             new ArrayTypeChecker(),
             new StringTypeChecker(),
+            new GenericObjectTypeChecker(),
         ]))->__invoke(
             (new PropertyTypeFinder())->__invoke($access->getField()),
             $access->getValueToSet()
