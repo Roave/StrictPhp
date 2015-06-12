@@ -4,7 +4,7 @@ namespace StrictPhp\TypeChecker\TypeChecker;
 
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
-final class bjectTypeChecker implements TypeCheckerInterface
+final class ObjectTypeChecker implements TypeCheckerInterface
 {
     /**
      * {@inheritDoc}
