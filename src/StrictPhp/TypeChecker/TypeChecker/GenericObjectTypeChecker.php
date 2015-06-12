@@ -11,7 +11,7 @@ final class GenericObjectTypeChecker implements TypeCheckerInterface
      */
     public function canApplyToType($type)
     {
-        return strtolower($type) === 'object' || class_exists($type, false);
+        return strtolower($type) === 'object';
     }
 
     /**
