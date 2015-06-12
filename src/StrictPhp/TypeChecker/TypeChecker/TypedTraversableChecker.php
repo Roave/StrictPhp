@@ -44,6 +44,13 @@ final class TypedTraversableChecker implements TypeCheckerInterface
      */
     public function simulateFailure($value, $type)
     {
+        if (! $value instanceof \Traversable) {
+            $callback = function (array $value) {
+            };
+
+            $callback($value);
+        }
+
         $subType = substr($type, 0, -2);
 
         array_map(
