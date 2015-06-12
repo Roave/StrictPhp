@@ -5,7 +5,7 @@ namespace StrictPhpTestAsset;
 class ClassWithGenericObjectTypedProperty
 {
     /**
-     * @var \stdClass
+     * @var object
      */
     public $property;
 }
