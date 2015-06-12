@@ -21,7 +21,9 @@ interface TypeCheckerInterface
     /**
      * @param mixed $value
      *
-     * @return bool
+     * @return void
+     *
+     * @throws \ErrorException|\Exception
      */
     public function simulateFailure($value);
 }
