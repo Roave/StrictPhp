@@ -5,9 +5,9 @@ Verifies that writing a non-object to an object-typed property causes a fatal er
 
 require_once __DIR__ . '/init.php';
 
-$object = new \StrictPhpTestAsset\ClassWithStdClassStringTypedProperty();
+$object = new \StrictPhpTestAsset\ClassWithStdClassTypedProperty();
 
-$object->property = 123;
+$object->property = new \StrictPhpTestAsset\ClassWithStdClassTypedProperty();
 ?>
 --EXPECT--
 PHP Catchable fatal error:%a
