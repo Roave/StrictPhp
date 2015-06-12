@@ -12,6 +12,7 @@ use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
 use StrictPhp\TypeFinder\PropertyTypeFinder;
 
 class PropertyWriteTypeCheck implements Aspect
@@ -19,18 +20,27 @@ class PropertyWriteTypeCheck implements Aspect
     /**
      * @Go\Before("access(public **->*)")
      *
+     * @param FieldAccess $access
+     *
+     * @return mixed
+     *
      * @throws \ErrorException|\Exception
      */
     public function beforePropertyAccess(FieldAccess $access)
     {
-        (new ApplyTypeChecks(...[
+        $baseCheckers = [
             new IntegerTypeChecker(),
             new ArrayTypeChecker(),
             new CallableTypeChecker(),
             new StringTypeChecker(),
             new GenericObjectTypeChecker(),
             new ObjectTypeChecker(),
-        ]))->__invoke(
+        ];
+
+        (new ApplyTypeChecks(
+            new TypedTraversableChecker(...$baseCheckers),
+            ...$baseCheckers
+        ))->__invoke(
             (new PropertyTypeFinder())->__invoke($access->getField()),
             $access->getValueToSet()
         );
