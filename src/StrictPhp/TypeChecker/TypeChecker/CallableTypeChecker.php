@@ -4,7 +4,7 @@ namespace StrictPhp\TypeChecker\TypeChecker;
 
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
-final class ArrayTypeChecker implements TypeCheckerInterface
+final class CallableTypeChecker implements TypeCheckerInterface
 {
     /**
      * @var callable|null
@@ -24,7 +24,7 @@ final class ArrayTypeChecker implements TypeCheckerInterface
      */
     public function validate($value, $type)
     {
-        return is_int($value);
+        return is_callable($value);
     }
 
     /**
