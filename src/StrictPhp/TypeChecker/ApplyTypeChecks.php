@@ -30,23 +30,29 @@ final class ApplyTypeChecks
      */
     public function __invoke(array $allowedTypes, $value)
     {
-        $validCheckers = array_filter(
-            $this->typeCheckers,
-            function (TypeCheckerInterface $typeChecker) use ($allowedTypes) {
-                return array_filter($allowedTypes, [$typeChecker, 'canApplyToType']);
+        // @todo turn into functional?
+        $validCheckers = [];
+
+        foreach ($allowedTypes as $type) {
+            foreach ($this->typeCheckers as $typeChecker) {
+                if ($typeChecker->canApplyToType($type)) {
+                    $validCheckers[] = [$typeChecker, $type];
+                }
             }
-        );
+        }
 
         $applicableCheckers = array_filter(
             $validCheckers,
-            function (TypeCheckerInterface $typeChecker) use ($value) {
-                return $typeChecker->validate($value);
+            function (array $typeChecker) use ($value) {
+                /* @var $typeChecker TypeCheckerInterface[]|string[] */
+                return $typeChecker[0]->validate($value, $typeChecker[1]);
             }
         );
 
         array_map(
-            function (TypeCheckerInterface $typeChecker) use ($value) {
-                $typeChecker->simulateFailure($value);
+            function (array $typeChecker) use ($value) {
+                /* @var $typeChecker TypeCheckerInterface[]|string[] */
+                $typeChecker[0]->simulateFailure($value, $typeChecker[1]);
             },
             $applicableCheckers ?: $validCheckers
         );

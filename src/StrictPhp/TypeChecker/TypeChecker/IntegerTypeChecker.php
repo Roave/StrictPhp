@@ -22,7 +22,7 @@ final class IntegerTypeChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function validate($value)
+    public function validate($value, $type)
     {
         return is_int($value);
     }
@@ -30,9 +30,9 @@ final class IntegerTypeChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function simulateFailure($value)
+    public function simulateFailure($value, $type)
     {
-        if (! $this->validate($value)) {
+        if (! $this->validate($value, $type)) {
             // @TODO bump to PHP 7 and use strict scalar types + a closure.
             throw new \ErrorException('NOPE');
         }

@@ -13,17 +13,19 @@ interface TypeCheckerInterface
 
     /**
      * @param mixed $value
+     * @param string $type
      *
      * @return bool
      */
-    public function validate($value);
+    public function validate($value, $type);
 
     /**
      * @param mixed $value
+     * @param string $type
      *
      * @return void
      *
      * @throws \ErrorException|\Exception
      */
-    public function simulateFailure($value);
+    public function simulateFailure($value, $type);
 }
