@@ -44,11 +44,15 @@ final class TypedTraversableChecker implements TypeCheckerInterface
      */
     public function simulateFailure($value, $type)
     {
+        $subType = substr($type, 0, -2);
+
         array_map(
-            function (TypeCheckerInterface $typeChecker) use ($value, $type) {
-                $typeChecker->simulateFailure($value, $type);
+            function (TypeCheckerInterface $typeChecker) use ($value, $subType) {
+                foreach ($value as $singleValue) {
+                    $typeChecker->simulateFailure($singleValue, $subType);
+                }
             },
-            $this->getCheckersApplicableToType($type)
+            $this->getCheckersApplicableToType($subType)
         );
     }
 
