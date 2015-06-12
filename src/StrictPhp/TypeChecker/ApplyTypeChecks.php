@@ -5,6 +5,19 @@ namespace StrictPhp\TypeChecker;
 final class ApplyTypeChecks
 {
     /**
+     * @var TypeCheckerInterface[]
+     */
+    private $typeCheckers;
+
+    /**
+     * @param TypeCheckerInterface ...$typeCheckers
+     */
+    public function __construct(TypeCheckerInterface ...$typeCheckers)
+    {
+        $this->typeCheckers = $typeCheckers;
+    }
+
+    /**
      * @param string[] $allowedTypes
      * @param mixed    $value
      *
@@ -12,74 +25,30 @@ final class ApplyTypeChecks
      *
      * @todo this has to be split into multiple different type checkers, one for each possible allowed type
      *       each checker should be a separate object that can "match" a given value and can emulate a match failure
+     *
+     * @throws \ErrorException|\Exception
      */
     public function __invoke(array $allowedTypes, $value)
     {
-        $matchingCheckers = [];
-
-        foreach ($allowedTypes as $type) {
-            $baseType = strtolower($type);
-
-            if ('callable' === $baseType) {
-                $matchingCheckers[] = [$this, 'checkCallable'];
+        $validCheckers = array_filter(
+            $this->typeCheckers,
+            function (TypeCheckerInterface $typeChecker) use ($allowedTypes) {
+                return array_filter($allowedTypes, [$typeChecker, 'canApplyToType']);
             }
+        );
 
-            if ('array' === $baseType) {
-                $matchingCheckers[] = [$this, 'checkArray'];
+        $applicableCheckers = array_filter(
+            $validCheckers,
+            function (TypeCheckerInterface $typeChecker) use ($value) {
+                return $typeChecker->validate($value);
             }
+        );
 
-            if ('string' === $baseType) {
-                $matchingCheckers[] = [$this, 'checkString'];
-            }
-
-            if ('integer' === $baseType) {
-                $matchingCheckers[] = [$this, 'checkInteger'];
-            }
-
-            if ('float' === $baseType) {
-                $matchingCheckers[] = [$this, 'checkFloat'];
-            }
-
-            // ...
-        }
-
-        if (empty($matchingCheckers) && ! empty($allowedTypes)) {
-            // could not find fitting type checkers - execute the first checker that could apply?
-        }
-
-        // should actually sort by "nearest" and execute only the first one
-
-        foreach ($matchingCheckers as $matchingChecker) {
-            $matchingChecker($value);
-        }
-    }
-
-    private function checkCallable(callable $value)
-    {
-    }
-
-    private function checkArray(array $value)
-    {
-    }
-
-    private function checkString($value)
-    {
-        if (! is_string($value)) {
-            throw new \UnexpectedValueException(sprintf('Expecting string, %s given', gettype($value)));
-        }
-    }
-
-    private function checkInteger($value)
-    {
-        if (! is_integer($value)) {
-            throw new \UnexpectedValueException(sprintf('Expecting integer, %s given', gettype($value)));
-        }
-    }
-
-    private function checkFloat($value)
-    {
-        if (! is_float($value)) {
-            throw new \UnexpectedValueException(sprintf('Expecting float, %s given', gettype($value)));
-        }
+        array_map(
+            function (TypeCheckerInterface $typeChecker) use ($value) {
+                $typeChecker->simulateFailure($value);
+            },
+            $applicableCheckers ?: $validCheckers
+        );
     }
 }
