@@ -18,13 +18,10 @@ final class ApplyTypeChecks
     }
 
     /**
-     * @param string[] $allowedTypes
+     * @param \phpDocumentor\Reflection\Type[] $allowedTypes
      * @param mixed    $value
      *
      * @return void
-     *
-     * @todo this has to be split into multiple different type checkers, one for each possible allowed type
-     *       each checker should be a separate object that can "match" a given value and can emulate a match failure
      *
      * @throws \ErrorException|\Exception
      */
@@ -36,7 +33,7 @@ final class ApplyTypeChecks
         foreach ($allowedTypes as $type) {
             foreach ($this->typeCheckers as $typeChecker) {
                 if ($typeChecker->canApplyToType($type)) {
-                    $validCheckers[] = [$typeChecker, $type];
+                    $validCheckers[] = [$typeChecker, (string) $type];
                 }
             }
         }
