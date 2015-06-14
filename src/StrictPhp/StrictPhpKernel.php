@@ -4,7 +4,6 @@ namespace StrictPhp;
 
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
-use StrictPhp\Aspect\ImmutableProperty;
 use StrictPhp\Aspect\ImmutablePropertyCheck;
 use StrictPhp\Aspect\PropertyWriteTypeCheck;
 
