@@ -17,8 +17,8 @@ final class PropertyTypeFinder
      */
     public function __invoke(ReflectionProperty $reflectionProperty)
     {
-        $typeResolver   = new TypeResolver();
-        $context        = (new ContextFactory())->createFromReflector($reflectionProperty->getDeclaringClass());
+        $typeResolver = new TypeResolver();
+        $context      = (new ContextFactory())->createFromReflector($reflectionProperty->getDeclaringClass());
 
         return array_unique(array_filter(array_merge(
             [],
