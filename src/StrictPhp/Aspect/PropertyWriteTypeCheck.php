@@ -28,6 +28,10 @@ class PropertyWriteTypeCheck implements Aspect
      */
     public function beforePropertyAccess(FieldAccess $access)
     {
+        if (FieldAccess::WRITE !== $access->getAccessType()) {
+            return $access->proceed();
+        }
+
         $baseCheckers = [
             new IntegerTypeChecker(),
             new ArrayTypeChecker(),

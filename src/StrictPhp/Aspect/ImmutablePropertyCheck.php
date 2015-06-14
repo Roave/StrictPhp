@@ -33,6 +33,10 @@ class ImmutablePropertyCheck implements Aspect
             return $access->proceed();
         }
 
+        if (FieldAccess::WRITE !== $access->getAccessType()) {
+            return $access->proceed();
+        }
+
         $field = $access->getField();
 
         $field->setAccessible(true);
