@@ -4,6 +4,9 @@
         "lisachenko/go-aop-php":             "1.0.*@ALPHA",
         "phpdocumentor/reflection-docblock": "~2.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "~4.7"
+    },
     "autoload": {
         "psr-4": {
             "StrictPhp\\": "src/StrictPhp"
