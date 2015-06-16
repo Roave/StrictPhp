@@ -11,7 +11,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "StrictPhpTestAsset\\": "test/StrictPhpTestAsset"
+            "StrictPhpTestAsset\\": "tests/StrictPhpTestAsset"
         }
     }
 }
