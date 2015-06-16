@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
     <testsuite name="StrictPhp functional tests">
-        <directory suffix=".phpt">./test/functional</directory>
+        <directory suffix=".phpt">./tests/functional</directory>
     </testsuite>
 </phpunit>
