@@ -24,7 +24,7 @@ final class ArrayTypeChecker implements TypeCheckerInterface
      */
     public function validate($value, $type)
     {
-        return is_int($value);
+        return is_array($value);
     }
 
     /**
