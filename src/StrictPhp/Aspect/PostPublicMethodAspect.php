@@ -22,7 +22,10 @@ use Go\Aop\Aspect;
 use Go\Aop\Framework\AbstractMethodInvocation;
 use Go\Lang\Annotation as Go;
 
-final class PrePublicMethodAspect implements Aspect
+/**
+ * @author Jefersson Nathan <malukenho@phpse.net>
+ */
+final class PostPublicMethodAspect implements Aspect
 {
     /**
      * @var callable[]
@@ -38,13 +41,13 @@ final class PrePublicMethodAspect implements Aspect
     }
 
     /**
-     * @Go\Before("execution(public **->*(*))")
+     * @Go\After("execution(public **->*(*))")
      *
      * @param AbstractMethodInvocation $methodInvocation
      *
      * @return mixed
      */
-    public function prePublicMethod(AbstractMethodInvocation $methodInvocation)
+    public function postPublicMethod(AbstractMethodInvocation $methodInvocation)
     {
         foreach ($this->interceptors as $interceptor) {
             $interceptor($methodInvocation);
