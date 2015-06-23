@@ -25,9 +25,10 @@ echo "OK4\n";
 
 $object->property = [new stdClass(), new \StrictPhpTestAsset\ClassWithTypedArrayProperty()];
 ?>
---EXPECT--
+--EXPECTF--
 OK1
 OK2
 OK3
 OK4
-PHP Catchable fatal error:%a
+
+%ACatchable fatal error: Argument 1 passed to %a must be an instance of stdClass, instance of StrictPhpTestAsset\ClassWithTypedArrayProperty given%a

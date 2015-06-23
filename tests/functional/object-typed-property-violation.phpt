@@ -9,5 +9,5 @@ $object = new \StrictPhpTestAsset\ClassWithGenericObjectTypedProperty();
 
 $object->property = 'non-object';
 ?>
---EXPECT--
-PHP Catchable fatal error:%a
+--EXPECTF--
+%AFatal error: Uncaught exception 'ErrorException' with message 'NOPE'%a

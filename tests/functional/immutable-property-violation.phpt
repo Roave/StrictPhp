@@ -13,6 +13,6 @@ echo 'OK';
 
 $object->property = 'overwrite (not possible)'
 ?>
---EXPECT--
+--EXPECTF--
 OK
-PHP Catchable fatal error:%a
+%AFatal error: Uncaught exception 'RuntimeException' with message 'Trying to overwrite property %a#$property of object %a#%a with a value of type "string". The property was already given a value of type string%a

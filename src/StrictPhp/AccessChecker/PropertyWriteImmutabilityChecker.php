@@ -1,31 +1,28 @@
 <?php
 
-namespace StrictPhp\Aspect;
+namespace StrictPhp\AccessChecker;
 
-use Go\Aop\Aspect;
 use Go\Aop\Intercept\FieldAccess;
 use Go\Lang\Annotation as Go;
 use phpDocumentor\Reflection\DocBlock;
 
-class ImmutablePropertyCheck implements Aspect
+final class PropertyWriteImmutabilityChecker
 {
     /**
-     * @Go\Before("access(public **->*)")
-     *
      * @param FieldAccess $access
      *
-     * @return mixed
+     * @return void
      *
      * @throws \RuntimeException
      */
-    public function beforePropertyAccess(FieldAccess $access)
+    public function __invoke(FieldAccess $access)
     {
         if (! $that = $access->getThis()) {
-            return $access->proceed();
+            return;
         }
 
         if (FieldAccess::WRITE !== $access->getAccessType()) {
-            return $access->proceed();
+            return;
         }
 
         $field = $access->getField();
@@ -34,11 +31,11 @@ class ImmutablePropertyCheck implements Aspect
 
         // simplistic check - won't check for multiple assignments of "null" to a "null" valued field
         if (null === ($currentValue = $field->getValue($that))) {
-            return $access->proceed();
+            return;
         }
 
         if (! (new DocBlock($field))->getTagsByName('immutable')) {
-            return $access->proceed();
+            return;
         }
 
         $newValue = $access->getValueToSet();
@@ -48,9 +45,9 @@ class ImmutablePropertyCheck implements Aspect
             . ' The property was already given a value of type %s',
             $field->getDeclaringClass()->getName(),
             $field->getName(),
-            is_object($newValue) ? get_class($newValue) : gettype($newValue),
             get_class($that),
             spl_object_hash($that),
+            is_object($newValue) ? get_class($newValue) : gettype($newValue),
             is_object($currentValue) ? get_class($currentValue) : gettype($currentValue)
         ));
     }

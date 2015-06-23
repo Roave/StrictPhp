@@ -19,7 +19,7 @@ final class StringTypeChecker implements TypeCheckerInterface
      */
     public function validate($value, $type)
     {
-        return $value instanceof $type;
+        return is_string($value);
     }
 
     /**

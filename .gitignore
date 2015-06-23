@@ -1,3 +1,4 @@
 vendor
 composer.lock
 go-cache
+integration-tests-go-cache

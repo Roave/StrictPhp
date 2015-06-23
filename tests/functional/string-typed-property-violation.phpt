@@ -5,9 +5,9 @@ Verifies that writing a non-object to an object-typed property causes a fatal er
 
 require_once __DIR__ . '/init.php';
 
-$object = new \StrictPhpTestAsset\ClassWithCallableTypedProperty();
+$object = new \StrictPhpTestAsset\ClassWithGenericStringTypedProperty();
 
 $object->property = 123;
 ?>
---EXPECT--
-PHP Catchable fatal error:%a
+--EXPECTF--
+%AFatal error: Uncaught exception 'ErrorException' with message 'NOPE'%a
