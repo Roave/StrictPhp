@@ -9,5 +9,5 @@ $object = new \StrictPhpTestAsset\ClassWithStdClassTypedProperty();
 
 $object->property = new \StrictPhpTestAsset\ClassWithStdClassTypedProperty();
 ?>
---EXPECT--
-PHP Catchable fatal error:%a
+--EXPECTF--
+%ACatchable fatal error: Argument 1 passed to%a must be an instance of stdClass, instance of StrictPhpTestAsset\ClassWithStdClassTypedProperty given%a
