@@ -4,6 +4,6 @@
         <directory suffix=".phpt">./tests/functional</directory>
     </testsuite>
     <testsuite name="StrictPhp unitary tests">
-        <directory suffix="php">tests/src/</directory>
+        <directory suffix="php">tests/StrictPhpTest</directory>
     </testsuite>
 </phpunit>
