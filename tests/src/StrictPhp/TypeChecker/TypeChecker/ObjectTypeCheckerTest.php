@@ -60,7 +60,8 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimulateFailureRaisesExceptionWhenNotPassAString()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
+        $this->setExpectedException(\PHPUnit_Framework_Error::class);
         $this->objectTypeCheck->simulateFailure([], StdClass::class);
         $this->objectTypeCheck->simulateFailure('Marco Pivetta', StdClass::class);
     }
