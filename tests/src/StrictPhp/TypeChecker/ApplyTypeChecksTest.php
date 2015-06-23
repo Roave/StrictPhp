@@ -1,6 +1,9 @@
 <?php
 
-namespace StrictPhp\TypeChecker;
+namespace StrictPhpTest\TypeChecker;
+
+use StrictPhp\TypeChecker\ApplyTypeChecks;
+use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 /**
  * Tests for {@see \StrictPhp\TypeChecker\ApplyTypeChecks}

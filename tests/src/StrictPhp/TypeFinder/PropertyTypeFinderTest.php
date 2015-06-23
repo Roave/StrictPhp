@@ -1,8 +1,9 @@
 <?php
 
-namespace StrictPhp\TypeFinder;
+namespace StrictPhpTest\TypeFinder;
 
 use ReflectionProperty;
+use StrictPhp\TypeFinder\PropertyTypeFinder;
 
 /**
  * Tests for {@see \StrictPhp\TypeFinder\PropertyTypeFinder}

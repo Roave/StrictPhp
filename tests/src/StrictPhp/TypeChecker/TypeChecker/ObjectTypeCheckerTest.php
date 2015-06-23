@@ -1,9 +1,10 @@
 <?php
 
-namespace StrictPhp\TypeChecker\TypeChecker;
+namespace StrictPhpTest\TypeChecker\TypeChecker;
 
 use DateTime;
 use StdClass;
+use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
 
 /**
  * Tests for {@see \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker}

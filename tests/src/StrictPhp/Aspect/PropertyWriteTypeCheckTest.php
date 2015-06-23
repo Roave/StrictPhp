@@ -1,9 +1,10 @@
 <?php
 
-namespace StrictPhp\Aspect;
+namespace StrictPhpTest\Aspect;
 
 use Go\Aop\Intercept\FieldAccess;
 use ReflectionProperty;
+use StrictPhp\Aspect\PropertyWriteTypeCheck;
 
 /**
  * Tests for {@see \StrictPhp\Aspect\PropertyWriteTypeCheck}

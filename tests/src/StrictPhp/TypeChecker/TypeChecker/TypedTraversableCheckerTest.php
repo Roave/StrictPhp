@@ -1,8 +1,11 @@
 <?php
 
-namespace StrictPhp\TypeChecker\TypeChecker;
+namespace StrictPhpTest\TypeChecker\TypeChecker;
 
 use stdClass;
+use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
 
 /**
  * Tests for {@see \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker}

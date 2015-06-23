@@ -1,8 +1,9 @@
 <?php
 
-namespace StrictPhp;
+namespace StrictPhpTest;
 
 use StrictPhp\Aspect\PropertyWriteAspect;
+use StrictPhp\StrictPhpKernel;
 
 /**
  * Tests for {@see \StrictPhp\StrictPhpKernel}

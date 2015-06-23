@@ -1,6 +1,8 @@
 <?php
 
-namespace StrictPhp\TypeChecker\TypeChecker;
+namespace StrictPhpTest\TypeChecker\TypeChecker;
+
+use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
 
 /**
  * Tests for {@see \StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker}

@@ -1,9 +1,10 @@
 <?php
 
-namespace StrictPhp\Aspect;
+namespace StrictPhpTest\Aspect;
 
 use Go\Aop\Intercept\FieldAccess;
 use StdClass;
+use StrictPhp\Aspect\ImmutablePropertyCheck;
 
 /**
  * Tests for {@see \StrictPhp\Aspect\ImmutablePropertyCheck}
