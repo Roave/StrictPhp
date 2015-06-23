@@ -9,5 +9,5 @@ $object = new \StrictPhpTestAsset\ClassWithGenericArrayTypedProperty();
 
 $object->property = 'non-array';
 ?>
---EXPECT--
-PHP Catchable fatal error:%a
+--EXPECTF--
+%ACatchable fatal error: Argument 1 passed to %a must be of the type array, string given%a
