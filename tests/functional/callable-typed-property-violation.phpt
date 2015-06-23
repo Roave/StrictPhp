@@ -9,5 +9,5 @@ $object = new \StrictPhpTestAsset\ClassWithCallableTypedProperty();
 
 $object->property = 123;
 ?>
---EXPECT--
-PHP Catchable fatal error:%a
+--EXPECTF--
+%ACatchable fatal error: Argument 1 passed to %a must be callable, integer given%a
