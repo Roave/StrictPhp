@@ -29,7 +29,7 @@ final class ObjectTypeChecker implements TypeCheckerInterface
      */
     public function simulateFailure($value, $type)
     {
-        if (! $this->canApplyToType($type) || ! $this->validate($value, $type)) {
+        if (! $this->canApplyToType($type)) {
             throw new \InvalidArgumentException(sprintf('The provided type "%s" is not a valid class', $type));
         }
 
