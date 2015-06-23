@@ -2,9 +2,7 @@
 
 namespace StrictPhp;
 
-use StrictPhp\Aspect\ImmutablePropertyCheck;
 use StrictPhp\Aspect\PropertyWriteAspect;
-use StrictPhp\Aspect\PropertyWriteTypeCheck;
 
 /**
  * Tests for {@see \StrictPhp\StrictPhpKernel}

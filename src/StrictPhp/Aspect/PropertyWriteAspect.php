@@ -6,15 +6,6 @@ use Go\Aop\Aspect;
 use Go\Aop\Intercept\FieldAccess;
 use Go\Lang\Annotation as Go;
 use phpDocumentor\Reflection\DocBlock;
-use StrictPhp\TypeChecker\ApplyTypeChecks;
-use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
-use StrictPhp\TypeFinder\PropertyTypeFinder;
 
 final class PropertyWriteAspect implements Aspect
 {

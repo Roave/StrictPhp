@@ -2,7 +2,6 @@
 
 namespace StrictPhp\AccessChecker;
 
-use Go\Aop\Aspect;
 use Go\Aop\Intercept\FieldAccess;
 use Go\Lang\Annotation as Go;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
