@@ -1,5 +1,5 @@
 --TEST--
-Verifies return types to be correctly given, if not a fatal error
+Verifies return not-string should raises a fatal error
 --FILE--
 <?php
 
