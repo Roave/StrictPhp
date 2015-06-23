@@ -3,6 +3,7 @@
 namespace StrictPhp;
 
 use StrictPhp\Aspect\ImmutablePropertyCheck;
+use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\Aspect\PropertyWriteTypeCheck;
 
 /**
@@ -23,10 +24,12 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
         $strictPhp = StrictPhpKernel::getInstance();
         $strictPhp->init([
             'cacheDir' => realpath(__DIR__ . '/../..') . '/go-cache/',
+            'includePaths' => [
+                __DIR__,
+            ],
         ]);
 
         $container = $strictPhp->getContainer();
-        $this->assertInstanceOf(ImmutablePropertyCheck::class, $container->getAspect(ImmutablePropertyCheck::class));
-        $this->assertInstanceOf(PropertyWriteTypeCheck::class, $container->getAspect(PropertyWriteTypeCheck::class));
+        $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
     }
 }
