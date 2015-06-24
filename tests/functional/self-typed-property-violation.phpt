@@ -15,5 +15,7 @@ $object->property = new stdClass();
 
 echo 'Never reached!';
 ?>
---EXPECT--
-PHP Catchable fatal error:%a
+--EXPECTF--
+OK
+
+%APHP Catchable fatal error:%a

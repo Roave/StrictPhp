@@ -15,5 +15,7 @@ $object->property = new stdClass();
 
 echo 'Never reached!';
 ?>
---EXPECT--
-PHP Catchable fatal error:%a
+--EXPECTF--
+OK
+
+%ACatchable fatal error: Argument 1 passed to StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::{closure}() must be an instance of StrictPhpTestAsset\ClassWithSameTypedProperty, instance of stdClass given%a
