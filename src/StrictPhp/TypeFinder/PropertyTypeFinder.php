@@ -18,7 +18,7 @@ final class PropertyTypeFinder
     public function __invoke(ReflectionProperty $reflectionProperty)
     {
         $typeResolver = new TypeResolver();
-        $context      = (new ContextFactory())->createFromReflector($reflectionProperty->getDeclaringClass());
+        $context      = (new ContextFactory())->createFromReflector($reflectionProperty);
 
         return array_unique(array_filter(array_merge(
             [],
@@ -27,7 +27,7 @@ final class PropertyTypeFinder
                 function (VarTag $varTag) use ($typeResolver, $context) {
                     return array_map(
                         function ($type) use ($typeResolver, $context) {
-                            return $typeResolver->resolve($type, $context);
+                            return $typeResolver->resolve(ltrim($type, '\\'), $context);
                         },
                         $varTag->getTypes()
                     );
