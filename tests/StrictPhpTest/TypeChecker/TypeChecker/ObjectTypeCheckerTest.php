@@ -126,6 +126,7 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [new Object_(new Fqsen('\\' . StdClass::class)), true],
+            [new Object_(new Fqsen('\\UnknownStuff')),       true],
             [new Integer(),                                  false],
             [new Object_(),                                  false],
             [new String_(),                                  false],
