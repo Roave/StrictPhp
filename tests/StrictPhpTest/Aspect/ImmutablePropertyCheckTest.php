@@ -5,6 +5,8 @@ namespace StrictPhpTest\Aspect;
 use Go\Aop\Intercept\FieldAccess;
 use StdClass;
 use StrictPhp\Aspect\ImmutablePropertyCheck;
+use StrictPhpTestAsset\ClassWithImmutableProperty;
+use ReflectionProperty;
 
 /**
  * Tests for {@see \StrictPhp\Aspect\ImmutablePropertyCheck}
@@ -95,24 +97,16 @@ class ImmutablePropertyCheckTest extends \PHPUnit_Framework_TestCase
      */
     public function testRaisesExceptionWhenFieldAccessIsInvalid()
     {
+        $object      = new ClassWithImmutableProperty();
         /* @var $fieldAccess FieldAccess|\PHPUnit_Framework_MockObject_MockObject */
         $fieldAccess = $this->getMock(FieldAccess::class);
-        $field       = $this->getMockBuilder(StdClass::class)
-            ->setMethods([
-                'setAccessible',
-                'getName',
-                'getValue',
-                'getDocComment',
-            ])->getMock();
+        $field       = new ReflectionProperty(ClassWithImmutableProperty::class, 'property');
 
-        $field->expects($this->once())->method('setAccessible')->willReturnSelf();
-        $field->expects($this->once())->method('getValue')->will($this->returnValue(true));
-        $field->expects($this->once())->method('getDocComment')->will($this->returnValue('/** @immutable */'));
-        $field->expects($this->any())->method('getName')->will($this->returnValue(StdClass::class));
+        $object->property = 'initialized';
 
-        $fieldAccess->expects($this->once())->method('getThis')->willReturnSelf();
-        $fieldAccess->expects($this->once())->method('getAccessType')->will($this->returnValue(FieldAccess::WRITE));
-        $fieldAccess->expects($this->once())->method('getField')->will($this->returnValue($field));
+        $fieldAccess->expects($this->any())->method('getThis')->will($this->returnValue($object));
+        $fieldAccess->expects($this->any())->method('getAccessType')->will($this->returnValue(FieldAccess::WRITE));
+        $fieldAccess->expects($this->any())->method('getField')->will($this->returnValue($field));
 
         $immutablePropertyCheck = new ImmutablePropertyCheck();
 
