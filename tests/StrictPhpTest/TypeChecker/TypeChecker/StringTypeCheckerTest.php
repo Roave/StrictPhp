@@ -2,6 +2,15 @@
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 
 /**
@@ -32,10 +41,10 @@ class StringTypeCheckerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->stringCheck->canApplyToType($type));
     }
@@ -50,7 +59,7 @@ class StringTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfDataTypeIsValid($value, $expected)
     {
-        $this->assertSame($expected, $this->stringCheck->validate($value, null));
+        $this->assertSame($expected, $this->stringCheck->validate($value, new String_()));
     }
 
     /**
@@ -59,7 +68,7 @@ class StringTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function testSimulateFailureRaisesExceptionWhenNotPassAString()
     {
         $this->setExpectedException(\ErrorException::class);
-        $this->stringCheck->simulateFailure([], null);
+        $this->stringCheck->simulateFailure([], new String_());
     }
 
     /**
@@ -67,7 +76,9 @@ class StringTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimulateFailureDoesNothingWhenPassAString()
     {
-        $this->stringCheck->simulateFailure('Marco Pivetta', null);
+        $this->stringCheck->simulateFailure('Marco Pivetta', new String_());
+
+        // @TODO add assertion
     }
 
     /**
@@ -96,15 +107,14 @@ class StringTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            ['string',  true],
-            ['array',   false],
-            ['object',  false],
-            ['boolean', false],
-            ['bool',    false],
-            ['integer', false],
-            ['int',     false],
-            ['null',    false],
-            ['mixed',   false],
+            [new String_(),                             true],
+            [new Array_(),                              false],
+            [new Object_(),                             false],
+            [new Object_(new Fqsen('\\' . __CLASS__)),  false],
+            [new Boolean(),                             false],
+            [new Integer(),                             false],
+            [new Null_(),                               false],
+            [new Mixed(),                               false],
         ];
     }
 }
