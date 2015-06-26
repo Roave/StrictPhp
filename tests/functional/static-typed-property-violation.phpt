@@ -18,4 +18,4 @@ echo 'Never reached!';
 --EXPECTF--
 OK
 
-PHP Catchable fatal error:%a
+%ACatchable fatal error:%amust be an instance of %a, instance of stdClass given,%a
