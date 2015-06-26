@@ -99,3 +99,11 @@ $object->immutableProperty = 'another value'; // crash
 
 Please note that this kind of feature currently only works with public and 
 protected properties.
+
+## Current limitations
+
+This package uses [voodoo magic](http://ocramius.github.io/voodoo-php/) to 
+operate, specifically [go-aop-php](https://github.com/lisachenko/go-aop-php).
+
+Go AOP PHP has some limitations when it comes to intercepting access to
+private class members, so please be aware that it has limited scope (for now).
