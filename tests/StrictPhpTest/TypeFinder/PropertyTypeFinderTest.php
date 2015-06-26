@@ -8,6 +8,9 @@ use ReflectionProperty;
 use StrictPhp\TypeFinder\PropertyTypeFinder;
 use StrictPhpTestAsset\ClassWithGenericNonTypedProperty;
 use StrictPhpTestAsset\ClassWithGenericStringTypedProperty;
+use StrictPhpTestAsset\ClassWithSameTypedProperty;
+use StrictPhpTestAsset\ClassWithSelfTypedProperty;
+use StrictPhpTestAsset\ClassWithStaticTypedProperty;
 
 /**
  * Tests for {@see \StrictPhp\TypeFinder\PropertyTypeFinder}
@@ -16,12 +19,11 @@ use StrictPhpTestAsset\ClassWithGenericStringTypedProperty;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\TypeFinder\PropertyTypeFinder
  */
 class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers \StrictPhp\TypeFinder\PropertyTypeFinder::__invoke
-     */
     public function testInvalidReflectionPropertyReturnAEmptyArray()
     {
         $this->assertEmpty(
@@ -31,31 +33,36 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       \StrictPhp\TypeFinder\PropertyTypeFinder::__invoke
-     *
      * @dataProvider mixedAnnotationTypes
      *
-     * @param string $annotation with annotation
-     * @param string $contextClass
-     * @param array  $expected
+     * @param string                  $annotation with annotation
+     * @param string                  $contextClass
+     * @param array                   $expected
+     * @param ReflectionProperty|null $reflectionProperty
      */
-    public function testValidReflectionPropertyReturnAEmptyArray($annotation, $contextClass, array $expected)
-    {
-        /** @var \ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionProperty */
-        $reflectionProperty = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getDocComment', 'getDeclaringClass'])
-            ->disableOriginalConstructor()
-            ->getMock();
+    public function testValidReflectionPropertyReturnAEmptyArray(
+        $annotation,
+        $contextClass,
+        array $expected,
+        ReflectionProperty $reflectionProperty = null
+    ) {
+        if (! $reflectionProperty) {
+            /** @var \ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionProperty */
+            $reflectionProperty = $this->getMockBuilder(ReflectionProperty::class)
+                ->setMethods(['getDocComment', 'getDeclaringClass'])
+                ->disableOriginalConstructor()
+                ->getMock();
 
-        $reflectionProperty
-            ->expects($this->any())
-            ->method('getDeclaringClass')
-            ->will($this->returnValue(new ReflectionClass(ClassWithGenericStringTypedProperty::class)));
+            $reflectionProperty
+                ->expects($this->any())
+                ->method('getDeclaringClass')
+                ->will($this->returnValue(new ReflectionClass(ClassWithGenericStringTypedProperty::class)));
 
-        $reflectionProperty
-            ->expects($this->once())
-            ->method('getDocComment')
-            ->will($this->returnValue($annotation));
+            $reflectionProperty
+                ->expects($this->once())
+                ->method('getDocComment')
+                ->will($this->returnValue($annotation));
+        }
 
         $this->assertSame(
             $expected,
@@ -95,18 +102,21 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
             ['/** @var mixed */', __CLASS__, ['mixed']],
             [
                 '/** @var self */',
-                ClassWithGenericStringTypedProperty::class,
-                ['\\' . ClassWithGenericStringTypedProperty::class]
+                ClassWithSelfTypedProperty::class,
+                ['\\' . ClassWithSelfTypedProperty::class],
+                new ReflectionProperty(ClassWithSelfTypedProperty::class, 'property'),
             ],
             [
                 '/** @var static */',
-                ClassWithGenericStringTypedProperty::class,
-                ['\\' . ClassWithGenericStringTypedProperty::class]
+                ClassWithStaticTypedProperty::class,
+                ['\\' . ClassWithStaticTypedProperty::class],
+                new ReflectionProperty(ClassWithStaticTypedProperty::class, 'property'),
             ],
             [
                 '/** @var \\' . ClassWithGenericStringTypedProperty::class . ' */',
-                ClassWithGenericStringTypedProperty::class,
-                ['\\' . ClassWithGenericStringTypedProperty::class]
+                ClassWithSameTypedProperty::class,
+                ['\\' . ClassWithSameTypedProperty::class],
+                new ReflectionProperty(ClassWithSameTypedProperty::class, 'property'),
             ],
         ];
     }
