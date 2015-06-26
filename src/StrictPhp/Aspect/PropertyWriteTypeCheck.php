@@ -41,11 +41,14 @@ class PropertyWriteTypeCheck implements Aspect
             new ObjectTypeChecker(),
         ];
 
+        $object       = $access->getThis();
+        $contextClass = $object ? get_class($object) : $access->getField()->getDeclaringClass()->getName();
+
         (new ApplyTypeChecks(
             new TypedTraversableChecker(...$baseCheckers),
             ...$baseCheckers
         ))->__invoke(
-            (new PropertyTypeFinder())->__invoke($access->getField()),
+            (new PropertyTypeFinder())->__invoke($access->getField(), $contextClass),
             $access->getValueToSet()
         );
 
