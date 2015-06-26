@@ -2,6 +2,15 @@
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use stdClass;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
@@ -40,10 +49,10 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->typedCheck->canApplyToType($type));
     }
@@ -55,10 +64,10 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
      * @dataProvider  mixedDataTypesToValidate
      *
      * @param string  $value
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testIfDataTypeIsValid($value, $type, $expected)
+    public function testIfDataTypeIsValid($value, Type $type, $expected)
     {
         $this->assertSame($expected, $this->typedCheck->validate($value, $type));
     }
@@ -69,7 +78,7 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimulateFailureDoesNothingWhenPassAString()
     {
-        $this->typedCheck->simulateFailure([], StdClass::class);
+        $this->typedCheck->simulateFailure([], new Array_());
     }
 
     /**
@@ -81,17 +90,17 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypesToValidate()
     {
         return [
-            [['Marco Pivetta'], 'string[]',      true],
-            [[1, 2, 4],         'integer[]',     true],
-            [[1, 2, 4],         'int[]',         true],
-            ['4',               'array[]',       false],
-            [new StdClass,      StdClass::class, false],
-            [123,               'integer',       false],
-            [0x12,              'int',           false],
-            ['Marco Pivetta',   'string',        false],
-            [[],                'array',         false],
-            [true,              'boolean',       false],
-            [null,              'null',          false],
+            [['Marco Pivetta'], new Array_(new String_()),                                  true],
+            [[1, 2, 4],         new Array_(new Integer()),                                  true],
+            ['4',               new Array_(new Array_()),                                   false],
+            [[['4']],           new Array_(new Array_()),                                   true],
+            [new StdClass,      new Array_(new Object_(new Fqsen('\\' . StdClass::class))), false],
+            [123,               new Integer(),                                              false],
+            [0x12,              new Integer(),                                              false],
+            ['Marco Pivetta',   new String_(),                                              false],
+            [[],                new Array_(),                                               true],
+            [true,              new Boolean(),                                              false],
+            [null,              new Null_(),                                                false],
         ];
     }
 
@@ -102,17 +111,15 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            ['array[]',       true],
-            ['integer[]',     true],
-            [StdClass::class, false],
-            ['integer',       false],
-            ['int',           false],
-            ['object',        false],
-            ['string',        false],
-            ['boolean',       false],
-            ['bool',          false],
-            ['null',          false],
-            ['mixed',         false],
+            [new Array_(new Array_()),                                   true],
+            [new Array_(new Integer()),                                  true],
+            [new Array_(new Object_(new Fqsen('\\' . StdClass::class))), false],
+            [new Integer(),                                              false],
+            [new Object_(),                                              false],
+            [new String_(),                                              false],
+            [new Boolean(),                                              false],
+            [new Null_(),                                                false],
+            [new Mixed(),                                                false],
         ];
     }
 }
