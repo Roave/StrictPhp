@@ -42,7 +42,11 @@ final class PropertyTypeFinder
                             $varTag->getTypes()
                         );
                     },
-                    (new DocBlock($reflectionProperty))->getTagsByName('var')
+                    (new DocBlock(
+                        $reflectionProperty,
+                        new DocBlock\Context($reflectionProperty->getDeclaringClass()->getNamespaceName())
+                    ))
+                        ->getTagsByName('var')
                 )
             )))
         );
