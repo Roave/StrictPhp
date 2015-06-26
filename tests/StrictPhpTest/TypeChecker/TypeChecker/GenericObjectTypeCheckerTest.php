@@ -2,6 +2,14 @@
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
 
 /**
@@ -32,10 +40,10 @@ class GenericObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->objectCheck->canApplyToType($type));
     }
@@ -50,7 +58,7 @@ class GenericObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfDataTypeIsValid($value, $expected)
     {
-        $this->assertSame($expected, $this->objectCheck->validate($value, null));
+        $this->assertSame($expected, $this->objectCheck->validate($value, new Object_()));
     }
 
     /**
@@ -59,7 +67,7 @@ class GenericObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function testSimulateFailureRaisesExceptionWhenNotPassAString()
     {
         $this->setExpectedException(\ErrorException::class);
-        $this->objectCheck->simulateFailure([], null);
+        $this->objectCheck->simulateFailure([], new Object_());
     }
 
     /**
@@ -67,7 +75,9 @@ class GenericObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimulateFailureDoesNothingWhenPassAString()
     {
-        $this->objectCheck->simulateFailure(new \StdClass, null);
+        $this->objectCheck->simulateFailure(new \StdClass, new Object_());
+
+        // @TODO add assertion here
     }
 
     /**
@@ -96,15 +106,13 @@ class GenericObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            ['object',  true],
-            ['string',  false],
-            ['array',   false],
-            ['boolean', false],
-            ['bool',    false],
-            ['integer', false],
-            ['int',     false],
-            ['null',    false],
-            ['mixed',   false],
+            [new Object_(),  true],
+            [new String_(),  false],
+            [new Array_(),   false],
+            [new Boolean(),  false],
+            [new Integer(),  false],
+            [new Null_(),    false],
+            [new Mixed(),    false],
         ];
     }
 }
