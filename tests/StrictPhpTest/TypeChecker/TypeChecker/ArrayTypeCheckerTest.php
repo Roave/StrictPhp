@@ -1,6 +1,15 @@
 <?php
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 
 /**
@@ -31,7 +40,7 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
     public function testTypeCanBeApplied($type, $expected)
@@ -49,7 +58,7 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfDataTypeIsValid($value, $expected)
     {
-        $this->assertSame($expected, $this->arrayCheck->validate($value, null));
+        $this->assertSame($expected, $this->arrayCheck->validate($value, new Array_()));
     }
 
     /**
@@ -58,7 +67,7 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function testSimulateFailure()
     {
         $this->assertAttributeEmpty('failingCallback', $this->arrayCheck);
-        $this->arrayCheck->simulateFailure([], null);
+        $this->arrayCheck->simulateFailure([], new Array_());
         $this->assertAttributeNotEmpty('failingCallback', $this->arrayCheck);
         $this->assertAttributeInternalType('callable', 'failingCallback', $this->arrayCheck);
     }
@@ -89,15 +98,14 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            ['array',   true],
-            ['string',  false],
-            ['object',  false],
-            ['boolean', false],
-            ['bool',    false],
-            ['integer', false],
-            ['int',     false],
-            ['null',    false],
-            ['mixed',   false],
+            [new Array_(),                             true],
+            [new String_(),                            false],
+            [new Object_(),                            false],
+            [new Object_(new Fqsen('\\' . __CLASS__)), false],
+            [new Boolean(),                            false],
+            [new Integer(),                            false],
+            [new Null_(),                              false],
+            [new Mixed(),                              false],
         ];
     }
 }
