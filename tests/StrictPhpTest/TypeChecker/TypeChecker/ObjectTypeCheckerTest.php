@@ -23,7 +23,7 @@ use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
  *
  * @group Coverage
  *
- * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::simulateFailure
+ * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker
  */
 class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
 {
