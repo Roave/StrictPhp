@@ -13,7 +13,8 @@ final class GenericObjectTypeChecker implements TypeCheckerInterface
      */
     public function canApplyToType(Type $type)
     {
-        return $type instanceof Object_;
+        return $type instanceof Object_
+            && ! $type->getFqsen();
     }
 
     /**
