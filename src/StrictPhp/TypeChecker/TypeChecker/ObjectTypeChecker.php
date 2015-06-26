@@ -14,7 +14,7 @@ final class ObjectTypeChecker implements TypeCheckerInterface
     public function canApplyToType(Type $type)
     {
         return $type instanceof Object_
-            && ($fqsen = $type->getFqsen());
+            && $type->getFqsen();
     }
 
     /**
