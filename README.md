@@ -21,7 +21,7 @@ After installing `StrictPhp`, point it at the directory to be checked at runtime
 \StrictPhp\StrictPhpKernel::getInstance()->init([
     'debug'        => true,
     // change this if you use this tool on multiple projects:
-    'cacheDir'     => sys_get_tmp_dir(),
+    'cacheDir'     => sys_get_temp_dir(),
     'includePaths' => [
         __DIR__ . '/path/to/your/sources',
     ],
