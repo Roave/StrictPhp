@@ -4,7 +4,6 @@ namespace StrictPhp\TypeChecker\TypeChecker;
 
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
-use phpDocumentor\Reflection\Types\Mixed;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class TypedTraversableChecker implements TypeCheckerInterface
@@ -35,12 +34,16 @@ final class TypedTraversableChecker implements TypeCheckerInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @throws \InvalidArgumentException
      */
     public function validate($value, Type $type)
     {
+        if (! $type instanceof Array_) {
+            throw new \InvalidArgumentException(sprintf('Invalid type "%s" provided', get_class($type)));
+        }
 
-        return $type instanceof Array_
-            && (($value instanceof \Traversable) || is_array($value))
+        return (($value instanceof \Traversable) || is_array($value))
             && $this->getCheckersValidForType($value, $type->getValueType());
     }
 
@@ -94,17 +97,23 @@ final class TypedTraversableChecker implements TypeCheckerInterface
     }
 
     /**
-     * @param mixed  $value
-     * @param Type   $type
+     * @param array|\Traversable $values
+     * @param Type               $type
      *
      * @return TypeCheckerInterface[]
      */
-    private function getCheckersValidForType($value, Type $type)
+    private function getCheckersValidForType($values, Type $type)
     {
         return array_filter(
-            $this->typeCheckers,
-            function (TypeCheckerInterface $typeChecker) use ($value, $type) {
-                return $typeChecker->validate($value, $type);
+            $this->getCheckersApplicableToType($type),
+            function (TypeCheckerInterface $typeChecker) use ($values, $type) {
+                foreach ($values as $value) {
+                    if (! $typeChecker->validate($value, $type)) {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         );
     }
