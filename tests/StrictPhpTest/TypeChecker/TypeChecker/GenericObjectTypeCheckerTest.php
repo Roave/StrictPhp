@@ -2,6 +2,7 @@
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Boolean;
@@ -106,13 +107,14 @@ class GenericObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            [new Object_(),  true],
-            [new String_(),  false],
-            [new Array_(),   false],
-            [new Boolean(),  false],
-            [new Integer(),  false],
-            [new Null_(),    false],
-            [new Mixed(),    false],
+            [new Object_(),                            true],
+            [new Object_(new Fqsen('\\' . __CLASS__)), false],
+            [new String_(),                            false],
+            [new Array_(),                             false],
+            [new Boolean(),                            false],
+            [new Integer(),                            false],
+            [new Null_(),                              false],
+            [new Mixed(),                              false],
         ];
     }
 }
