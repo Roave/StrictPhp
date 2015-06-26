@@ -14,6 +14,7 @@ use phpDocumentor\Reflection\Types\String_;
 use stdClass;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
@@ -41,10 +42,10 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->typedCheck = new TypedTraversableChecker(...[
-            new ArrayTypeChecker(),
             new IntegerTypeChecker(),
             new StringTypeChecker(),
             new ObjectTypeChecker(),
+            new MixedTypeChecker(),
         ]);
     }
 
@@ -68,6 +69,12 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfDataTypeIsValid($value, Type $type, $expected)
     {
+        if (! $this->typedCheck->canApplyToType($type)) {
+            $this->markTestSkipped(sprintf('Validity cannot be checked for type "%s"', get_class($type)));
+
+            return;
+        }
+
         $this->assertSame($expected, $this->typedCheck->validate($value, $type));
     }
 
@@ -80,15 +87,14 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFailureWithData($value, Type $type, $expected)
     {
-        if (! $expected) {
+        if (! $this->typedCheck->canApplyToType($type)) {
+            $this->setExpectedException(\InvalidArgumentException::class);
+        } elseif (! $expected) {
             // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
             $this->setExpectedException(\PHPUnit_Framework_Error::class);
         }
 
-        $this->typedCheck->simulateFailure(
-            [new stdClass()],
-            new Array_(new Object_(new Fqsen('\\' . stdClass::class)))
-        );
+        $this->typedCheck->simulateFailure($value, $type);
 
         // @TODO assertion?
     }
@@ -130,7 +136,7 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
             [new Array_(new Array_()),                                   true],
             [new Array_(new Integer()),                                  true],
             [new Array_(new Object_(new Fqsen('\\' . StdClass::class))), true],
-            [new Array_(new Mixed()),                                    false],
+            [new Array_(new Mixed()),                                    true],
             [new Integer(),                                              false],
             [new Object_(),                                              false],
             [new String_(),                                              false],
