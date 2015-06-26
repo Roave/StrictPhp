@@ -2,8 +2,12 @@
 
 namespace StrictPhpTest\TypeFinder;
 
+use phpDocumentor\Reflection\Type;
+use ReflectionClass;
 use ReflectionProperty;
 use StrictPhp\TypeFinder\PropertyTypeFinder;
+use StrictPhpTestAsset\ClassWithGenericNonTypedProperty;
+use StrictPhpTestAsset\ClassWithGenericStringTypedProperty;
 
 /**
  * Tests for {@see \StrictPhp\TypeFinder\PropertyTypeFinder}
@@ -20,12 +24,13 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidReflectionPropertyReturnAEmptyArray()
     {
-        /** @var \ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionProperty */
-        $reflectionProperty = $this->getMockBuilder(ReflectionProperty::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->assertSame([], (new PropertyTypeFinder())->__invoke($reflectionProperty));
+        $this->assertSame(
+            [],
+            (new PropertyTypeFinder())->__invoke(new ReflectionProperty(
+                ClassWithGenericNonTypedProperty::class,
+                'property'
+            ))
+        );
     }
 
     /**
@@ -40,16 +45,29 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
     {
         /** @var \ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionProperty */
         $reflectionProperty = $this->getMockBuilder(ReflectionProperty::class)
-            ->setMethods(['getDocComment'])
+            ->setMethods(['getDocComment', 'getDeclaringClass'])
             ->disableOriginalConstructor()
             ->getMock();
+
+        $reflectionProperty
+            ->expects($this->any())
+            ->method('getDeclaringClass')
+            ->will($this->returnValue(new ReflectionClass(ClassWithGenericStringTypedProperty::class)));
 
         $reflectionProperty
             ->expects($this->once())
             ->method('getDocComment')
             ->will($this->returnValue($annotation));
 
-        $this->assertSame($expected, (new PropertyTypeFinder())->__invoke($reflectionProperty));
+        $this->assertSame(
+            $expected,
+            array_map(
+                function (Type $type) {
+                    return (string) $type;
+                },
+                (new PropertyTypeFinder())->__invoke($reflectionProperty)
+            )
+        );
     }
 
     /**
@@ -62,10 +80,10 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
             ['/** */', []],
             ['/** @var */', []],
             ['/** @var string */', ['string']],
-            ['/** @var integer */', ['integer']],
+            ['/** @var integer */', ['int']],
             ['/** @var int */', ['int']],
             ['/** @var bool */', ['bool']],
-            ['/** @var boolean */', ['boolean']],
+            ['/** @var boolean */', ['bool']],
             ['/** @var array */', ['array']],
             ['/** @var string[] */', ['string[]']],
             ['/** @var null */', ['null']],

@@ -5,6 +5,8 @@ namespace StrictPhpTest\Aspect;
 use Go\Aop\Intercept\FieldAccess;
 use ReflectionProperty;
 use StrictPhp\Aspect\PropertyWriteTypeCheck;
+use StrictPhpTestAsset\ClassWithGenericNonTypedProperty;
+use StrictPhpTestAsset\ClassWithGenericStringTypedProperty;
 
 /**
  * Tests for {@see \StrictPhp\Aspect\PropertyWriteTypeCheck}
@@ -36,12 +38,13 @@ class PropertyWriteTypeCheckTest extends \PHPUnit_Framework_TestCase
     public function testCanApplyTypeCheckAndCallProceed()
     {
         /* @var $fieldAccess FieldAccess|\PHPUnit_Framework_MockObject_MockObject */
-        $fieldAccess        = $this->getMock(FieldAccess::class);
-        /* @var $reflectionProperty ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject */
-        $reflectionProperty = $this->getMockBuilder(ReflectionProperty::class)->disableOriginalConstructor()->getMock();
+        $fieldAccess = $this->getMock(FieldAccess::class);
 
         $fieldAccess->expects($this->once())->method('getAccessType')->will($this->returnValue(FieldAccess::WRITE));
-        $fieldAccess->expects($this->once())->method('getField')->will($this->returnValue($reflectionProperty));
+        $fieldAccess->expects($this->once())->method('getField')->will($this->returnValue(new ReflectionProperty(
+            ClassWithGenericNonTypedProperty::class,
+            'property'
+        )));
         $fieldAccess->expects($this->once())->method('proceed');
 
         $immutablePropertyCheck = new PropertyWriteTypeCheck();
