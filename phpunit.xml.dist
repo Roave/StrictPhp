@@ -3,7 +3,7 @@
     <testsuite name="StrictPhp functional tests">
         <directory suffix=".phpt">./tests/functional</directory>
     </testsuite>
-    <testsuite name="StrictPhp unitary tests">
+    <testsuite name="StrictPhp unit tests">
         <directory suffix="php">tests/StrictPhpTest</directory>
     </testsuite>
     <filter>
