@@ -94,6 +94,20 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
         $this->objectTypeCheck->simulateFailure('foo', new Array_());
     }
 
+    public function testWillNotValidateWithInvalidType()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->objectTypeCheck->validate('foo', new Array_());
+    }
+
+    public function testWillNotValidateWithMissingFqcn()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->objectTypeCheck->validate('foo', new Object_());
+    }
+
     /**
      * @return mixed[][] - mixed data type
      *                   - name of class to tests against
