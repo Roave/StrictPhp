@@ -6,4 +6,9 @@
     <testsuite name="StrictPhp unitary tests">
         <directory suffix="php">tests/StrictPhpTest</directory>
     </testsuite>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
