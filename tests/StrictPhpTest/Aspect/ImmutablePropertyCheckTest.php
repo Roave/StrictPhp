@@ -98,20 +98,16 @@ class ImmutablePropertyCheckTest extends \PHPUnit_Framework_TestCase
         /* @var $fieldAccess FieldAccess|\PHPUnit_Framework_MockObject_MockObject */
         $fieldAccess = $this->getMock(FieldAccess::class);
         $field       = $this->getMockBuilder(StdClass::class)
-            ->setMethods(
-                [
-                    'setAccessible',
-                    'getName',
-                    'getValue',
-                    'getDocComment',
-                    'getDeclaringClass'
-                ]
-            )->getMock();
+            ->setMethods([
+                'setAccessible',
+                'getName',
+                'getValue',
+                'getDocComment',
+            ])->getMock();
 
         $field->expects($this->once())->method('setAccessible')->willReturnSelf();
         $field->expects($this->once())->method('getValue')->will($this->returnValue(true));
         $field->expects($this->once())->method('getDocComment')->will($this->returnValue('/** @immutable */'));
-        $field->expects($this->once())->method('getDeclaringClass')->willReturnSelf();
         $field->expects($this->any())->method('getName')->will($this->returnValue(StdClass::class));
 
         $fieldAccess->expects($this->once())->method('getThis')->willReturnSelf();
