@@ -86,11 +86,11 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
             ['/** @var array */', __CLASS__, ['array']],
             ['/** @var string[] */', __CLASS__, ['string[]']],
             ['/** @var null */', __CLASS__, ['null']],
-            ['/** @var StdClass */', __CLASS__, ['\StdClass']],
+            ['/** @var StdClass */', __CLASS__, ['\StrictPhpTestAsset\StdClass']],
             ['/** @var \StdClass */', __CLASS__, ['\StdClass']],
             ['/** @var \StdClass[] */', __CLASS__, ['\StdClass[]']],
             ['/** @var \StdClass|null|array */', __CLASS__, ['\StdClass', 'null', 'array']],
-            ['/** @var \StdClass|AnotherClass */', __CLASS__, ['\StdClass', '\AnotherClass']],
+            ['/** @var \StdClass|AnotherClass */', __CLASS__, ['\StdClass', '\StrictPhpTestAsset\AnotherClass']],
             ['/** @var \My\Collection|\Some\Thing[] */', __CLASS__, ['\My\Collection', '\Some\Thing[]']],
             ['/** @var mixed */', __CLASS__, ['mixed']],
             [
