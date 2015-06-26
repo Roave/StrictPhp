@@ -29,6 +29,9 @@ final class PropertyWriteTypeChecker
             return;
         }
 
+        $that         = $access->getThis();
+        $contextClass = $that ? get_class($that) : $access->getField()->getDeclaringClass()->getName();
+
         $baseCheckers = [
             new IntegerTypeChecker(),
             new ArrayTypeChecker(),
@@ -38,11 +41,13 @@ final class PropertyWriteTypeChecker
             new ObjectTypeChecker(),
         ];
 
+        //var_dump((new PropertyTypeFinder())->__invoke($access->getField(), $contextClass));
+
         (new ApplyTypeChecks(
             new TypedTraversableChecker(...$baseCheckers),
             ...$baseCheckers
         ))->__invoke(
-            (new PropertyTypeFinder())->__invoke($access->getField()),
+            (new PropertyTypeFinder())->__invoke($access->getField(), $contextClass),
             $access->getValueToSet()
         );
     }
