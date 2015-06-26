@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 5.6
+  - 7
+  - hhvm
+
+script:
+  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --coverage-clover ./clover.xml
+  - ./vendor/bin/phpunit --disallow-test-output --report-useless-tests --strict --exclude-group=Performance,Coverage
+
+matrix:
+  allow_failures:
+    - php: hhvm
+    - php: 7
