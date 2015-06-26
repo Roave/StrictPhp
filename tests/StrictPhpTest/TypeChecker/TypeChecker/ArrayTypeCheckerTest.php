@@ -66,10 +66,10 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimulateFailure()
     {
-        $this->assertAttributeEmpty('failingCallback', $this->arrayCheck);
-        $this->arrayCheck->simulateFailure([], new Array_());
-        $this->assertAttributeNotEmpty('failingCallback', $this->arrayCheck);
-        $this->assertAttributeInternalType('callable', 'failingCallback', $this->arrayCheck);
+        // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
+        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+
+        $this->arrayCheck->simulateFailure('invalid', new Array_());
     }
 
     /**
