@@ -24,12 +24,9 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidReflectionPropertyReturnAEmptyArray()
     {
-        $this->assertSame(
-            [],
-            (new PropertyTypeFinder())->__invoke(new ReflectionProperty(
-                ClassWithGenericNonTypedProperty::class,
-                'property'
-            ))
+        $this->assertEmpty(
+            (new PropertyTypeFinder())
+                ->__invoke(new ReflectionProperty(ClassWithGenericNonTypedProperty::class, 'property'), __CLASS__)
         );
     }
 
@@ -39,9 +36,10 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
      * @dataProvider mixedAnnotationTypes
      *
      * @param string $annotation with annotation
+     * @param string $contextClass
      * @param array  $expected
      */
-    public function testValidReflectionPropertyReturnAEmptyArray($annotation, array $expected)
+    public function testValidReflectionPropertyReturnAEmptyArray($annotation, array $expected, $contextClass)
     {
         /** @var \ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionProperty */
         $reflectionProperty = $this->getMockBuilder(ReflectionProperty::class)
@@ -65,7 +63,8 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
                 function (Type $type) {
                     return (string) $type;
                 },
-                (new PropertyTypeFinder())->__invoke($reflectionProperty)
+                (new PropertyTypeFinder())
+                    ->__invoke($reflectionProperty, $contextClass)
             )
         );
     }
@@ -77,23 +76,27 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
     public function mixedAnnotationTypes()
     {
         return [
-            ['/** */', []],
-            ['/** @var */', []],
-            ['/** @var string */', ['string']],
-            ['/** @var integer */', ['int']],
-            ['/** @var int */', ['int']],
-            ['/** @var bool */', ['bool']],
-            ['/** @var boolean */', ['bool']],
-            ['/** @var array */', ['array']],
-            ['/** @var string[] */', ['string[]']],
-            ['/** @var null */', ['null']],
-            ['/** @var StdClass */', ['\StdClass']],
-            ['/** @var \StdClass */', ['\StdClass']],
-            ['/** @var \StdClass[] */', ['\StdClass[]']],
-            ['/** @var \StdClass|null|array */', ['\StdClass', 'null', 'array']],
-            ['/** @var \StdClass|AnotherClass */', ['\StdClass', '\AnotherClass']],
-            ['/** @var \My\Collection|\Some\Thing[] */', ['\My\Collection', '\Some\Thing[]']],
-            ['/** @var mixed */', ['mixed']],
+            ['/** */', __CLASS__, []],
+            ['/** @var */', __CLASS__, []],
+            ['/** @var string */', __CLASS__, ['string']],
+            ['/** @var integer */', __CLASS__, ['int']],
+            ['/** @var int */', __CLASS__, ['int']],
+            ['/** @var bool */', __CLASS__, ['bool']],
+            ['/** @var boolean */', __CLASS__, ['bool']],
+            ['/** @var array */', __CLASS__, ['array']],
+            ['/** @var string[] */', __CLASS__, ['string[]']],
+            ['/** @var null */', __CLASS__, ['null']],
+            ['/** @var StdClass */', __CLASS__, ['\StdClass']],
+            ['/** @var \StdClass */', __CLASS__, ['\StdClass']],
+            ['/** @var \StdClass[] */', __CLASS__, ['\StdClass[]']],
+            ['/** @var \StdClass|null|array */', __CLASS__, ['\StdClass', 'null', 'array']],
+            ['/** @var \StdClass|AnotherClass */', __CLASS__, ['\StdClass', '\AnotherClass']],
+            ['/** @var \My\Collection|\Some\Thing[] */', __CLASS__, ['\My\Collection', '\Some\Thing[]']],
+            ['/** @var mixed */', __CLASS__, ['mixed']],
+            ['/** @var self */', __CLASS__, ['\\' . __CLASS__]],
+            ['/** @var static */', __CLASS__, ['\\' . __CLASS__]],
+            ['/** @var $this */', __CLASS__, ['\\' . __CLASS__]],
+            ['/** @var \\' . __CLASS__ . ' */', __CLASS__, ['\\' . __CLASS__]],
         ];
     }
 }
