@@ -43,7 +43,7 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
      * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->arrayCheck->canApplyToType($type));
     }
