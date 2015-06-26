@@ -40,7 +40,9 @@ final class ObjectTypeChecker implements TypeCheckerInterface
             ));
         }
 
-        return $value instanceof $fqcn;
+        $fqcnString = $fqcn->getName();
+
+        return $value instanceof $fqcnString;
     }
 
     /**
