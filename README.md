@@ -107,3 +107,11 @@ operate, specifically [go-aop-php](https://github.com/lisachenko/go-aop-php).
 
 Go AOP PHP has some limitations when it comes to intercepting access to
 private class members, so please be aware that it has limited scope (for now).
+
+## License
+
+This package is released under the [MIT license](LICENSE).
+
+## Contributing
+
+If you wish to contribute to the project, please read the [CONTRIBUTING notes](CONTRIBUTING.md).
