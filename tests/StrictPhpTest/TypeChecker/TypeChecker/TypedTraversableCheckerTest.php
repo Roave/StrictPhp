@@ -23,6 +23,8 @@ use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker
  */
 class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,8 +47,6 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::canApplyToType
-     *
      * @dataProvider mixedDataTypes
      *
      * @param Type    $type
@@ -58,9 +58,6 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers        \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::validate
-     * @covers        \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::getCheckersValidForType
-     *
      * @dataProvider  mixedDataTypesToValidate
      *
      * @param string  $value
@@ -72,10 +69,6 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->typedCheck->validate($value, $type));
     }
 
-    /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::simulateFailure
-     * @covers \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::getCheckersApplicableToType
-     */
     public function testSimulateFailureDoesNothingWhenPassAString()
     {
         $this->typedCheck->simulateFailure([], new Array_());
