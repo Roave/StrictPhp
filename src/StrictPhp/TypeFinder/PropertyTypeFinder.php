@@ -27,7 +27,7 @@ final class PropertyTypeFinder
                 function (VarTag $varTag) use ($typeResolver, $context) {
                     return array_map(
                         function ($type) use ($typeResolver, $context) {
-                            return $typeResolver->resolve(ltrim($type, '\\'), $context);
+                            return $typeResolver->resolve($type, $context);
                         },
                         $varTag->getTypes()
                     );
