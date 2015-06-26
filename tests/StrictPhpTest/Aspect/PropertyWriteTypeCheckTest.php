@@ -40,8 +40,8 @@ class PropertyWriteTypeCheckTest extends \PHPUnit_Framework_TestCase
         /* @var $fieldAccess FieldAccess|\PHPUnit_Framework_MockObject_MockObject */
         $fieldAccess = $this->getMock(FieldAccess::class);
 
-        $fieldAccess->expects($this->once())->method('getAccessType')->will($this->returnValue(FieldAccess::WRITE));
-        $fieldAccess->expects($this->once())->method('getField')->will($this->returnValue(new ReflectionProperty(
+        $fieldAccess->expects($this->any())->method('getAccessType')->will($this->returnValue(FieldAccess::WRITE));
+        $fieldAccess->expects($this->any())->method('getField')->will($this->returnValue(new ReflectionProperty(
             ClassWithGenericNonTypedProperty::class,
             'property'
         )));
