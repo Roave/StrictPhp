@@ -19,6 +19,8 @@ use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker
  */
 class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,8 +38,6 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       \StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker::canApplyToType
-     *
      * @dataProvider mixedDataTypes
      *
      * @param Type    $type
@@ -49,8 +49,6 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers        \StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker::validate
-     *
      * @dataProvider  mixedDataTypesToValidate
      *
      * @param string  $value
@@ -61,15 +59,19 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->arrayCheck->validate($value, new Array_()));
     }
 
-    /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker::simulateFailure
-     */
     public function testSimulateFailure()
     {
         // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
         $this->setExpectedException(\PHPUnit_Framework_Error::class);
 
         $this->arrayCheck->simulateFailure('invalid', new Array_());
+    }
+
+    public function testSimulateSuccess()
+    {
+        $this->arrayCheck->simulateFailure([], new Array_());
+
+        // @TODO assertion?
     }
 
     /**
