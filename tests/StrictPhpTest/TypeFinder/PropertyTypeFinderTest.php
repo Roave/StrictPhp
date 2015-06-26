@@ -39,7 +39,7 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
      * @param string $contextClass
      * @param array  $expected
      */
-    public function testValidReflectionPropertyReturnAEmptyArray($annotation, array $expected, $contextClass)
+    public function testValidReflectionPropertyReturnAEmptyArray($annotation, $contextClass, array $expected)
     {
         /** @var \ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $reflectionProperty */
         $reflectionProperty = $this->getMockBuilder(ReflectionProperty::class)
@@ -93,10 +93,21 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
             ['/** @var \StdClass|AnotherClass */', __CLASS__, ['\StdClass', '\AnotherClass']],
             ['/** @var \My\Collection|\Some\Thing[] */', __CLASS__, ['\My\Collection', '\Some\Thing[]']],
             ['/** @var mixed */', __CLASS__, ['mixed']],
-            ['/** @var self */', __CLASS__, ['\\' . __CLASS__]],
-            ['/** @var static */', __CLASS__, ['\\' . __CLASS__]],
-            ['/** @var $this */', __CLASS__, ['\\' . __CLASS__]],
-            ['/** @var \\' . __CLASS__ . ' */', __CLASS__, ['\\' . __CLASS__]],
+            [
+                '/** @var self */',
+                ClassWithGenericStringTypedProperty::class,
+                ['\\' . ClassWithGenericStringTypedProperty::class]
+            ],
+            [
+                '/** @var static */',
+                ClassWithGenericStringTypedProperty::class,
+                ['\\' . ClassWithGenericStringTypedProperty::class]
+            ],
+            [
+                '/** @var \\' . ClassWithGenericStringTypedProperty::class . ' */',
+                ClassWithGenericStringTypedProperty::class,
+                ['\\' . ClassWithGenericStringTypedProperty::class]
+            ],
         ];
     }
 }
