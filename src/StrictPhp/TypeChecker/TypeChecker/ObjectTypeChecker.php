@@ -2,6 +2,8 @@
 
 namespace StrictPhp\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Object_;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class ObjectTypeChecker implements TypeCheckerInterface
@@ -9,17 +11,11 @@ final class ObjectTypeChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function canApplyToType($type)
+    public function canApplyToType(Type $type)
     {
-        return class_exists($type);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function validate($value, $type)
-    {
-        return $value instanceof $type;
+        return $type instanceof Object_
+            && ($fqsen = $type->getFqsen())
+            && class_exists($fqsen->getName());
     }
 
     /**
@@ -27,10 +23,38 @@ final class ObjectTypeChecker implements TypeCheckerInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function simulateFailure($value, $type)
+    public function validate($value, Type $type)
+    {
+        if (! $type instanceof Object_) {
+            throw new \InvalidArgumentException(sprintf(
+                'Non-object type "%s" given, expected "%s"',
+                get_class($type),
+                Object_::class
+            ));
+        }
+
+        if (! $fqcn = $type->getFqsen()) {
+            throw new \InvalidArgumentException(sprintf(
+                'The provided type of type "%s" does not have a FQCN',
+                get_class($type)
+            ));
+        }
+
+        return $value instanceof $fqcn;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function simulateFailure($value, Type $type)
     {
         if (! $this->canApplyToType($type)) {
-            throw new \InvalidArgumentException(sprintf('The provided type "%s" is not a valid class', $type));
+            throw new \InvalidArgumentException(sprintf(
+                'The provided type "%s" does not refer to a valid class',
+                $type
+            ));
         }
 
         /* @var $callback callable */

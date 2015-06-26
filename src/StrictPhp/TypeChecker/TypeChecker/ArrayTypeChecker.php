@@ -2,6 +2,8 @@
 
 namespace StrictPhp\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class ArrayTypeChecker implements TypeCheckerInterface
@@ -14,15 +16,15 @@ final class ArrayTypeChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function canApplyToType($type)
+    public function canApplyToType(Type $type)
     {
-        return strtolower($type) === 'array';
+        return $type instanceof Array_;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function validate($value, $type)
+    public function validate($value, Type $type)
     {
         return is_array($value);
     }
@@ -30,7 +32,7 @@ final class ArrayTypeChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function simulateFailure($value, $type)
+    public function simulateFailure($value, Type $type)
     {
         $callback = self::$failingCallback ?: self::$failingCallback = function (array $value) {
             return $value;
