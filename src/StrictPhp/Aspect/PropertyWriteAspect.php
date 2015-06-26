@@ -23,7 +23,9 @@ final class PropertyWriteAspect implements Aspect
     }
 
     /**
-     * @Go\Before("access(public|protected|private **->*)")
+     * @TODO private access to be handled too
+     *
+     * @Go\Before("access(public|protected **->*)")
      *
      * @param FieldAccess $access
      *
