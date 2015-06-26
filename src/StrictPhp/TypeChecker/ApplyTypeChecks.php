@@ -33,7 +33,7 @@ final class ApplyTypeChecks
         foreach ($allowedTypes as $type) {
             foreach ($this->typeCheckers as $typeChecker) {
                 if ($typeChecker->canApplyToType($type)) {
-                    $validCheckers[] = [$typeChecker, (string) $type];
+                    $validCheckers[] = [$typeChecker, $type];
                 }
             }
         }
