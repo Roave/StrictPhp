@@ -2,6 +2,8 @@
 
 namespace StrictPhp\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class TypedTraversableChecker implements TypeCheckerInterface
@@ -23,27 +25,43 @@ final class TypedTraversableChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function canApplyToType($type)
+    public function canApplyToType(Type $type)
     {
-        return substr($type, -2) === '[]'
-            && $this->getCheckersApplicableToType(substr($type, 0, -2));
+        // @todo validate also key type!
+        return $type instanceof Array_
+            && $this->getCheckersApplicableToType($type->getValueType());
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws \InvalidArgumentException
      */
-    public function validate($value, $type)
+    public function validate($value, Type $type)
     {
-        return substr($type, -2) === '[]'
-            && (($value instanceof \Traversable) || is_array($value))
-            && $this->getCheckersValidForType($value, substr($type, 0, -2));
+        if (! $type instanceof Array_) {
+            throw new \InvalidArgumentException(sprintf('Invalid type "%s" provided', get_class($type)));
+        }
+
+        return (($value instanceof \Traversable) || is_array($value))
+            && $this->getCheckersValidForType($value, $type->getValueType());
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws \InvalidArgumentException
      */
-    public function simulateFailure($value, $type)
+    public function simulateFailure($value, Type $type)
     {
+        if (! $type instanceof Array_) {
+            throw new \InvalidArgumentException(sprintf(
+                'Expecting type of type "%s", "%s" given',
+                Array_::class,
+                get_class($type)
+            ));
+        }
+
         if (! $value instanceof \Traversable) {
             $callback = function (array $value) {
             };
@@ -51,7 +69,7 @@ final class TypedTraversableChecker implements TypeCheckerInterface
             $callback($value);
         }
 
-        $subType = substr($type, 0, -2);
+        $subType = $type->getValueType();
 
         array_map(
             function (TypeCheckerInterface $typeChecker) use ($value, $subType) {
@@ -64,11 +82,11 @@ final class TypedTraversableChecker implements TypeCheckerInterface
     }
 
     /**
-     * @param string $type
+     * @param Type $type
      *
      * @return TypeCheckerInterface[]
      */
-    private function getCheckersApplicableToType($type)
+    private function getCheckersApplicableToType(Type $type)
     {
         return array_filter(
             $this->typeCheckers,
@@ -79,17 +97,23 @@ final class TypedTraversableChecker implements TypeCheckerInterface
     }
 
     /**
-     * @param mixed  $value
-     * @param string $type
+     * @param array|\Traversable $values
+     * @param Type               $type
      *
      * @return TypeCheckerInterface[]
      */
-    private function getCheckersValidForType($value, $type)
+    private function getCheckersValidForType($values, Type $type)
     {
         return array_filter(
-            $this->typeCheckers,
-            function (TypeCheckerInterface $typeChecker) use ($value, $type) {
-                return $typeChecker->validate($value, $type);
+            $this->getCheckersApplicableToType($type),
+            function (TypeCheckerInterface $typeChecker) use ($values, $type) {
+                foreach ($values as $value) {
+                    if (! $typeChecker->validate($value, $type)) {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         );
     }

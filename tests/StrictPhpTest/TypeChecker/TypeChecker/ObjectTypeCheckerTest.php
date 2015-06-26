@@ -3,6 +3,15 @@
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
 use DateTime;
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use StdClass;
 use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
 
@@ -13,6 +22,8 @@ use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker
  */
 class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,50 +41,71 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::canApplyToType
-     *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->objectTypeCheck->canApplyToType($type));
     }
 
     /**
-     * @covers        \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::validate
-     *
      * @dataProvider  mixedDataTypesToValidate
      *
      * @param string  $value
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testIfDataTypeIsValid($value, $type, $expected)
+    public function testIfDataTypeIsValid($value, Type $type, $expected)
     {
         $this->assertSame($expected, $this->objectTypeCheck->validate($value, $type));
     }
 
-    /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::simulateFailure
-     */
+    public function testSimulateFailureRaisesExceptionWhenPassingAnArray()
+    {
+        // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
+        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+
+        $this->objectTypeCheck->simulateFailure([], new Object_(new Fqsen('\\' . StdClass::class)));
+    }
+
     public function testSimulateFailureRaisesExceptionWhenNotPassAString()
     {
         // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
         $this->setExpectedException(\PHPUnit_Framework_Error::class);
-        $this->objectTypeCheck->simulateFailure([], StdClass::class);
-        $this->objectTypeCheck->simulateFailure('Marco Pivetta', StdClass::class);
+
+        $this->objectTypeCheck->simulateFailure('Marco Pivetta', new Object_(new Fqsen('\\' . StdClass::class)));
     }
 
-    /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::simulateFailure
-     */
     public function testSimulateFailureDoesNothingWhenPassAString()
     {
-        $this->objectTypeCheck->simulateFailure(new StdClass, StdClass::class);
-        $this->objectTypeCheck->simulateFailure(new DateTime, DateTime::class);
+        $this->objectTypeCheck->simulateFailure(new StdClass, new Object_(new Fqsen('\\' . StdClass::class)));
+        $this->objectTypeCheck->simulateFailure(new DateTime, new Object_(new Fqsen('\\' . DateTime::class)));
+
+        // @TODO add assertions here
+    }
+
+    public function testWillNotSimulateFailureWithInvalidType()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->objectTypeCheck->simulateFailure('foo', new Array_());
+    }
+
+    public function testWillNotValidateWithInvalidType()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->objectTypeCheck->validate('foo', new Array_());
+    }
+
+    public function testWillNotValidateWithMissingFqcn()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->objectTypeCheck->validate('foo', new Object_());
     }
 
     /**
@@ -85,14 +117,14 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypesToValidate()
     {
         return [
-            [new StdClass,    StdClass::class, true],
-            [new DateTime,    DateTime::class, true],
-            [123,             StdClass::class, false],
-            [0x12,            StdClass::class, false],
-            ['Marco Pivetta', StdClass::class, false],
-            [[],              StdClass::class, false],
-            [true,            StdClass::class, false],
-            [null,            StdClass::class, false],
+            [new StdClass,    new Object_(new Fqsen('\\' . StdClass::class)), true],
+            [new DateTime,    new Object_(new Fqsen('\\' . DateTime::class)), true],
+            [123,             new Object_(new Fqsen('\\' . StdClass::class)), false],
+            [0x12,            new Object_(new Fqsen('\\' . StdClass::class)), false],
+            ['Marco Pivetta', new Object_(new Fqsen('\\' . StdClass::class)), false],
+            [[],              new Object_(new Fqsen('\\' . StdClass::class)), false],
+            [true,            new Object_(new Fqsen('\\' . StdClass::class)), false],
+            [null,            new Object_(new Fqsen('\\' . StdClass::class)), false],
         ];
     }
 
@@ -103,17 +135,15 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            [StdClass::class, true],
-            ['integer',       false],
-            ['integer',       false],
-            ['int',           false],
-            ['object',        false],
-            ['string',        false],
-            ['array',         false],
-            ['boolean',       false],
-            ['bool',          false],
-            ['null',          false],
-            ['mixed',         false],
+            [new Object_(new Fqsen('\\' . StdClass::class)), true],
+            [new Object_(new Fqsen('\\UnknownStuff')),       true],
+            [new Integer(),                                  false],
+            [new Object_(),                                  false],
+            [new String_(),                                  false],
+            [new Array_(),                                   false],
+            [new Boolean(),                                  false],
+            [new Null_(),                                    false],
+            [new Mixed(),                                    false],
         ];
     }
 }

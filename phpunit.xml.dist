@@ -3,7 +3,12 @@
     <testsuite name="StrictPhp functional tests">
         <directory suffix=".phpt">./tests/functional</directory>
     </testsuite>
-    <testsuite name="StrictPhp unitary tests">
+    <testsuite name="StrictPhp unit tests">
         <directory suffix="php">tests/StrictPhpTest</directory>
     </testsuite>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>

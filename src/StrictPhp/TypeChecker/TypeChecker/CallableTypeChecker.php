@@ -2,6 +2,8 @@
 
 namespace StrictPhp\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Callable_;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class CallableTypeChecker implements TypeCheckerInterface
@@ -14,15 +16,15 @@ final class CallableTypeChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function canApplyToType($type)
+    public function canApplyToType(Type $type)
     {
-        return strtolower($type) === 'callable';
+        return $type instanceof Callable_;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function validate($value, $type)
+    public function validate($value, Type $type)
     {
         return is_callable($value);
     }
@@ -30,7 +32,7 @@ final class CallableTypeChecker implements TypeCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function simulateFailure($value, $type)
+    public function simulateFailure($value, Type $type)
     {
         $callback = self::$failingCallback ?: self::$failingCallback = function (callable $value) {
             return $value;

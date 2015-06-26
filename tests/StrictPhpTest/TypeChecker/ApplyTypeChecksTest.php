@@ -2,6 +2,7 @@
 
 namespace StrictPhpTest\TypeChecker;
 
+use phpDocumentor\Reflection\Types\Boolean;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
@@ -21,10 +22,11 @@ class ApplyTypeChecksTest extends \PHPUnit_Framework_TestCase
      */
     public function testApplyCheckerProperly()
     {
+        $booleanType = new Boolean();
         $typeChecker = $this->getMock(TypeCheckerInterface::class);
         $typeChecker->expects($this->once())
             ->method('canApplyToType')
-            ->with('boolean')
+            ->with($booleanType)
             ->will($this->returnValue(true));
 
         $typeChecker->expects($this->once())
@@ -36,6 +38,6 @@ class ApplyTypeChecksTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $applyChecks = new ApplyTypeChecks($typeChecker);
-        $applyChecks->__invoke(['boolean'], []);
+        $applyChecks->__invoke([$booleanType], []);
     }
 }

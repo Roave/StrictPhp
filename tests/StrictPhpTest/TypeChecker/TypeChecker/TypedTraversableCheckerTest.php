@@ -2,9 +2,21 @@
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Fqsen;
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use stdClass;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
 
 /**
@@ -14,6 +26,8 @@ use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker
  */
 class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,49 +41,69 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->typedCheck = new TypedTraversableChecker(
-            ...[
-                new ArrayTypeChecker(),
-                new IntegerTypeChecker(),
-            ]
-        );
+        $this->typedCheck = new TypedTraversableChecker(...[
+            new IntegerTypeChecker(),
+            new StringTypeChecker(),
+            new ObjectTypeChecker(),
+            new MixedTypeChecker(),
+        ]);
     }
 
     /**
-     * @covers       \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::canApplyToType
-     *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->typedCheck->canApplyToType($type));
     }
 
     /**
-     * @covers        \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::validate
-     * @covers        \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::getCheckersValidForType
-     *
      * @dataProvider  mixedDataTypesToValidate
      *
      * @param string  $value
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testIfDataTypeIsValid($value, $type, $expected)
+    public function testIfDataTypeIsValid($value, Type $type, $expected)
     {
+        if (! $this->typedCheck->canApplyToType($type)) {
+            $this->markTestSkipped(sprintf('Validity cannot be checked for type "%s"', get_class($type)));
+
+            return;
+        }
+
         $this->assertSame($expected, $this->typedCheck->validate($value, $type));
     }
 
     /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::simulateFailure
-     * @covers \StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker::getCheckersApplicableToType
+     * @dataProvider  mixedDataTypesToValidate
+     *
+     * @param string  $value
+     * @param Type    $type
+     * @param boolean $expected
      */
-    public function testSimulateFailureDoesNothingWhenPassAString()
+    public function testFailureWithData($value, Type $type, $expected)
     {
-        $this->typedCheck->simulateFailure([], StdClass::class);
+        if (! $this->typedCheck->canApplyToType($type)) {
+            $this->setExpectedException(\InvalidArgumentException::class);
+        } elseif (! $expected) {
+            // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
+            $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        }
+
+        $this->typedCheck->simulateFailure($value, $type);
+
+        // @TODO assertion?
+    }
+
+    public function testRejectsValidationOfInvalidType()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->typedCheck->validate('foo', new String_());
     }
 
     /**
@@ -81,17 +115,21 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypesToValidate()
     {
         return [
-            [['Marco Pivetta'], 'string[]',      true],
-            [[1, 2, 4],         'integer[]',     true],
-            [[1, 2, 4],         'int[]',         true],
-            ['4',               'array[]',       false],
-            [new StdClass,      StdClass::class, false],
-            [123,               'integer',       false],
-            [0x12,              'int',           false],
-            ['Marco Pivetta',   'string',        false],
-            [[],                'array',         false],
-            [true,              'boolean',       false],
-            [null,              'null',          false],
+            [['foo'],           new Array_(),                                               true],
+            [['Marco Pivetta'], new Array_(new String_()),                                  true],
+            [[1, 2, 4],         new Array_(new Integer()),                                  true],
+            ['4',               new Array_(new Array_()),                                   false],
+            [[['4']],           new Array_(new Array_()),                                   true],
+            [[[['4']]],         new Array_(new Array_(new Array_())),                       true],
+            [[['4']],           new Array_(new Array_(new Array_())),                       false],
+            [new StdClass,      new Array_(new Object_(new Fqsen('\\' . StdClass::class))), false],
+            [[new StdClass],    new Array_(new Object_(new Fqsen('\\' . StdClass::class))), true],
+            [123,               new Integer(),                                              false],
+            [0x12,              new Integer(),                                              false],
+            ['Marco Pivetta',   new String_(),                                              false],
+            [[],                new Array_(),                                               true],
+            [true,              new Boolean(),                                              false],
+            [null,              new Null_(),                                                false],
         ];
     }
 
@@ -102,17 +140,16 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            ['array[]',       true],
-            ['integer[]',     true],
-            [StdClass::class, false],
-            ['integer',       false],
-            ['int',           false],
-            ['object',        false],
-            ['string',        false],
-            ['boolean',       false],
-            ['bool',          false],
-            ['null',          false],
-            ['mixed',         false],
+            [new Array_(new Array_()),                                   true],
+            [new Array_(new Integer()),                                  true],
+            [new Array_(new Object_(new Fqsen('\\' . StdClass::class))), true],
+            [new Array_(new Mixed()),                                    true],
+            [new Integer(),                                              false],
+            [new Object_(),                                              false],
+            [new String_(),                                              false],
+            [new Boolean(),                                              false],
+            [new Null_(),                                                false],
+            [new Mixed(),                                                false],
         ];
     }
 }

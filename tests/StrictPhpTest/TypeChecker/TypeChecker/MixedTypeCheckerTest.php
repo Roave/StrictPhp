@@ -1,6 +1,7 @@
 <?php
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
+
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
@@ -11,30 +12,31 @@ use phpDocumentor\Reflection\Types\Null_;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
 
 /**
- * Tests for {@see \StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker}
+ * Tests for {@see \StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker}
  *
- * @author Jefersson Nathan <malukenho@phpse.net>
+ * @author Marco Pivetta <ocramius@gmail.com>
  * @license MIT
  *
  * @group Coverage
  *
- * @covers \StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker
+ * @covers \StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker
  */
-class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
+class MixedTypeCheckerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ArrayTypeChecker
+     * @var MixedTypeChecker
      */
-    private $arrayCheck;
+    private $mixedChecker;
 
     /**
      * {@inheritDoc}
      */
     public function setUp()
     {
-        $this->arrayCheck = new ArrayTypeChecker();
+        $this->mixedChecker = new MixedTypeChecker();
     }
 
     /**
@@ -45,7 +47,7 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testTypeCanBeApplied(Type $type, $expected)
     {
-        $this->assertSame($expected, $this->arrayCheck->canApplyToType($type));
+        $this->assertSame($expected, $this->mixedChecker->canApplyToType($type));
     }
 
     /**
@@ -56,20 +58,19 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfDataTypeIsValid($value, $expected)
     {
-        $this->assertSame($expected, $this->arrayCheck->validate($value, new Array_()));
+        $this->assertSame($expected, $this->mixedChecker->validate($value, new Mixed()));
     }
 
-    public function testSimulateFailure()
+    public function testRejectsInvalidTypeValidation()
     {
-        // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
-        $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        $this->setExpectedException(\InvalidArgumentException::class);
 
-        $this->arrayCheck->simulateFailure('invalid', new Array_());
+        $this->mixedChecker->validate('foo', new String_());
     }
 
     public function testSimulateSuccess()
     {
-        $this->arrayCheck->simulateFailure([], new Array_());
+        $this->mixedChecker->simulateFailure([], new Mixed());
 
         // @TODO assertion?
     }
@@ -83,13 +84,13 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [[],              true],
-            [new \StdClass,   false],
-            [true,            false],
-            [null,            false],
-            [123,             false],
-            [1e-3,            false],
-            [0x12,            false],
-            ['Marco Pivetta', false],
+            [new \StdClass,   true],
+            [true,            true],
+            [null,            true],
+            [123,             true],
+            [1e-3,            true],
+            [0x12,            true],
+            ['Marco Pivetta', true],
         ];
     }
 
@@ -100,14 +101,14 @@ class ArrayTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            [new Array_(),                             true],
+            [new Mixed(),                              true],
+            [new Array_(),                             false],
             [new String_(),                            false],
             [new Object_(),                            false],
             [new Object_(new Fqsen('\\' . __CLASS__)), false],
             [new Boolean(),                            false],
             [new Integer(),                            false],
             [new Null_(),                              false],
-            [new Mixed(),                              false],
         ];
     }
 }
