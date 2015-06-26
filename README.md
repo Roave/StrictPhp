@@ -31,6 +31,9 @@ After installing `StrictPhp`, point it at the directory to be checked at runtime
 StrictPhp will then intercept any runtime operations that are considered "illegal"
 and throw an exception or a catchable fatal error.
 
+Please remember to execute this code **before** any code that may autoload any of
+the classes that should be checked.
+
 ## Features
 
 `StrictPhp` currently supports following features:
