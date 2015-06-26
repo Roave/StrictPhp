@@ -2,6 +2,14 @@
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
 
 /**
@@ -32,10 +40,10 @@ class IntegerTypeCheckerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->integerCheck->canApplyToType($type));
     }
@@ -50,7 +58,7 @@ class IntegerTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfDataTypeIsValid($value, $expected)
     {
-        $this->assertSame($expected, $this->integerCheck->validate($value, null));
+        $this->assertSame($expected, $this->integerCheck->validate($value, new Integer()));
     }
 
     /**
@@ -59,7 +67,7 @@ class IntegerTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function testSimulateFailureRaisesExceptionWhenNotPassAString()
     {
         $this->setExpectedException(\ErrorException::class);
-        $this->integerCheck->simulateFailure([], null);
+        $this->integerCheck->simulateFailure([], new Integer());
     }
 
     /**
@@ -67,7 +75,7 @@ class IntegerTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSimulateFailureDoesNothingWhenPassAString()
     {
-        $this->integerCheck->simulateFailure(10, null);
+        $this->integerCheck->simulateFailure(10, new Integer());
     }
 
     /**
@@ -95,15 +103,13 @@ class IntegerTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            ['integer', true],
-            ['int',     true],
-            ['object',  false],
-            ['string',  false],
-            ['array',   false],
-            ['boolean', false],
-            ['bool',    false],
-            ['null',    false],
-            ['mixed',   false],
+            [new Integer(), true],
+            [new Object_(), false],
+            [new String_(), false],
+            [new Array_(),  false],
+            [new Boolean(), false],
+            [new Null_(),    false],
+            [new Mixed(),   false],
         ];
     }
 }
