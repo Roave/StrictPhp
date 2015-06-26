@@ -14,6 +14,8 @@ use phpDocumentor\Reflection\Types\String_;
 use stdClass;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
 
 /**
@@ -38,12 +40,12 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->typedCheck = new TypedTraversableChecker(
-            ...[
-                new ArrayTypeChecker(),
-                new IntegerTypeChecker(),
-            ]
-        );
+        $this->typedCheck = new TypedTraversableChecker(...[
+            new ArrayTypeChecker(),
+            new IntegerTypeChecker(),
+            new StringTypeChecker(),
+            new ObjectTypeChecker(),
+        ]);
     }
 
     /**
@@ -69,9 +71,26 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->typedCheck->validate($value, $type));
     }
 
-    public function testSimulateFailureDoesNothingWhenPassAString()
+    /**
+     * @dataProvider  mixedDataTypesToValidate
+     *
+     * @param string  $value
+     * @param Type    $type
+     * @param boolean $expected
+     */
+    public function testFailureWithData($value, Type $type, $expected)
     {
-        $this->typedCheck->simulateFailure([], new Array_());
+        if (! $expected) {
+            // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
+            $this->setExpectedException(\PHPUnit_Framework_Error::class);
+        }
+
+        $this->typedCheck->simulateFailure(
+            [new stdClass()],
+            new Array_(new Object_(new Fqsen('\\' . stdClass::class)))
+        );
+
+        // @TODO assertion?
     }
 
     /**
@@ -83,11 +102,15 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypesToValidate()
     {
         return [
+            [['foo'],           new Array_(),                                               true],
             [['Marco Pivetta'], new Array_(new String_()),                                  true],
             [[1, 2, 4],         new Array_(new Integer()),                                  true],
             ['4',               new Array_(new Array_()),                                   false],
             [[['4']],           new Array_(new Array_()),                                   true],
+            [[[['4']]],         new Array_(new Array_(new Array_())),                       true],
+            [[['4']],           new Array_(new Array_(new Array_())),                       false],
             [new StdClass,      new Array_(new Object_(new Fqsen('\\' . StdClass::class))), false],
+            [[new StdClass],    new Array_(new Object_(new Fqsen('\\' . StdClass::class))), true],
             [123,               new Integer(),                                              false],
             [0x12,              new Integer(),                                              false],
             ['Marco Pivetta',   new String_(),                                              false],
@@ -106,7 +129,8 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
         return [
             [new Array_(new Array_()),                                   true],
             [new Array_(new Integer()),                                  true],
-            [new Array_(new Object_(new Fqsen('\\' . StdClass::class))), false],
+            [new Array_(new Object_(new Fqsen('\\' . StdClass::class))), true],
+            [new Array_(new Mixed()),                                    false],
             [new Integer(),                                              false],
             [new Object_(),                                              false],
             [new String_(),                                              false],
