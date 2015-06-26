@@ -2,6 +2,15 @@
 
 namespace StrictPhpTest\TypeChecker\TypeChecker;
 
+use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Callable_;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Mixed;
+use phpDocumentor\Reflection\Types\Null_;
+use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
 
 /**
@@ -32,10 +41,10 @@ class CallableTypeCheckerTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider mixedDataTypes
      *
-     * @param string  $type
+     * @param Type    $type
      * @param boolean $expected
      */
-    public function testTypeCanBeApplied($type, $expected)
+    public function testTypeCanBeApplied(Type $type, $expected)
     {
         $this->assertSame($expected, $this->callableCheck->canApplyToType($type));
     }
@@ -50,7 +59,7 @@ class CallableTypeCheckerTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfDataTypeIsValid($value, $expected)
     {
-        $this->assertSame($expected, $this->callableCheck->validate($value, null));
+        $this->assertSame($expected, $this->callableCheck->validate($value, new Callable_()));
     }
 
     /**
@@ -59,7 +68,7 @@ class CallableTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function testSimulateFailure()
     {
         $this->assertAttributeEmpty('failingCallback', $this->callableCheck);
-        $this->callableCheck->simulateFailure(function () {}, null);
+        $this->callableCheck->simulateFailure(function () {}, new Callable_());
         $this->assertAttributeNotEmpty('failingCallback', $this->callableCheck);
         $this->assertAttributeInternalType('callable', 'failingCallback', $this->callableCheck);
     }
@@ -91,16 +100,14 @@ class CallableTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypes()
     {
         return [
-            ['callable', true],
-            ['array',    false],
-            ['string',   false],
-            ['object',   false],
-            ['boolean',  false],
-            ['bool',     false],
-            ['integer',  false],
-            ['int',      false],
-            ['null',     false],
-            ['mixed',    false],
+            [new Callable_(), true],
+            [new Array_(),    false],
+            [new String_(),   false],
+            [new Object_(),   false],
+            [new Boolean(),   false],
+            [new Integer(),   false],
+            [new Null_(),     false],
+            [new Mixed(),     false],
         ];
     }
 }
