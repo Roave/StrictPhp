@@ -22,6 +22,8 @@ use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::simulateFailure
  */
 class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,8 +41,6 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers       \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::canApplyToType
-     *
      * @dataProvider mixedDataTypes
      *
      * @param Type    $type
@@ -52,8 +52,6 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers        \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::validate
-     *
      * @dataProvider  mixedDataTypesToValidate
      *
      * @param string  $value
@@ -65,9 +63,6 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $this->objectTypeCheck->validate($value, $type));
     }
 
-    /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::simulateFailure
-     */
     public function testSimulateFailureRaisesExceptionWhenPassingAnArray()
     {
         // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
@@ -76,9 +71,6 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
         $this->objectTypeCheck->simulateFailure([], new Object_(new Fqsen('\\' . StdClass::class)));
     }
 
-    /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::simulateFailure
-     */
     public function testSimulateFailureRaisesExceptionWhenNotPassAString()
     {
         // catching the exception raised by PHPUnit by converting a fatal into an exception (in the error handler)
@@ -87,15 +79,19 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
         $this->objectTypeCheck->simulateFailure('Marco Pivetta', new Object_(new Fqsen('\\' . StdClass::class)));
     }
 
-    /**
-     * @covers \StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::simulateFailure
-     */
     public function testSimulateFailureDoesNothingWhenPassAString()
     {
         $this->objectTypeCheck->simulateFailure(new StdClass, new Object_(new Fqsen('\\' . StdClass::class)));
         $this->objectTypeCheck->simulateFailure(new DateTime, new Object_(new Fqsen('\\' . DateTime::class)));
 
         // @TODO add assertions here
+    }
+
+    public function testWillNotSimulateFailureWithInvalidType()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->objectTypeCheck->simulateFailure('foo', new Array_());
     }
 
     /**
