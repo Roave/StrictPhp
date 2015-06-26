@@ -92,6 +92,7 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
             ['/** @var \StdClass[] */', ['\StdClass[]']],
             ['/** @var \StdClass|null|array */', ['\StdClass', 'null', 'array']],
             ['/** @var \StdClass|AnotherClass */', ['\StdClass', '\AnotherClass']],
+            ['/** @var \My\Collection|\Some\Thing[] */', ['\My\Collection', '\Some\Thing[]']],
             ['/** @var mixed */', ['mixed']],
         ];
     }
