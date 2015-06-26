@@ -99,6 +99,13 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
         // @TODO assertion?
     }
 
+    public function testRejectsValidationOfInvalidType()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+
+        $this->typedCheck->validate('foo', new String_());
+    }
+
     /**
      * @return mixed[][] - mixed data type
      *                   - name of class to tests against
