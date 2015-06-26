@@ -30,3 +30,72 @@ After installing `StrictPhp`, point it at the directory to be checked at runtime
 
 StrictPhp will then intercept any runtime operations that are considered "illegal"
 and throw an exception or a catchable fatal error.
+
+## Features
+
+`StrictPhp` currently supports following features:
+
+#### Per-property type checks
+
+This feature will prevent your application from assigning illegal values to
+properties that are type-hinted (via docblock) differently. As an example,
+consider following class:
+
+```php
+class Example
+{
+    /**
+     * @var int|null
+     */
+    public $integer;
+}
+```
+
+Following code will work:
+
+```php
+$object = new Example();
+
+$object->integer = 123;
+```
+
+Following code will crash:
+
+```php
+$object = new Example();
+
+$object->integer = '123';
+```
+
+Please note that this kind of feature currently only works with public and 
+protected properties.
+
+#### immutable properties
+
+This feature will prevent your application from overwriting object properties
+that are marked as `@immutable`. As an example, consider following class:
+
+```php
+class Example
+{
+    /**
+     * @immutable
+     */
+    public $immutableProperty;
+}
+```
+
+Following code will crash:
+
+```php
+$object = new Example();
+
+$object->immutableProperty = 'a value';
+
+echo 'Works till here!';
+
+$object->immutableProperty = 'another value'; // crash
+```
+
+Please note that this kind of feature currently only works with public and 
+protected properties.
