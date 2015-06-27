@@ -8,6 +8,7 @@ use StrictPhp\AccessChecker\ObjectStateChecker;
 use StrictPhp\AccessChecker\PropertyWriteImmutabilityChecker;
 use StrictPhp\AccessChecker\PropertyWriteTypeChecker;
 use StrictPhp\Aspect\PostConstructAspect;
+use StrictPhp\Aspect\PrePublicMethodAspect;
 use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
 use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
@@ -47,5 +48,6 @@ class StrictPhpKernel extends AspectKernel
             new ApplyTypeChecks(...$typeCheckers),
             new PropertyTypeFinder()
         )));
+        $container->registerAspect(new PrePublicMethodAspect());
     }
 }
