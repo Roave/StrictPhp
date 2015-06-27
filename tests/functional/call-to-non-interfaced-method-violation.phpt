@@ -18,4 +18,4 @@ echo 'Never reached'
 
 ?>
 --EXPECTF--
-%ACatchable fatal error: call to undefined method ...
+%AFatal error: Uncaught exception 'InterNations\Component\TypeJail\Exception\JailException' with message 'Jailed method "%a::otherMethod()" invoked on proxy restricted to "StrictPhpTestAsset\HelloInterface". Check file "%a" to find out which method calls are allowed%a
