@@ -7,6 +7,7 @@ use Go\Aop\Intercept\ConstructorInvocation;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation as Go;
 use ReflectionProperty;
+use StrictPhp\Reflection\AllProperties;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
 use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
@@ -38,10 +39,8 @@ class PostConstructStateCheck implements Aspect
 
                 $this->checkProperty($property, $property->getValue($that));
             },
-            $constructorInvocation
-                ->getMethod()
-                ->getDeclaringClass()
-                ->getProperties()
+            (new AllProperties())
+                ->__invoke($constructorInvocation->getMethod()->getDeclaringClass())
         );
 
         return $constructorInvocation->proceed();
