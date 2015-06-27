@@ -18,7 +18,7 @@ class Sushi
 
 In this way, `StrictPhp` knows that we can only set a **float** value for the `Sushi#price` property.
 
-Let's try setting a integer value.
+Let's try setting a float value.
 
 ```php
 $sushi = new Sushi;
