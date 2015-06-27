@@ -44,10 +44,9 @@ This is the most basic functionality of `StrictPhp`
 
 ## Working with collections
 
-`StrictPhp` provide a way to work strictly with a collection of elements.
+`StrictPhp` provide a way to work strictly with a collection of a data type.
 
-We can have a collection declaring a type and the array symbol after type, as `string[]`, we can have multi array levels
-expressed as `string[][]` and soon.
+We can have a collection of a type marking the property with something like `string[]`, also we can have more levels `string[][]` and soon.
 
 ```php
 /**
@@ -56,8 +55,8 @@ expressed as `string[][]` and soon.
 public $invoice;
 ```
 
-This declare a collection of `Invoice`. If any element on the array assigned to `$invoice` is not a instance of `Invoice`,
-it's will raise an `Exception`.
+This can receive *only* a collection of `Invoice` objects. If any element on the array assigned to `$invoice` is not an
+instance of `Invoice` we will get an `Exception`.
 
 ## Supported annotation types
 
