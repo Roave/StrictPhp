@@ -1,6 +1,6 @@
 # Immutability
 
-We also provided a `@immutable` annotation, which works pretty much a constant, ideal to use on values objects, not mutable.
+We also provided a `@immutable` annotation, which works pretty much as constant, ideal to use on values objects, not mutable.
 
 A property marked as immutable can receive a value only a single time. The value can never be overwritten.
 
