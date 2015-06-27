@@ -2,12 +2,9 @@
 
 namespace StrictPhpTest\Aspect;
 
-use Go\Aop\Intercept\FieldAccess;
 use phpDocumentor\Reflection\Types\Object_;
 use ReflectionProperty;
 use StrictPhp\AccessChecker\ObjectStateChecker;
-use StrictPhp\AccessChecker\PropertyWriteTypeChecker;
-use StrictPhpTestAsset\ClassWithGenericArrayTypedProperty;
 use StrictPhpTestAsset\ClassWithIncorrectlyInitializedParentClassProperties;
 use StrictPhpTestAsset\ParentClassWithInitializingConstructor;
 
