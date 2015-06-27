@@ -72,7 +72,7 @@ class PostConstructStateCheck implements Aspect
             new TypedTraversableChecker(...$baseCheckers),
             ...$baseCheckers
         ))->__invoke(
-            (new PropertyTypeFinder())->__invoke($property),
+            (new PropertyTypeFinder())->__invoke($property, $property->getDeclaringClass()->getName()),
             $value
         );
     }
