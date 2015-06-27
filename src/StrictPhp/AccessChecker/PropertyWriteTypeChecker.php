@@ -10,6 +10,7 @@ use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\NullTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
@@ -40,6 +41,7 @@ final class PropertyWriteTypeChecker
             new GenericObjectTypeChecker(),
             new ObjectTypeChecker(),
             new MixedTypeChecker(),
+            new NullTypeChecker(),
         ];
 
         (new ApplyTypeChecks(
