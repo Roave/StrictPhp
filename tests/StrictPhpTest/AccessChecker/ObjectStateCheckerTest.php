@@ -66,4 +66,33 @@ class ObjectStateCheckerTest extends \PHPUnit_Framework_TestCase
             ClassWithIncorrectlyInitializedParentClassProperties::class
         );
     }
+
+    public function testAppliesTypeChecksToAllObjectPropertiesOfTheGivenRestrictedScope()
+    {
+        /* @var $applyTypeChecks callable|\PHPUnit_Framework_MockObject_MockObject */
+        $applyTypeChecks = $this->getMock('stdClass', ['__invoke']);
+        /* @var $findTypes callable|\PHPUnit_Framework_MockObject_MockObject */
+        $findTypes       = $this->getMock('stdClass', ['__invoke']);
+        $objectType      = new Object_();
+        $checker         = new ObjectStateChecker($applyTypeChecks, $findTypes);
+
+        // note: null because the child class is not calling the parent constructor!
+        $applyTypeChecks->expects($this->once())->method('__invoke')->with([$objectType], null);
+        $findTypes
+            ->expects($this->once())
+            ->method('__invoke')
+            ->with(
+                $this->callback(function (ReflectionProperty $property) {
+                    return ParentClassWithInitializingConstructor::class === $property->getDeclaringClass()->getName();
+                }),
+                ParentClassWithInitializingConstructor::class
+            )
+            ->will($this->returnValue([$objectType]));
+
+        // we are only checking the properties in the scope of the parent class
+        $checker->__invoke(
+            new ClassWithIncorrectlyInitializedParentClassProperties(),
+            ParentClassWithInitializingConstructor::class
+        );
+    }
 }
