@@ -4,10 +4,12 @@ To bootstrap `StrictPhp`, we initialize the `StrictPhp\StrictPhpKernel` singleto
 
 ```php
 \StrictPhp\StrictPhpKernel::getInstance()->init([
-    'debug'        => true,
-    'cacheDir'     => sys_get_temp_dir(),
+    'debug'        => true, // Use 'false' for production mode
+    'cacheDir'     => sys_get_temp_dir(), // Adjust this path if needed
     'includePaths' => [
-        __DIR__ . '/path/to/your/sources',
+        __DIR__ . '/path/to/your/sources', // Include paths restricts the directories
+                                           // where aspects should be applied, or empty
+                                           // for all source files
     ],
 ]);
 ```
