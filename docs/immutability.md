@@ -21,6 +21,7 @@ If the value of `Sushi::$price` is gonna be changed, we will get an exception.
 ```php
 $sushi = new Sushi;
 $sushi->price = 2.0;
+
 // Okay!
 
 $sushi->price = 1.9; // Exception is raised

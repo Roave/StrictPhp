@@ -42,6 +42,23 @@ Fatal error: Uncaught exception 'ErrorException' ...
 
 This is the most basic functionality of `StrictPhp`
 
+## Working with collections
+
+`StrictPhp` provide a way to work strictly with a collection of elements.
+
+We can have a collection declaring a type and the array symbol after type, as `string[]`, we can have multi array levels
+expressed as `string[][]` and soon.
+
+```php
+/**
+ * @var Invoice[]
+ */
+public $invoice;
+```
+
+This declare a collection of `Invoice`. If any element on the array assigned to `$invoice` is not a instance of `Invoice`,
+it's will raise an `Exception`.
+
 ## Supported annotation types
 
 - null
