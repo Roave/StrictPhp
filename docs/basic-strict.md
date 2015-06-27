@@ -71,7 +71,6 @@ it's will raise an `Exception`.
 - object
 - self
 - static
-- self
 - *Class|Interfaces names*
 - `[]` - *collection*
 
