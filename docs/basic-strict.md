@@ -42,4 +42,20 @@ Fatal error: Uncaught exception 'ErrorException' ...
 
 This is the most basic functionality of `StrictPhp`
 
-Great!
+## Supported annotation types
+
+- null
+- int|integer
+- mixed
+- float
+- string
+- array
+- callable
+- object
+- self
+- static
+- self
+- *Class|Interfaces names*
+- `[]` - *collection*
+
+**Next step:** [Immutability](immutability.md)
