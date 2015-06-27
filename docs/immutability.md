@@ -1,29 +1,10 @@
 # Immutability
 
-We also provided a `@immutable` annotation, who works pretty much a constant, ideal to use on values objects, not mutable.
+We also provided a `@immutable` annotation, which works pretty much a constant, ideal to use on values objects, not mutable.
 
-A property setted as immutable can receive a value only a single time. Your value never can be changed.
+A property marked as immutable can receive a value only a single time. The value can never be overwritten.
 
-The following code...
-
-```php
-class Sushi
-{
-    private $price;
-
-    public function __construct($price)
-    {
-        $this->price = $price;
-    }
-
-    public function getPrice()
-    {
-        return $this->price;
-    }
-}
-```
-
-Can be expressed using `StrictPhp` as th follow:
+A simple value object can be expressed using `StrictPhp` as the follow:
 
 ```php
 class Sushi
@@ -33,4 +14,15 @@ class Sushi
      */
     public $price;
 }
+```
+
+If the value of `Sushi::$price` is gonna be changed, we will get an exception.
+
+```php
+$sushi = new Sushi;
+$sushi->price = 2.0;
+// Okay!
+
+$sushi->price = 1.9; // Exception is raised
+
 ```
