@@ -2,9 +2,9 @@
 
 With a configured bootstrap, we use annotations on the properties to make your app operate in strict mode.
 
-The `StrictPhp` uses compatible with the PhpDocumentor annotation. Then you probably should be familiar with them.
+`StrictPhp` uses PhpDocumentor compatible annotations.
 
-Take a look at following class.
+Take a look at the following class.
 
 ```php
 class Sushi
@@ -16,9 +16,9 @@ class Sushi
 }
 ```
 
-In that way, `StrictPhp` knows we can only set a **float** value for the `Sushi#price` property.
+In this way, `StrictPhp` knows that we can only set a **float** value for the `Sushi#price` property.
 
-Let's try set a integer value.
+Let's try setting a integer value.
 
 ```php
 $sushi = new Sushi;
