@@ -9,11 +9,6 @@ use StrictPhp\TypeChecker\TypeCheckerInterface;
 final class IntegerTypeChecker implements TypeCheckerInterface
 {
     /**
-     * @var string[]
-     */
-    private static $allowedTypes = ['int', 'integer'];
-
-    /**
      * {@inheritDoc}
      */
     public function canApplyToType(Type $type)

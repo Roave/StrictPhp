@@ -3,7 +3,6 @@
 namespace StrictPhp\TypeChecker\TypeChecker;
 
 use phpDocumentor\Reflection\Type;
-use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Mixed;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 

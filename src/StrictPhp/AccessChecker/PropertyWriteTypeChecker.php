@@ -5,7 +5,6 @@ namespace StrictPhp\AccessChecker;
 use Go\Aop\Intercept\FieldAccess;
 use Go\Lang\Annotation as Go;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
-use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;

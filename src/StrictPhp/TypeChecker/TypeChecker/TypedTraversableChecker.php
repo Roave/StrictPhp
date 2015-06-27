@@ -51,6 +51,7 @@ final class TypedTraversableChecker implements TypeCheckerInterface
      * {@inheritDoc}
      *
      * @throws \InvalidArgumentException
+     * @throws \ErrorException
      */
     public function simulateFailure($value, Type $type)
     {
