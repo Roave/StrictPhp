@@ -19,9 +19,8 @@ use StrictPhp\TypeFinder\PropertyTypeFinder;
 
 class PostConstructStateCheck implements Aspect
 {
-    //* @Go\After("initialization(**)")
     /**
-     * @Go\After("execution(public|protected|private **->__construct(*))")
+     * @Go\After("execution(public **->__construct(*))")
      *
      * @param MethodInvocation $constructorInvocation
      *
