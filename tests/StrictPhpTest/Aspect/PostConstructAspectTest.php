@@ -2,10 +2,8 @@
 
 namespace StrictPhpTest\Aspect;
 
-use Go\Aop\Intercept\FieldAccess;
 use Go\Aop\Intercept\MethodInvocation;
 use StrictPhp\Aspect\PostConstructAspect;
-use StrictPhp\Aspect\PropertyWriteAspect;
 
 /**
  * Tests for {@see \StrictPhp\Aspect\PostConstructAspect}
