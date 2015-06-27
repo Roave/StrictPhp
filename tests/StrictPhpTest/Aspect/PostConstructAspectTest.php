@@ -3,6 +3,7 @@
 namespace StrictPhpTest\Aspect;
 
 use Go\Aop\Intercept\MethodInvocation;
+use ReflectionMethod;
 use StrictPhp\Aspect\PostConstructAspect;
 
 /**
@@ -45,10 +46,15 @@ class PostConstructAspectTest extends \PHPUnit_Framework_TestCase
 
         $this->methodInvocation->expects($this->once())->method('proceed')->will($this->returnValue('done'));
         $this->methodInvocation->expects($this->any())->method('getThis')->will($this->returnValue($object));
+        $this
+            ->methodInvocation
+            ->expects($this->any())
+            ->method('getMethod')
+            ->will($this->returnValue(new ReflectionMethod(__CLASS__, __FUNCTION__)));
 
 
         foreach ($this->callables as $callable) {
-            $callable->expects($this->once())->method('__invoke')->with($object);
+            $callable->expects($this->once())->method('__invoke')->with($object, __CLASS__);
         }
 
         $this->assertSame(
@@ -63,12 +69,17 @@ class PostConstructAspectTest extends \PHPUnit_Framework_TestCase
 
         $this->methodInvocation->expects($this->never())->method('proceed')->will($this->returnValue('done'));
         $this->methodInvocation->expects($this->any())->method('getThis')->will($this->returnValue($object));
+        $this
+            ->methodInvocation
+            ->expects($this->any())
+            ->method('getMethod')
+            ->will($this->returnValue(new ReflectionMethod(__CLASS__, __FUNCTION__)));
 
         foreach ($this->callables as $callable) {
             $callable
                 ->expects($this->any())
                 ->method('__invoke')
-                ->with($object)
+                ->with($object, __CLASS__)
                 ->will($this->throwException(new \Exception()));
         }
 

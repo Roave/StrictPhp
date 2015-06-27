@@ -30,7 +30,8 @@ final class ObjectStateChecker
     }
 
     /**
-     * @param $object
+     * @param object $object
+     * @param string $scope  scope of the state checks
      *
      * @return void
      *
@@ -38,7 +39,7 @@ final class ObjectStateChecker
      * @throws \Exception
      * @throws \ErrorException
      */
-    public function __invoke($object)
+    public function __invoke($object, $scope)
     {
         if (! is_object($object)) {
             throw new \InvalidArgumentException(sprintf(
@@ -53,7 +54,7 @@ final class ObjectStateChecker
 
                 $this->checkProperty($property, $property->getValue($object));
             },
-            (new AllProperties())->__invoke(new ReflectionClass($object))
+            (new AllProperties())->__invoke(new ReflectionClass($scope))
         );
     }
 

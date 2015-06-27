@@ -32,11 +32,12 @@ final class PostConstructAspect implements Aspect
      */
     public function postConstruct(MethodInvocation $constructorInvocation)
     {
-        $that = $constructorInvocation->getThis();
+        $that  = $constructorInvocation->getThis();
+        $scope = $constructorInvocation->getMethod()->getDeclaringClass()->getName();
 
         array_map(
-            function (callable $checker) use ($that) {
-                $checker($that);
+            function (callable $checker) use ($that, $scope) {
+                $checker($that, $scope);
             },
             $this->stateCheckers
         );

@@ -26,7 +26,7 @@ class ObjectStateCheckerTest extends \PHPUnit_Framework_TestCase
 
         $this->setExpectedException(\InvalidArgumentException::class);
 
-        $checker->__invoke('not an object');
+        $checker->__invoke('not an object', __CLASS__);
     }
 
     public function testAppliesTypeChecksToAllObjectProperties()
@@ -61,6 +61,9 @@ class ObjectStateCheckerTest extends \PHPUnit_Framework_TestCase
             )
             ->will($this->returnValue([$objectType]));
 
-        $checker->__invoke(new ClassWithIncorrectlyInitializedParentClassProperties());
+        $checker->__invoke(
+            new ClassWithIncorrectlyInitializedParentClassProperties(),
+            ClassWithIncorrectlyInitializedParentClassProperties::class
+        );
     }
 }
