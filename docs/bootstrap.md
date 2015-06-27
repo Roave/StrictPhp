@@ -1,7 +1,6 @@
-# Being Strict
+# Enabling StrictPhp
 
-Start being strict is very easy, at first we just need to configure an instance of `\StrictPhp\StrictPhpKernel`
-configured properly.
+To bootstrap `StrictPhp`, we initialize the `StrictPhp\StrictPhpKernel` singleton:
 
 ```php
 \StrictPhp\StrictPhpKernel::getInstance()->init([
@@ -13,7 +12,6 @@ configured properly.
 ]);
 ```
 
-More details about the options settings that can be passed to the `init` can be seen in the documentation of the
-[Go! AOP Framework](https://github.com/lisachenko/go-aop-php)
+More supported configuration keys can be found in the [Go! AOP PHP documentation](http://go.aopphp.com/docs/initial-configuration)
 
-It's all you need to start being Strict!
+**Next step:** [Basic strict property typing](basic-strict.md)

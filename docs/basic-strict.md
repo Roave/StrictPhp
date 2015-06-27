@@ -40,6 +40,6 @@ We will get an exception:
 Fatal error: Uncaught exception 'ErrorException' ...
 ```
 
-You're using the most basic common functionality of `StrictPhp`.
+This is the most basic functionality of `StrictPhp`
 
 Great!
