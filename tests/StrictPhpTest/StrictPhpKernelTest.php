@@ -2,6 +2,7 @@
 
 namespace StrictPhpTest;
 
+use StrictPhp\Aspect\PostConstructAspect;
 use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\StrictPhpKernel;
 
@@ -30,5 +31,6 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
 
         $container = $strictPhp->getContainer();
         $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
+        $this->assertInstanceOf(PostConstructAspect::class, $container->getAspect(PostConstructAspect::class));
     }
 }
