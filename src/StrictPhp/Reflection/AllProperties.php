@@ -17,7 +17,7 @@ final class AllProperties
         return array_merge(
             [],
             [],
-            ...array_map([$this, 'allProperties'], $this->allHierarchyClasses($class))
+            ...array_map([$this, 'propertiesOfClass'], $this->allHierarchyClasses($class))
         );
     }
 
@@ -26,7 +26,7 @@ final class AllProperties
      *
      * @return ReflectionProperty[]
      */
-    private function allProperties(ReflectionClass $class)
+    private function propertiesOfClass(ReflectionClass $class)
     {
         $className = $class->getName();
 
