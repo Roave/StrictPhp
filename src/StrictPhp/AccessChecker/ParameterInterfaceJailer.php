@@ -52,7 +52,7 @@ final class ParameterInterfaceJailer
                 continue;
             }
 
-            if (! $interface = $this->getParameterInterfaceType($method, $parameterIndex)) {
+            if (! $interface = $this->getParameterInterfaceType($parameterIndex, $method)) {
                 continue;
             }
 
@@ -61,14 +61,14 @@ final class ParameterInterfaceJailer
     }
 
     /**
-     * @param ReflectionMethod $reflectionMethod
-     * @param int              $index
+     * @param int                   $index
+     * @param ReflectionMethod|null $reflectionMethod
      *
      * @return ReflectionParameter
      */
-    private function getParameterInterfaceType(ReflectionMethod $reflectionMethod, $index)
+    private function getParameterInterfaceType($index, ReflectionMethod $reflectionMethod = null)
     {
-        $parameters = $reflectionMethod->getParameters();
+        $parameters = $reflectionMethod ? $reflectionMethod->getParameters() : [];
 
         if (isset($parameters[$index])) {
             return $this->getInterface($parameters[$index]);
