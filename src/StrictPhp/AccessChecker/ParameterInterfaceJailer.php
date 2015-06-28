@@ -40,13 +40,12 @@ final class ParameterInterfaceJailer
     {
         $method    = $methodInvocation->getMethod();
         $arguments = & Closure::bind(
-                function & (AbstractMethodInvocation $methodInvocation) {
-                    return $methodInvocation->arguments;
-                },
-                null,
-                AbstractMethodInvocation::class
-            )
-            ->__invoke($methodInvocation);
+            function & (AbstractMethodInvocation $methodInvocation) {
+                return $methodInvocation->arguments;
+            },
+            null,
+            AbstractMethodInvocation::class
+        )->__invoke($methodInvocation);
 
         foreach ($arguments as $parameterIndex => & $argument) {
             if (null === $argument) {
