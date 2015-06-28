@@ -22,7 +22,7 @@
     "minimum-stability": "dev",
     "require": {
         "php":                               "~5.6|~7.0",
-        "lisachenko/go-aop-php":             "0.6.*",
+        "lisachenko/go-aop-php":             "~1.0.0@ALPHA",
         "phpdocumentor/reflection-docblock": "~2.0",
         "phpdocumentor/type-resolver":       "dev-master",
         "internations/type-jail":            "0.4.*"
