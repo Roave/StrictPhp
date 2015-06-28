@@ -13,8 +13,16 @@ into PHP applications and libraries.
 composer require roave/strict-php
 ```
 
-Please note that the current version has unstable dependencies. We will get rid
-of those as we approach `1.0.0`.
+Please note that the current version has unstable dependencies.
+
+In order to install those dependencies, you can set `"minimum-stability"` in
+your `composer.json`:
+
+```json
+{
+    "minimum-stability": "dev"
+}
+```
 
 ## Usage
 
