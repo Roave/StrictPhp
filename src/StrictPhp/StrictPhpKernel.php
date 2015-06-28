@@ -50,8 +50,6 @@ class StrictPhpKernel extends AspectKernel
             new ApplyTypeChecks(...$typeCheckers),
             new PropertyTypeFinder()
         )));
-        $container->registerAspect(new PrePublicMethodAspect(
-            [new ParameterInterfaceJailer(new JailFactory()), 'jail']
-        ));
+        $container->registerAspect(new PrePublicMethodAspect(new ParameterInterfaceJailer(new JailFactory())));
     }
 }
