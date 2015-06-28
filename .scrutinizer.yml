@@ -4,6 +4,7 @@ before_commands:
 tools:
     external_code_coverage:
         timeout: 600
+        runs: 1
     php_code_coverage:
         enabled: true
     php_code_sniffer:
