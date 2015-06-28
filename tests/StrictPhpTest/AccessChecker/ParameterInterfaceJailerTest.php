@@ -40,13 +40,6 @@ class ParameterInterfaceJailerTest extends \PHPUnit_Framework_TestCase
         $this->jailer      = new ParameterInterfaceJailer($this->jailFactory);
     }
 
-    public function testProceedIsDisabled()
-    {
-        $this->setExpectedException(\BadMethodCallException::class);
-
-        $this->jailer->proceed();
-    }
-
     /**
      * @dataProvider jailExpectationParameters
      *
@@ -76,7 +69,9 @@ class ParameterInterfaceJailerTest extends \PHPUnit_Framework_TestCase
                 return $expectedJails[array_search($value, $parameters, true)];
             }));
 
-        $this->jailer->jail($methodInvocation);
+        $jailer = $this->jailer;
+
+        $jailer($methodInvocation);
 
         $jailedParameters = $parameters;
 
