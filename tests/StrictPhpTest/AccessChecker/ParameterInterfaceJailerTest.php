@@ -82,6 +82,26 @@ class ParameterInterfaceJailerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($jailedParameters, $invocationArgs->getValue($methodInvocation));
     }
 
+    public function testWillSkipWhenReflectionMethodIsUnavailable()
+    {
+        $parameters       = [new \stdClass(), new \stdClass()];
+        /* @var $methodInvocation AbstractMethodInvocation|\PHPUnit_Framework_MockObject_MockObject */
+        $methodInvocation = $this->getMockForAbstractClass(AbstractMethodInvocation::class, [], '', false);
+        $invocationArgs   = new ReflectionProperty(AbstractMethodInvocation::class, 'arguments');
+
+        $invocationArgs->setAccessible(true);
+        $invocationArgs->setValue($methodInvocation, $parameters);
+
+        $this
+            ->jailFactory
+            ->expects($this->never())
+            ->method('createInstanceJail');
+
+        $this->jailer->__invoke($methodInvocation);
+
+        $this->assertSame($parameters, $invocationArgs->getValue($methodInvocation));
+    }
+
     /**
      * Data provider
      *
