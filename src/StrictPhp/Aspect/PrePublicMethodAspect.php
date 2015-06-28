@@ -3,27 +3,26 @@
 namespace StrictPhp\Aspect;
 
 use Go\Aop\Aspect;
-use Go\Lang\Annotation as Go;
 use Go\Aop\Framework\AbstractMethodInvocation;
-use InterNations\Component\TypeJail\Factory\JailFactory;
+use Go\Lang\Annotation as Go;
 
 final class PrePublicMethodAspect implements Aspect
 {
     /**
      * @var callable[]
      */
-    private $stateCheckers;
+    private $interceptors;
 
     /**
      * @param callable ...$stateCheckers
      */
-    public function __construct(callable ...$stateCheckers)
+    public function __construct(callable ...$interceptors)
     {
-        $this->stateCheckers = $stateCheckers;
+        $this->interceptors = $interceptors;
     }
 
     /**
-     * @Go\Before("execution(public **->*(*))", scope=AbstractMethodInvocation::class)
+     * @Go\Before("execution(public **->*(*))")
      *
      * @param AbstractMethodInvocation $methodInvocation
      *
@@ -31,24 +30,8 @@ final class PrePublicMethodAspect implements Aspect
      */
     public function prePublicMethod(AbstractMethodInvocation $methodInvocation)
     {
-        // following line is executed in the scope of AbstractMethodInvocation
-        $arguments = & $methodInvocation->arguments; // UNSAFE
-
-        foreach ($methodInvocation->getMethod()->getParameters() as $parameterIndex => $parameter) {
-            if (! $class = $parameter->getClass()) {
-                continue;
-            }
-
-            if (null === $arguments[$parameterIndex] && $parameter->isOptional()) {
-                continue;
-            }
-
-            if (! $class->isInterface()) {
-                continue;
-            }
-
-            $arguments[$parameterIndex] = (new JailFactory())
-                ->createInstanceJail($arguments[$parameterIndex], $class->getName());
+        foreach ($this->interceptors as $interceptor) {
+            $interceptor($methodInvocation);
         }
 
         return $methodInvocation->proceed();
