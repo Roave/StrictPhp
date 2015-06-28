@@ -65,6 +65,7 @@ final class TypedTraversableChecker implements TypeCheckerInterface
 
         if (! $value instanceof \Traversable) {
             $callback = function (array $value) {
+                return $value;
             };
 
             $callback($value);
