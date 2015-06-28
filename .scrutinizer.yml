@@ -37,7 +37,7 @@ tools:
     php_analyzer:
         enabled: true
         filter:
-            paths: ["src/*", "tests/*"]
+            paths: ["src/*", "tests/StrictPhpTest/*"]
     php_hhvm:
         enabled: true
         filter:
