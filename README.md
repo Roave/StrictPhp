@@ -1,5 +1,9 @@
 # StrictPhp
 
+[![Build Status](https://travis-ci.org/Roave/StrictPhp.svg)](https://travis-ci.org/Roave/StrictPhp)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/StrictPhp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/StrictPhp/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/Roave/StrictPhp/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/StrictPhp/?branch=master)
+
 StrictPhp is a development tool aimed at bringing stricter runtime assertions
 into PHP applications and libraries.
 
@@ -103,7 +107,7 @@ $object->immutableProperty = 'another value'; // crash
 Please note that this kind of feature currently only works with public and 
 protected properties.
 
-## Public constructor property initialization checks
+#### Public constructor property initialization checks
 
 This feature of StrictPhp allows checking whether a public constructor of
 a class fully initialized an object.
@@ -143,6 +147,52 @@ class Example
 }
 ```
 
+#### Parameter interface jailing
+
+This feature of StrictPhp "jails" (restricts) calls to non-interfaced methods
+whenever an interface is used as a type-hint.
+
+Following example will work, but will crash if StrictPhp is enabled:
+
+```php
+interface HornInterface
+{
+    public function honk();
+}
+
+class TheUsualHorn implements HornInterface
+{
+    public function honk() { var_dump('honk'); }
+    public function sadTrombone() { var_dump('pooapooapooapoaaaa'); }
+}
+
+class Car
+{
+    public function honk(HornInterface $horn, $sad = false)
+    {
+        if ($sad) {
+            // method not covered by interface: crash
+            $horn->sadTrombone();
+            
+            return;
+        }
+        
+        // interface respected
+        $horn->honk();
+    }
+}
+```
+
+```php
+$car  = new Car();
+$horn = new TheUsualHorn();
+
+$car->honk($horn, false); // works
+$car->honk($horn, true); // crashes
+```
+
+This prevents consumers of your APIs to design their code against non-API methods.
+
 ## Current limitations
 
 This package uses [voodoo magic](http://ocramius.github.io/voodoo-php/) to 
@@ -150,6 +200,9 @@ operate, specifically [go-aop-php](https://github.com/lisachenko/go-aop-php).
 
 Go AOP PHP has some limitations when it comes to intercepting access to
 private class members, so please be aware that it has limited scope (for now).
+
+This package only works against autoloaded classes: classes that aren't handled by
+an autoloader cannot be rectified by StrictPhp.
 
 ## License
 

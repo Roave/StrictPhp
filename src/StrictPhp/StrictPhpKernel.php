@@ -4,10 +4,13 @@ namespace StrictPhp;
 
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
+use InterNations\Component\TypeJail\Factory\JailFactory;
 use StrictPhp\AccessChecker\ObjectStateChecker;
+use StrictPhp\AccessChecker\ParameterInterfaceJailer;
 use StrictPhp\AccessChecker\PropertyWriteImmutabilityChecker;
 use StrictPhp\AccessChecker\PropertyWriteTypeChecker;
 use StrictPhp\Aspect\PostConstructAspect;
+use StrictPhp\Aspect\PrePublicMethodAspect;
 use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
 use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
@@ -47,5 +50,6 @@ class StrictPhpKernel extends AspectKernel
             new ApplyTypeChecks(...$typeCheckers),
             new PropertyTypeFinder()
         )));
+        $container->registerAspect(new PrePublicMethodAspect(new ParameterInterfaceJailer(new JailFactory())));
     }
 }
