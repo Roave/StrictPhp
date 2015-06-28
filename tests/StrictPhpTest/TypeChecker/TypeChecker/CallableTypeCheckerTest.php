@@ -68,7 +68,11 @@ class CallableTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function testSimulateFailure()
     {
         $this->assertAttributeEmpty('failingCallback', $this->callableCheck);
-        $this->callableCheck->simulateFailure(function () {}, new Callable_());
+        $this->callableCheck->simulateFailure(
+            function () {
+            },
+            new Callable_()
+        );
         $this->assertAttributeNotEmpty('failingCallback', $this->callableCheck);
         $this->assertAttributeInternalType('callable', 'failingCallback', $this->callableCheck);
     }
