@@ -11,10 +11,6 @@ use InterNations\Component\TypeJail\Factory\JailFactoryInterface;
 use ReflectionMethod;
 use ReflectionParameter;
 
-/**
- * Note: this class extends {@see \Go\Aop\Framework\AbstractMethodInvocation}
- * just to have access to its protected members without too many scope hacks
- */
 final class ParameterInterfaceJailer
 {
     /**
