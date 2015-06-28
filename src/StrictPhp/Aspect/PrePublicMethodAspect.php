@@ -29,7 +29,7 @@ final class PrePublicMethodAspect implements Aspect
      *
      * @return mixed
      */
-    public function postConstruct(AbstractMethodInvocation $methodInvocation)
+    public function prePublicMethod(AbstractMethodInvocation $methodInvocation)
     {
         // following line is executed in the scope of AbstractMethodInvocation
         $arguments = & $methodInvocation->arguments; // UNSAFE
