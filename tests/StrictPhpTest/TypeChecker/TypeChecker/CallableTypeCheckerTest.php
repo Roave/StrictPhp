@@ -85,7 +85,11 @@ class CallableTypeCheckerTest extends \PHPUnit_Framework_TestCase
     public function mixedDataTypesToValidate()
     {
         return [
-            [function () {},  true],
+            [
+                function () {
+                },
+                true
+            ],
             [[],              false],
             [new \StdClass,   false],
             [true,            false],
