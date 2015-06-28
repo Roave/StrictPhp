@@ -1,5 +1,7 @@
 # StrictPhp
 
+[![Build Status](https://travis-ci.org/Roave/StrictPhp.svg)](https://travis-ci.org/Roave/StrictPhp)
+
 StrictPhp is a development tool aimed at bringing stricter runtime assertions
 into PHP applications and libraries.
 
