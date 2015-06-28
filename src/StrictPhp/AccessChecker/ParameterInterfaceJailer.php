@@ -2,6 +2,7 @@
 
 namespace StrictPhp\AccessChecker;
 
+use Closure;
 use Go\Aop\Framework\AbstractMethodInvocation;
 use Go\Lang\Annotation as Go;
 use InterNations\Component\TypeJail\Exception\ExceptionInterface;
@@ -14,7 +15,7 @@ use ReflectionParameter;
  * Note: this class extends {@see \Go\Aop\Framework\AbstractMethodInvocation}
  * just to have access to its protected members without too many scope hacks
  */
-final class ParameterInterfaceJailer extends AbstractMethodInvocation
+final class ParameterInterfaceJailer
 {
     /**
      * @var JailFactoryInterface
@@ -27,8 +28,6 @@ final class ParameterInterfaceJailer extends AbstractMethodInvocation
     public function __construct(JailFactoryInterface $jailFactory)
     {
         $this->jailFactory = $jailFactory;
-
-        //parent::__construct(__CLASS__, __METHOD__, []);
     }
 
     /**
@@ -41,11 +40,19 @@ final class ParameterInterfaceJailer extends AbstractMethodInvocation
      * @throws ExceptionInterface
      * @throws HierarchyException
      */
-    public function jail(AbstractMethodInvocation $methodInvocation)
+    public function __invoke(AbstractMethodInvocation $methodInvocation)
     {
-        $method = $methodInvocation->getMethod();
+        $method    = $methodInvocation->getMethod();
+        $arguments = & Closure::bind(
+                function & (AbstractMethodInvocation $methodInvocation) {
+                    return $methodInvocation->arguments;
+                },
+                null,
+                AbstractMethodInvocation::class
+            )
+            ->__invoke($methodInvocation);
 
-        foreach ($methodInvocation->arguments as $parameterIndex => & $argument) {
+        foreach ($arguments as $parameterIndex => & $argument) {
             if (null === $argument) {
                 continue;
             }
@@ -91,17 +98,5 @@ final class ParameterInterfaceJailer extends AbstractMethodInvocation
             && $class->isInterface()
             ? $class->getName()
             : null;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Note: method implemented just to please the abstract definition, but not supposed to be called directly
-     *
-     * @throws \BadMethodCallException
-     */
-    public function proceed()
-    {
-        throw new \BadMethodCallException('Unsupported - this class is a scope hack, not supposed to be used directly');
     }
 }
