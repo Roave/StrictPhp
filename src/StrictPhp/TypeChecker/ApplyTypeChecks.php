@@ -42,16 +42,22 @@ final class ApplyTypeChecks
 
         $applicableCheckers = array_filter(
             $validCheckers,
-            function (array $typeChecker) use ($value) {
-                /* @var $typeChecker TypeCheckerInterface[]|Type[] */
-                return $typeChecker[0]->validate($value, $typeChecker[1]);
+            function (array $typeCheckerData) use ($value) {
+                /* @var $checker TypeCheckerInterface */
+                /* @var $type Type */
+                list($checker, $type) = $typeCheckerData;
+
+                return $checker->validate($value, $type);
             }
         );
 
         array_map(
-            function (array $typeChecker) use ($value) {
-                /* @var $typeChecker TypeCheckerInterface[]|Type[] */
-                $typeChecker[0]->simulateFailure($value, $typeChecker[1]);
+            function (array $typeCheckerData) use ($value) {
+                /* @var $checker TypeCheckerInterface */
+                /* @var $type Type */
+                list($checker, $type) = $typeCheckerData;
+
+                $checker->simulateFailure($value, $type);
             },
             $applicableCheckers ?: $validCheckers
         );
