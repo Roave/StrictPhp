@@ -177,7 +177,9 @@ class Car
         $horn->honk();
     }
 }
+```
 
+```php
 $car  = new Car();
 $horn = new TheUsualHorn();
 
