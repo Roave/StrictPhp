@@ -23,7 +23,7 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
     {
         $strictPhp = StrictPhpKernel::getInstance();
         $strictPhp->init([
-            'cacheDir' => realpath(__DIR__ . '/../..') . '/go-cache/',
+            'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
             'includePaths' => [
                 __DIR__,
             ],
