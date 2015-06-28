@@ -1,6 +1,8 @@
 # StrictPhp
 
 [![Build Status](https://travis-ci.org/Roave/StrictPhp.svg)](https://travis-ci.org/Roave/StrictPhp)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Roave/StrictPhp/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Roave/StrictPhp/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/Roave/StrictPhp/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Roave/StrictPhp/?branch=master)
 
 StrictPhp is a development tool aimed at bringing stricter runtime assertions
 into PHP applications and libraries.
