@@ -10,7 +10,7 @@ into PHP applications and libraries.
 ## Installation
 
 ```sh
-composer require roave/strict-php
+$ composer require roave/strict-php
 ```
 
 Please note that the current version has unstable dependencies.
