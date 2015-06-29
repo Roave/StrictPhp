@@ -30,7 +30,7 @@ final class PrePublicMethodAspect implements Aspect
     private $interceptors;
 
     /**
-     * @param callable ...$stateCheckers
+     * @param callable ...$interceptors
      */
     public function __construct(callable ...$interceptors)
     {
