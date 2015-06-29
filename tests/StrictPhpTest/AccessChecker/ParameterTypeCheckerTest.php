@@ -60,9 +60,12 @@ class ParameterTypeCheckerTest extends \PHPUnit_Framework_TestCase
         /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $propertyTwo */
         $propertyTwo = $this->getMockBuilder(ReflectionProperty::class)->disableOriginalConstructor()->getMock();
 
+        $propertyOne->expects($this->once())->method('getName')->willReturn('parameterOne');
+        $propertyTwo->expects($this->once())->method('getName')->willReturn('parameterTwo');
+
         $properties = [
-            $propertyOne->expects($this->once())->method('getName')->willReturn('parameterOne'),
-            $propertyTwo->expects($this->once())->method('getName')->willReturn('parameterTwo'),
+            $propertyOne,
+            $propertyTwo,
         ];
 
         $reflectionMethod->expects($this->once())->method('getNamespaceName')->willReturn('Application');
