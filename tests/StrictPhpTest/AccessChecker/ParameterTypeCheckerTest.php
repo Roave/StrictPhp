@@ -24,14 +24,14 @@ use StrictPhp\AccessChecker\ParameterTypeChecker;
 use Go\Aop\Intercept\MethodInvocation;
 
 /**
- * Tests for {@see \StrictPhp\AccessChecker\ParameterTypeCheckerTest}
+ * Tests for {@see \StrictPhp\AccessChecker\ParameterTypeChecker}
  *
  * @author Jefersson Nathan <malukenho@phpse.net>
  * @license MIT
  *
  * @group Coverage
  *
- * @covers \StrictPhp\AccessChecker\ParameterTypeCheckerTest
+ * @covers \StrictPhp\AccessChecker\ParameterTypeChecker
  */
 class ParameterTypeCheckerTest extends \PHPUnit_Framework_TestCase
 {
