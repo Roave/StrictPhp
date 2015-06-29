@@ -22,10 +22,10 @@ class ClassWithMultipleParamsTypedMethodAnnotation
 {
     /**
      * @param \stdClass[]|int[] $someParameter
-     * @param string[][]        $anotherParam
-     * @param boolean           $simpleParam
+     * @param string[][]        $anotherParameter
+     * @param boolean           $simpleParameter
      */
-    public function method(array $someParameter, array $anotherParam, $simpleParam)
+    public function method(array $someParameter, array $anotherParameter, $simpleParameter)
     {
     }
 }

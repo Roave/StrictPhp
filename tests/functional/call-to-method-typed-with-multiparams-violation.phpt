@@ -1,5 +1,5 @@
 --TEST--
-Verifies that calling a method with a typed array parameter annotation causes a fatal error
+Verifies that calling a method with a typed multiple array parameter annotation causes a fatal error
 --FILE--
 <?php
 
