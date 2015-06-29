@@ -1,5 +1,5 @@
 --TEST--
-Verifies that writing a non-object to an object-typed property causes a fatal error
+Verifies that writing a non-callable to an callable-typed property causes a fatal error
 --FILE--
 <?php
 
