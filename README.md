@@ -201,6 +201,47 @@ $car->honk($horn, true); // crashes
 
 This prevents consumers of your APIs to design their code against non-API methods.
 
+#### Parameter checking
+
+We also provide a way to check parameters type when call a method.
+
+```php
+final class PayInvoice
+{
+    /**
+     * @param InvoiceInterface $invoice
+     * @param float            $amountReceived
+     */
+    public function __invoke($invoice, $amountReceived)
+    {
+        // ...
+    }
+}
+
+(PayInvoice())->__invoke(Invoice::getInvoiceById(42), 23.30);
+```
+
+We can also check data types in a collection.
+
+```php
+final class PayMultipleInvoice
+{
+    /**
+     * @param InvoiceInterface[] $invoiceCollection
+     * @param float              $amountReceived
+     */
+    public function __invoke(array $invoiceCollection, $amountReceived)
+    {
+        // ...
+    }
+}
+
+(PayMultipleInvoice())->__invoke([$invoiceOne, $invoiceTwo], 123.30);
+```
+
+The `InvoiceInterface[]` mean that parameter `$invoiceCollection` should be a `array` of `InvoiceInterface` elements,
+if only one element on that array is not of this type, a `ErrorException` is raised.
+
 ## Current limitations
 
 This package uses [voodoo magic](http://ocramius.github.io/voodoo-php/) to 
