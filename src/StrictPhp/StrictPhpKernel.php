@@ -59,17 +59,19 @@ class StrictPhpKernel extends AspectKernel
 
         $typeCheckers[] = new TypedTraversableChecker(...$typeCheckers);
 
+        $applyTypeChecks = new ApplyTypeChecks(...$typeCheckers);
+
         $container->registerAspect(new PropertyWriteAspect(
             new PropertyWriteImmutabilityChecker(),
             new PropertyWriteTypeChecker()
         ));
         $container->registerAspect(new PostConstructAspect(new ObjectStateChecker(
-            new ApplyTypeChecks(...$typeCheckers),
+            $applyTypeChecks,
             new PropertyTypeFinder()
         )));
         $container->registerAspect(new PrePublicMethodAspect(
             new ParameterInterfaceJailer(new JailFactory()),
-            new ParameterTypeChecker()
+            new ParameterTypeChecker($applyTypeChecks)
         ));
     }
 }
