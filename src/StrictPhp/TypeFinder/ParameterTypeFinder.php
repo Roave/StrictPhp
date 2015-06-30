@@ -19,7 +19,7 @@
 namespace StrictPhp\TypeFinder;
 
 use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
+use phpDocumentor\Reflection\DocBlock\Tag\ParamTag;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
@@ -50,7 +50,7 @@ final class ParameterTypeFinder
                 [],
                 [],
                 ...array_map(
-                    function (VarTag $varTag) use ($typeResolver, $context) {
+                    function (ParamTag $varTag) use ($typeResolver, $context) {
                         return array_map(
                             function ($type) use ($typeResolver, $context) {
                                 return $typeResolver->resolve($type, $context);
@@ -91,7 +91,7 @@ final class ParameterTypeFinder
     /**
      * @param ReflectionParameter $reflectionParameter
      *
-     * @return DocBlock\Tag\ParamTag[]
+     * @return ParamTag[]
      */
     private function getParamTagsForParameter(ReflectionParameter $reflectionParameter)
     {
@@ -104,7 +104,7 @@ final class ParameterTypeFinder
                 new DocBlock\Context($reflectionParameter->getDeclaringClass()->getNamespaceName())
             ))
                 ->getTagsByName('param'),
-            function (DocBlock\Tag\ParamTag $paramTag) use ($parameterName) {
+            function (ParamTag $paramTag) use ($parameterName) {
                 return ltrim($paramTag->getVariableName(), '$') === $parameterName;
             }
         );
