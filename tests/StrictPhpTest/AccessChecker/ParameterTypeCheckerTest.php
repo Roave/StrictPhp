@@ -18,12 +18,13 @@
 
 namespace StrictPhpTest\Aspect;
 
+use Go\Aop\Intercept\MethodInvocation;
 use phpDocumentor\Reflection\Type;
+use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
 use ReflectionMethod;
-use ReflectionParameter;
 use stdClass;
 use StrictPhp\AccessChecker\ParameterTypeChecker;
-use Go\Aop\Intercept\MethodInvocation;
 use StrictPhpTestAsset\ClassWithMultipleParamsTypedMethodAnnotation;
 
 /**
@@ -74,15 +75,24 @@ class ParameterTypeCheckerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->exactly(2))
             ->method('__invoke')
             ->with(
-                // @todo stricter check here
-                $this->callback(function (array $types) {
-                    return (bool) array_map(
-                        function (Type $type) {
-                            return $type;
-                        },
-                        $types
-                    );
-                }),
+                $this->logicalOr(
+                    $this->callback(function (array $types) {
+                        return (bool) array_map(
+                            function (Type $type) {
+                                $this->assertInstanceOf(Array_::class, $type);
+                            },
+                            $types
+                        );
+                    }),
+                    $this->callback(function (array $types) {
+                        return (bool) array_map(
+                            function (Type $type) {
+                                $this->assertInstanceOf(Boolean::class, $type);
+                            },
+                            $types
+                        );
+                    })
+                ),
                 $this->logicalOr('foo', 'bar')
             );
 
