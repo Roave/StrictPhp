@@ -28,7 +28,6 @@ use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\Self_;
 use phpDocumentor\Reflection\Types\Static_;
 use ReflectionParameter;
-use ReflectionProperty;
 
 final class ParameterTypeFinder
 {
