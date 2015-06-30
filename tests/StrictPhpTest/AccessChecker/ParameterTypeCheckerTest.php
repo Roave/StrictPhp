@@ -18,10 +18,13 @@
 
 namespace StrictPhpTest\Aspect;
 
+use phpDocumentor\Reflection\Type;
 use ReflectionMethod;
-use ReflectionProperty;
+use ReflectionParameter;
+use stdClass;
 use StrictPhp\AccessChecker\ParameterTypeChecker;
 use Go\Aop\Intercept\MethodInvocation;
+use StrictPhpTestAsset\ClassWithMultipleParamsTypedMethodAnnotation;
 
 /**
  * Tests for {@see \StrictPhp\AccessChecker\ParameterTypeChecker}
@@ -41,11 +44,17 @@ class ParameterTypeCheckerTest extends \PHPUnit_Framework_TestCase
     private $parameterCheck;
 
     /**
+     * @var callable|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $applyTypeChecks;
+
+    /**
      * {@inheritDoc}
      */
     protected function setUp()
     {
-        $this->parameterCheck = new ParameterTypeChecker();
+        $this->applyTypeChecks = $this->getMock(stdClass::class, ['__invoke']);
+        $this->parameterCheck  = new ParameterTypeChecker($this->applyTypeChecks);
     }
 
     public function testParameterTypeChecker()
@@ -53,29 +62,30 @@ class ParameterTypeCheckerTest extends \PHPUnit_Framework_TestCase
         /** @var MethodInvocation|\PHPUnit_Framework_MockObject_MockObject $method */
         $method = $this->getMock(MethodInvocation::class);
 
-        /** @var ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject $reflectionMethod */
-        $reflectionMethod = $this->getMockBuilder(ReflectionMethod::class)->disableOriginalConstructor()->getMock();
-        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $propertyOne */
-        $propertyOne = $this->getMockBuilder(ReflectionProperty::class)->disableOriginalConstructor()->getMock();
-        /** @var ReflectionProperty|\PHPUnit_Framework_MockObject_MockObject $propertyTwo */
-        $propertyTwo = $this->getMockBuilder(ReflectionProperty::class)->disableOriginalConstructor()->getMock();
-
-        $propertyOne->expects($this->once())->method('getName')->willReturn('parameterOne');
-        $propertyTwo->expects($this->once())->method('getName')->willReturn('parameterTwo');
-
-        $properties = [
-            $propertyOne,
-            $propertyTwo,
-        ];
-
-        $reflectionMethod->expects($this->once())->method('getNamespaceName')->willReturn('Application');
-        $reflectionMethod->expects($this->once())->method('getParameters')->willReturn($properties);
-        $reflectionMethod->expects($this->once())->method('getDeclaringClass')->willReturnSelf();
+        $reflectionMethod = new ReflectionMethod(ClassWithMultipleParamsTypedMethodAnnotation::class, 'method');
 
         $method->expects($this->once())->method('getMethod')->willReturn($reflectionMethod);
-        $method->expects($this->once())->method('getArguments')->willReturn($properties);
+        $method->expects($this->once())->method('getArguments')->willReturn(['foo', 'bar']);
 
         $parameterCheck = $this->parameterCheck;
+
+        $this
+            ->applyTypeChecks
+            ->expects($this->exactly(2))
+            ->method('__invoke')
+            ->with(
+                // @todo stricter check here
+                $this->callback(function (array $types) {
+                    return (bool) array_map(
+                        function (Type $type) {
+                            return $type;
+                        },
+                        $types
+                    );
+                }),
+                $this->logicalOr('foo', 'bar')
+            );
+
         $parameterCheck($method);
     }
 }
