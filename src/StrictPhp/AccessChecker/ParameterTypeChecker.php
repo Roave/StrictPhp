@@ -23,19 +23,23 @@ use Go\Lang\Annotation as Go;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
 use ReflectionParameter;
-use StrictPhp\TypeChecker\ApplyTypeChecks;
-use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\NullTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
-use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
 
 final class ParameterTypeChecker
 {
+    /**
+     * @var callable
+     */
+    private $applyTypeChecks;
+
+    /**
+     * @param callable $applyTypeChecks
+     */
+    public function __construct(callable $applyTypeChecks)
+    {
+        $this->applyTypeChecks = $applyTypeChecks;
+    }
+
     /**
      * @param MethodInvocation $methodInvocation
      *
@@ -46,9 +50,10 @@ final class ParameterTypeChecker
     public function __invoke(MethodInvocation $methodInvocation)
     {
         $reflectionParameters = $methodInvocation->getMethod()->getParameters();
+        $applyTypeChecks      = $this->applyTypeChecks;
 
         foreach ($methodInvocation->getArguments() as $argumentIndex => $argument) {
-            $this->applyTypeChecks(
+            $applyTypeChecks(
                 $this->getParameterDocblockType(
                     get_class($methodInvocation->getThis()),
                     $reflectionParameters,
@@ -57,32 +62,6 @@ final class ParameterTypeChecker
                 $argument
             );
         }
-    }
-
-    /**
-     * @param Type[] $types
-     * @param mixed  $value
-     *
-     * @return void
-     *
-     * @throws \ErrorException
-     */
-    private function applyTypeChecks(array $types, $value)
-    {
-        $baseCheckers = [
-            new IntegerTypeChecker(),
-            new CallableTypeChecker(),
-            new StringTypeChecker(),
-            new GenericObjectTypeChecker(),
-            new ObjectTypeChecker(),
-            new MixedTypeChecker(),
-            new NullTypeChecker(),
-        ];
-
-        (new ApplyTypeChecks(
-            new TypedTraversableChecker(...$baseCheckers),
-            ...$baseCheckers
-        ))->__invoke($types, $value);
     }
 
     /**
