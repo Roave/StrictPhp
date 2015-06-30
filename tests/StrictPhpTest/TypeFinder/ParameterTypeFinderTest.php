@@ -23,6 +23,7 @@ use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
+use phpDocumentor\Reflection\Types\String_;
 use ReflectionClass;
 use ReflectionProperty;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
@@ -87,6 +88,15 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
                 [
                     new Array_(new Object_(new Fqsen('\\' . \stdClass::class))),
                     new Array_(new Integer()),
+                ],
+            ],
+            'method with nested string array type' => [
+                ClassWithMultipleParamsTypedMethodAnnotation::class,
+                'method',
+                1,
+                ClassWithMultipleParamsTypedMethodAnnotation::class,
+                [
+                    new Array_(new Array_(new String_())),
                 ],
             ],
         ];
