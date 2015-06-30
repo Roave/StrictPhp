@@ -25,16 +25,8 @@ use phpDocumentor\Reflection\Types\Boolean;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
-use ReflectionClass;
-use ReflectionProperty;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
-use StrictPhp\TypeFinder\PropertyTypeFinder;
-use StrictPhpTestAsset\ClassWithGenericNonTypedProperty;
-use StrictPhpTestAsset\ClassWithGenericStringTypedProperty;
 use StrictPhpTestAsset\ClassWithMultipleParamsTypedMethodAnnotation;
-use StrictPhpTestAsset\ClassWithSameTypedProperty;
-use StrictPhpTestAsset\ClassWithSelfTypedProperty;
-use StrictPhpTestAsset\ClassWithStaticTypedProperty;
 
 /**
  * Tests for {@see \StrictPhp\TypeFinder\ParameterTypeFinder}
