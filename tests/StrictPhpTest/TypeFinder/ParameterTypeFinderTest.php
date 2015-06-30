@@ -21,6 +21,7 @@ namespace StrictPhpTest\TypeFinder;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Boolean;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
@@ -97,6 +98,15 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
                 ClassWithMultipleParamsTypedMethodAnnotation::class,
                 [
                     new Array_(new Array_(new String_())),
+                ],
+            ],
+            'method with simple parameter' => [
+                ClassWithMultipleParamsTypedMethodAnnotation::class,
+                'method',
+                1,
+                ClassWithMultipleParamsTypedMethodAnnotation::class,
+                [
+                    new Boolean(),
                 ],
             ],
         ];
