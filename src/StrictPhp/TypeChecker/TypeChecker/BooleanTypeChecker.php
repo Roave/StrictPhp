@@ -20,7 +20,6 @@ namespace StrictPhp\TypeChecker\TypeChecker;
 
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Boolean;
-use phpDocumentor\Reflection\Types\Integer;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class BooleanTypeChecker implements TypeCheckerInterface
