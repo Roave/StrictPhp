@@ -64,11 +64,11 @@ class ReturnTypeFinderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider mixedAnnotationTypes
      *
-     * @param $class
-     * @param $methodName
-     * @param $params
+     * @param string  $class
+     * @param string  $methodName
+     * @param mixed[] $params
      */
-    public function testRetrievesMethodReturnTypes($class, $methodName, $params)
+    public function testRetrievesMethodReturnTypes($class, $methodName, array $params)
     {
         $reflectionMethod = (new \ReflectionMethod($class, $methodName));
 

@@ -69,7 +69,7 @@ final class ReturnTypeFinder
                             return $this->expandSelfAndStaticTypes($type, $methodInvocation->getMethod(), $contextClass);
                         },
                         array_map(
-                            function (Type $type) use ($typeResolver, $context) {
+                            function ($type) use ($typeResolver, $context) {
                                 return $typeResolver->resolve($type, $context);
                             },
                             $argument->getTypes()
