@@ -18,7 +18,7 @@
 
 namespace StrictPhp\TypeFinder;
 
-use Go\Aop\Framework\DynamicClosureSplatMethodInvocation;
+use Go\Aop\Framework\AbstractMethodInvocation;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\Fqsen;
@@ -50,12 +50,12 @@ final class ReturnTypeFinder
     }
 
     /**
-     * @param DynamicClosureSplatMethodInvocation $methodInvocation
+     * @param AbstractMethodInvocation $methodInvocation
      * @param $contextClass
      *
      * @return Type[]
      */
-    public function __invoke(DynamicClosureSplatMethodInvocation $methodInvocation, $contextClass)
+    public function __invoke(AbstractMethodInvocation $methodInvocation, $contextClass)
     {
         $reflectionMethod = $methodInvocation->getMethod();
 
