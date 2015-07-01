@@ -42,10 +42,8 @@ class ReturnTypeFinderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->finder = new ReturnTypeFinder(
-            function (array $type) {
-            }
-        );
+        $applyTypeChecks = $this->getMock(\stdClass::class, ['__invoke']);
+        $this->finder = new ReturnTypeFinder($applyTypeChecks);
     }
 
     /**
