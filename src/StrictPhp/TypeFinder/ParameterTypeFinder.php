@@ -59,7 +59,7 @@ final class ParameterTypeFinder
                             $varTag->getTypes()
                         );
                     },
-                $this->getParamTagsForParameter($reflectionParameter, $context)
+                    $this->getParamTagsForParameter($reflectionParameter, $context)
                 )
             )))
         );
