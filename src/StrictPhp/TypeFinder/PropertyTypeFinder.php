@@ -60,7 +60,7 @@ final class PropertyTypeFinder
                     },
                     (new DocBlock(
                         $reflectionProperty,
-                        new DocBlock\Context($reflectionProperty->getDeclaringClass()->getNamespaceName())
+                        new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
                     ))
                         ->getTagsByName('var')
                 )
