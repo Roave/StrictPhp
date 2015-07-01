@@ -1,5 +1,5 @@
 --TEST--
-Verifies return not-static compatible should raises a fatal error
+Verifies return not-static compatible should raise a fatal error
 --FILE--
 <?php
 

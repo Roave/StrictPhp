@@ -1,5 +1,5 @@
 --TEST--
-Verifies return not-object should raises a fatal error
+Verifies return not-object should raise a fatal error
 --FILE--
 <?php
 

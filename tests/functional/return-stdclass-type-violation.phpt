@@ -1,5 +1,5 @@
 --TEST--
-Verifies return not-string should raises a fatal error
+Verifies return not-string should raise a fatal error
 --FILE--
 <?php
 

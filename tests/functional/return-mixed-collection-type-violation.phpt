@@ -1,5 +1,5 @@
 --TEST--
-Verifies return not-boolean or string collection should raises a fatal error
+Verifies return not-boolean or string collection should raise a fatal error
 --FILE--
 <?php
 

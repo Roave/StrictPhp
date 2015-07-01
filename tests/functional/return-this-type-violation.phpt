@@ -1,5 +1,5 @@
 --TEST--
-Verifies return not-self compatible should raises a fatal error
+Verifies return not-self compatible should raise a fatal error
 --FILE--
 <?php
 
