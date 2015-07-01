@@ -20,6 +20,7 @@ namespace StrictPhp\TypeFinder;
 
 use Go\Aop\Framework\DynamicClosureSplatMethodInvocation;
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
@@ -27,8 +28,12 @@ use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\Self_;
 use phpDocumentor\Reflection\Types\Static_;
+use phpDocumentor\Reflection\Types\This;
 use ReflectionMethod;
 
+/**
+ * @author Jefersson Nathan <malukenho@phpse.net>
+ */
 final class ReturnTypeFinder
 {
     /**
@@ -46,37 +51,42 @@ final class ReturnTypeFinder
 
     /**
      * @param DynamicClosureSplatMethodInvocation $methodInvocation
+     * @param $contextClass
      *
      * @return Type[]
      */
-    public function __invoke(DynamicClosureSplatMethodInvocation $methodInvocation)
+    public function __invoke(DynamicClosureSplatMethodInvocation $methodInvocation, $contextClass)
     {
         $reflectionMethod = $methodInvocation->getMethod();
-        $return           = $methodInvocation->proceed();
-        $context          = (new ContextFactory())->createFromReflector($reflectionMethod);
-        $applyTypeChecks      = $this->applyTypeChecks;
+
         $typeResolver     = new TypeResolver();
+        $context          = (new ContextFactory())->createFromReflector($reflectionMethod);
 
-        $reflectionParameters = (new DocBlock(
-                        $reflectionMethod,
-                        new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
-                    ))
-                        ->getTagsByName('return');
+        return array_map(
+            function (Tag $argument) use ($typeResolver, $methodInvocation, $contextClass, $context) {
 
-        /** @var \phpDocumentor\Reflection\DocBlock\Tag\ReturnTag $argument */
-        foreach ($reflectionParameters as $argumentIndex => $argument) {
-            $type =  array_map(
-                function ($type) use ($typeResolver, $context, $argument) {
-                    return $typeResolver->resolve($type, $context);
-                },
-                $argument->getTypes()
-            );
+                $applyTypeChecks  = $this->applyTypeChecks;
 
-            $applyTypeChecks(
-                $type,
-                $return
-            );
-        }
+                $applyTypeChecks(array_map(
+                        function ($type) use ($typeResolver, $contextClass, $methodInvocation) {
+                            return $this->expandSelfAndStaticTypes($type, $methodInvocation->getMethod(), $contextClass);
+                        },
+                        array_map(
+                            function ($type) use ($typeResolver, $context) {
+                                return $typeResolver->resolve($type, $context);
+                            },
+                            $argument->getTypes()
+                        )
+                    ),
+                    $methodInvocation->proceed()
+                );
+            },
+            (new DocBlock(
+                $reflectionMethod,
+                new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
+            ))
+                ->getTagsByName('return')
+        );
     }
 
     /**
@@ -92,7 +102,7 @@ final class ReturnTypeFinder
      */
     private function expandSelfAndStaticTypes(Type $type, ReflectionMethod $reflectionMethod, $contextClass)
     {
-        if ($type instanceof Self_) {
+        if ($type instanceof Self_ || $type instanceof This) {
             return new Object_(new Fqsen('\\' . $reflectionMethod->getDeclaringClass()->getName()));
         }
 
