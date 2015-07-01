@@ -49,7 +49,7 @@ final class PostPublicMethodAspect implements Aspect
      */
     public function postPublicMethod(AbstractMethodInvocation $methodInvocation)
     {
-        $scope = $methodInvocation->getMethod()->getDeclaringClass()->getName();
+        $scope = get_class($methodInvocation->getThis());
 
         foreach ($this->interceptors as $interceptor) {
             $interceptor($methodInvocation, $scope);
