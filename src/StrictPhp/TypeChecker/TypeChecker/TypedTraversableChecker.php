@@ -20,6 +20,7 @@ namespace StrictPhp\TypeChecker\TypeChecker;
 
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Mixed;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class TypedTraversableChecker implements TypeCheckerInterface
@@ -79,15 +80,20 @@ final class TypedTraversableChecker implements TypeCheckerInterface
             ));
         }
 
+        $subType = $type->getValueType();
+
         if (! $value instanceof \Traversable) {
+
+            if (!is_array($value) && !$subType instanceof Mixed) {
+                return;
+            }
+
             $callback = function (array $value) {
                 return $value;
             };
 
             $callback($value);
         }
-
-        $subType = $type->getValueType();
 
         array_map(
             function (TypeCheckerInterface $typeChecker) use ($value, $subType) {
