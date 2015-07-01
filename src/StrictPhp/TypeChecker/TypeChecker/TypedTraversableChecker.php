@@ -20,6 +20,7 @@ namespace StrictPhp\TypeChecker\TypeChecker;
 
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
+use phpDocumentor\Reflection\Types\Mixed;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
 final class TypedTraversableChecker implements TypeCheckerInterface

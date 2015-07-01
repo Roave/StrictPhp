@@ -30,6 +30,7 @@ use StrictPhp\Aspect\PostConstructAspect;
 use StrictPhp\Aspect\PrePublicMethodAspect;
 use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
+use StrictPhp\TypeChecker\TypeChecker\BooleanTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\CallableTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\GenericObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
@@ -54,6 +55,7 @@ class StrictPhpKernel extends AspectKernel
             new GenericObjectTypeChecker(),
             new ObjectTypeChecker(),
             new MixedTypeChecker(),
+            new BooleanTypeChecker(),
             new NullTypeChecker(),
         ];
 
