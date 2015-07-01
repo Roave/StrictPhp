@@ -27,6 +27,8 @@ use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
 use StrictPhpTestAsset\ClassWithMethodWithNoHints;
+use StrictPhpTestAsset\ClassWithMethodWithSelfHint;
+use StrictPhpTestAsset\ClassWithMethodWithStaticHint;
 use StrictPhpTestAsset\ClassWithMultipleParamsTypedMethodAnnotation;
 
 /**
@@ -109,7 +111,25 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
                 ClassWithMethodWithNoHints::class,
                 [
                 ],
-            ]
+            ],
+            'method with self parameter hint and fake context class' => [
+                ClassWithMethodWithSelfHint::class,
+                'methodWithSelfHint',
+                0,
+                __CLASS__,
+                [
+                    new Object_(new Fqsen('\\' . ClassWithMethodWithSelfHint::class)),
+                ],
+            ],
+            'method with self parameter hint and real context class' => [
+                ClassWithMethodWithSelfHint::class,
+                'methodWithSelfHint',
+                0,
+                ClassWithMethodWithSelfHint::class,
+                [
+                    new Object_(new Fqsen('\\' . ClassWithMethodWithSelfHint::class)),
+                ],
+            ],
         ];
     }
 }
