@@ -130,6 +130,24 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
                     new Object_(new Fqsen('\\' . ClassWithMethodWithSelfHint::class)),
                 ],
             ],
+            'method with static parameter hint and fake context class' => [
+                ClassWithMethodWithStaticHint::class,
+                'methodWithStaticHint',
+                0,
+                __CLASS__,
+                [
+                    new Object_(new Fqsen('\\' . __CLASS__)),
+                ],
+            ],
+            'method with static parameter hint and real context class' => [
+                ClassWithMethodWithStaticHint::class,
+                'methodWithStaticHint',
+                0,
+                ClassWithMethodWithStaticHint::class,
+                [
+                    new Object_(new Fqsen('\\' . ClassWithMethodWithStaticHint::class)),
+                ],
+            ],
         ];
     }
 }
