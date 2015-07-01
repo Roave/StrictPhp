@@ -70,7 +70,6 @@ class ReturnTypeFinderTest extends \PHPUnit_Framework_TestCase
      */
     public function testRetrievesMethodReturnTypes($class, $methodName, $params)
     {
-        $finder = $this->finder;
         $reflectionMethod = (new \ReflectionMethod($class, $methodName));
 
         /** @var DynamicReflectionMethodInvocation|\PHPUnit_Framework_MockObject_MockObject $methodInvocation */
@@ -81,7 +80,8 @@ class ReturnTypeFinderTest extends \PHPUnit_Framework_TestCase
             $reflectionMethod->invoke(new ClassWithReturnTypeMethod(), $params)[0]
         );
 
-        $finder->__invoke($methodInvocation, $class);
+        $finder = $this->finder;
+        $finder($methodInvocation, $class);
     }
 
     /**
