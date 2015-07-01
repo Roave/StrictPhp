@@ -73,9 +73,13 @@ final class ParameterTypeChecker
      */
     private function getParameterDocblockType($contextClass, array $reflectionParameters, $index)
     {
-        // @TODO consider variadic arguments here
-
         if (! isset($reflectionParameters[$index])) {
+            /* @var $lastParameter \ReflectionParameter|bool */
+            if (($lastParameter = end($reflectionParameters)) && $lastParameter->isVariadic()) {
+                return (new ParameterTypeFinder())
+                    ->__invoke($lastParameter, $contextClass);
+            }
+
             return [];
         }
 
