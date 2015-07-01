@@ -60,7 +60,7 @@ final class ReturnTypeFinder
         $typeResolver     = new TypeResolver();
         $context          = (new ContextFactory())->createFromReflector($methodInvocation->getMethod());
 
-        return array_map(
+        array_map(
             function (Tag $argument) use ($typeResolver, $methodInvocation, $contextClass, $context) {
                 $applyTypeChecks  = $this->applyTypeChecks;
 
