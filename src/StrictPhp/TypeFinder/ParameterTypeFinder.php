@@ -23,6 +23,7 @@ use phpDocumentor\Reflection\DocBlock\Tag\ParamTag;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
+use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\Self_;
@@ -58,7 +59,7 @@ final class ParameterTypeFinder
                             $varTag->getTypes()
                         );
                     },
-                    $this->getParamTagsForParameter($reflectionParameter)
+                $this->getParamTagsForParameter($reflectionParameter, $context)
                 )
             )))
         );
@@ -90,10 +91,11 @@ final class ParameterTypeFinder
 
     /**
      * @param ReflectionParameter $reflectionParameter
+     * @param Context             $context
      *
      * @return ParamTag[]
      */
-    private function getParamTagsForParameter(ReflectionParameter $reflectionParameter)
+    private function getParamTagsForParameter(ReflectionParameter $reflectionParameter, Context $context)
     {
         $reflectionFunction = $reflectionParameter->getDeclaringFunction();
         $parameterName      = $reflectionParameter->getName();
@@ -101,7 +103,7 @@ final class ParameterTypeFinder
         return array_filter(
             (new DocBlock(
                 $reflectionFunction,
-                new DocBlock\Context($reflectionParameter->getDeclaringClass()->getNamespaceName())
+                new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
             ))
                 ->getTagsByName('param'),
             function (ParamTag $paramTag) use ($parameterName) {
