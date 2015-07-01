@@ -27,6 +27,7 @@ use StrictPhp\AccessChecker\ParameterTypeChecker;
 use StrictPhp\AccessChecker\PropertyWriteImmutabilityChecker;
 use StrictPhp\AccessChecker\PropertyWriteTypeChecker;
 use StrictPhp\Aspect\PostConstructAspect;
+use StrictPhp\Aspect\PostPublicMethodAspect;
 use StrictPhp\Aspect\PrePublicMethodAspect;
 use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\TypeChecker\ApplyTypeChecks;
@@ -40,6 +41,7 @@ use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
 use StrictPhp\TypeFinder\PropertyTypeFinder;
+use StrictPhp\TypeFinder\ReturnTypeFinder;
 
 class StrictPhpKernel extends AspectKernel
 {
@@ -74,6 +76,9 @@ class StrictPhpKernel extends AspectKernel
         $container->registerAspect(new PrePublicMethodAspect(
             new ParameterInterfaceJailer(new JailFactory()),
             new ParameterTypeChecker($applyTypeChecks)
+        ));
+        $container->registerAspect(new PostPublicMethodAspect(
+            new ReturnTypeFinder($applyTypeChecks)
         ));
     }
 }
