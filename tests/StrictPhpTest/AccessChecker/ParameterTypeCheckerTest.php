@@ -19,13 +19,17 @@
 namespace StrictPhpTest\Aspect;
 
 use Go\Aop\Intercept\MethodInvocation;
+use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Object_;
 use ReflectionMethod;
 use stdClass;
 use StrictPhp\AccessChecker\ParameterTypeChecker;
 use StrictPhpTestAsset\ClassWithMultipleParamsTypedMethodAnnotation;
+use StrictPhpTestAsset\ClassWithVariadicInterfaceParameters;
+use StrictPhpTestAsset\HelloInterface;
 
 /**
  * Tests for {@see \StrictPhp\AccessChecker\ParameterTypeChecker}
@@ -60,7 +64,7 @@ class ParameterTypeCheckerTest extends \PHPUnit_Framework_TestCase
 
     public function testParameterTypeChecker()
     {
-        /** @var MethodInvocation|\PHPUnit_Framework_MockObject_MockObject $method */
+        /* @var MethodInvocation|\PHPUnit_Framework_MockObject_MockObject $method */
         $method = $this->getMock(MethodInvocation::class);
 
         $reflectionMethod = new ReflectionMethod(ClassWithMultipleParamsTypedMethodAnnotation::class, 'method');
@@ -94,6 +98,35 @@ class ParameterTypeCheckerTest extends \PHPUnit_Framework_TestCase
                     })
                 ),
                 $this->logicalOr('foo', 'bar')
+            );
+
+        $parameterCheck($method);
+    }
+
+    public function testParameterTypeCheckerWithVariadicArgument()
+    {
+        /* @var MethodInvocation|\PHPUnit_Framework_MockObject_MockObject $method */
+        $method = $this->getMock(MethodInvocation::class);
+
+        $reflectionMethod = new ReflectionMethod(
+            ClassWithVariadicInterfaceParameters::class,
+            'methodWithParameterAndVariadicSingleParameter'
+        );
+
+        $method->expects($this->once())->method('getMethod')->willReturn($reflectionMethod);
+        $method->expects($this->once())->method('getArguments')->willReturn(['foo', 'bar', 'baz', 'tab']);
+
+        $parameterCheck = $this->parameterCheck;
+
+        $variadicType   = new Object_(new Fqsen('\\' . HelloInterface::class));
+
+        $this
+            ->applyTypeChecks
+            ->expects($this->exactly(4))
+            ->method('__invoke')
+            ->with(
+                $this->equalTo([$variadicType]),
+                $this->logicalOr('foo', 'bar', 'baz', 'tab')
             );
 
         $parameterCheck($method);
