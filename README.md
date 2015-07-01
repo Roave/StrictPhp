@@ -203,44 +203,28 @@ This prevents consumers of your APIs to design their code against non-API method
 
 #### Parameter checking
 
-We also provide a way to check parameters type when call a method.
+StrictPhp also provides a way to check parameters types in more detail during
+public method calls.
+
+Specifically, the following code will work in PHP
 
 ```php
-final class PayInvoice
+final class Invoice
 {
     /**
-     * @param InvoiceInterface $invoice
-     * @param float            $amountReceived
+     * @param LineItem[] $lineItems
      */
-    public function __invoke($invoice, $amountReceived)
+    public function __construct(array $lineItems)
     {
         // ...
     }
 }
 
-(PayInvoice())->__invoke(Invoice::getInvoiceById(42), 23.30);
+(new Invoice(['foo', 'bar']));
 ```
 
-We can also check data types in a collection.
-
-```php
-final class PayMultipleInvoice
-{
-    /**
-     * @param InvoiceInterface[] $invoiceCollection
-     * @param float              $amountReceived
-     */
-    public function __invoke(array $invoiceCollection, $amountReceived)
-    {
-        // ...
-    }
-}
-
-(PayMultipleInvoice())->__invoke([$invoiceOne, $invoiceTwo], 123.30);
-```
-
-The `InvoiceInterface[]` mean that parameter `$invoiceCollection` should be a `array` of `InvoiceInterface` elements,
-if only one element on that array is not of this type, a `ErrorException` is raised.
+But it will crash on StrictPhp due to the type mismatch in `$lineItems` (which
+should be a collection of `LineItem` objects instead).
 
 ## Current limitations
 
