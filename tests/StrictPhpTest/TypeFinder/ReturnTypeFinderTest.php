@@ -19,7 +19,6 @@
 namespace StrictPhpTest\TypeFinder;
 
 use Go\Aop\Framework\DynamicReflectionMethodInvocation;
-use StrictPhp\TypeChecker\ApplyTypeChecks;
 use StrictPhp\TypeChecker\TypeChecker;
 use StrictPhp\TypeFinder\ReturnTypeFinder;
 use StrictPhpTestAsset\ClassWithReturnTypeMethod;
@@ -43,17 +42,10 @@ class ReturnTypeFinderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $typeCheckers = [
-            new TypeChecker\StringTypeChecker(),
-            new TypeChecker\ObjectTypeChecker(),
-            new TypeChecker\BooleanTypeChecker(),
-        ];
-
-        $typeCheckers[] = new TypeChecker\TypedTraversableChecker(...$typeCheckers);
-
-        $applyTypeChecks = new ApplyTypeChecks(...$typeCheckers);
-
-        $this->finder = new ReturnTypeFinder($applyTypeChecks);
+        $this->finder = new ReturnTypeFinder(
+            function (array $type) {
+            }
+        );
     }
 
     /**
