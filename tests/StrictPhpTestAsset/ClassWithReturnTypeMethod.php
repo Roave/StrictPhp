@@ -51,4 +51,28 @@ final class ClassWithReturnTypeMethod
     {
         return $input;
     }
+
+    /**
+     * @return self
+     */
+    public function expectSelf($input)
+    {
+        return $input;
+    }
+
+    /**
+     * @return static
+     */
+    public function expectStatic($input)
+    {
+        return $input;
+    }
+
+    /**
+     * @return $this
+     */
+    public function expectThis($input)
+    {
+        return $input;
+    }
 }
