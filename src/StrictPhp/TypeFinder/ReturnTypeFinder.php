@@ -18,51 +18,65 @@
 
 namespace StrictPhp\TypeFinder;
 
+use Go\Aop\Framework\DynamicClosureSplatMethodInvocation;
 use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Tag\ParamTag;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
-use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\Self_;
 use phpDocumentor\Reflection\Types\Static_;
-use ReflectionParameter;
+use ReflectionMethod;
 
-final class ParameterTypeFinder
+final class ReturnTypeFinder
 {
     /**
-     * @param ReflectionParameter $reflectionParameter
-     * @param string              $contextClass
+     * @var callable
+     */
+    private $applyTypeChecks;
+
+    /**
+     * @param callable $applyTypeChecks
+     */
+    public function __construct(callable $applyTypeChecks)
+    {
+        $this->applyTypeChecks = $applyTypeChecks;
+    }
+
+    /**
+     * @param DynamicClosureSplatMethodInvocation $methodInvocation
      *
      * @return Type[]
      */
-    public function __invoke(ReflectionParameter $reflectionParameter, $contextClass)
+    public function __invoke(DynamicClosureSplatMethodInvocation $methodInvocation)
     {
-        $typeResolver = new TypeResolver();
-        $context      = (new ContextFactory())->createFromReflector($reflectionParameter);
+        $reflectionMethod = $methodInvocation->getMethod();
+        $return           = $methodInvocation->proceed();
+        $context          = (new ContextFactory())->createFromReflector($reflectionMethod);
+        $applyTypeChecks      = $this->applyTypeChecks;
+        $typeResolver     = new TypeResolver();
 
-        return array_map(
-            function (Type $type) use ($reflectionParameter, $contextClass) {
-                return $this->expandSelfAndStaticTypes($type, $reflectionParameter, $contextClass);
-            },
-            array_unique(array_filter(array_merge(
-                [],
-                [],
-                ...array_map(
-                    function (ParamTag $varTag) use ($typeResolver, $context) {
-                        return array_map(
-                            function ($type) use ($typeResolver, $context) {
-                                return $typeResolver->resolve($type, $context);
-                            },
-                            $varTag->getTypes()
-                        );
-                    },
-                    $this->getParamTagsForParameter($reflectionParameter, $context)
-                )
-            )))
-        );
+        $reflectionParameters = (new DocBlock(
+                        $reflectionMethod,
+                        new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
+                    ))
+                        ->getTagsByName('return');
+
+        /** @var \phpDocumentor\Reflection\DocBlock\Tag\ReturnTag $argument */
+        foreach ($reflectionParameters as $argumentIndex => $argument) {
+            $type =  array_map(
+                function ($type) use ($typeResolver, $context, $argument) {
+                    return $typeResolver->resolve($type, $context);
+                },
+                $argument->getTypes()
+            );
+
+            $applyTypeChecks(
+                $type,
+                $return
+            );
+        }
     }
 
     /**
@@ -70,16 +84,16 @@ final class ParameterTypeFinder
      *
      * @todo may be removed if PHPDocumentor provides a runtime version of the types VO
      *
-     * @param Type                $type
-     * @param ReflectionParameter $reflectionParameter
-     * @param string              $contextClass
+     * @param Type $type
+     * @param ReflectionMethod $reflectionMethod
+     * @param string $contextClass
      *
      * @return Type
      */
-    private function expandSelfAndStaticTypes(Type $type, ReflectionParameter $reflectionParameter, $contextClass)
+    private function expandSelfAndStaticTypes(Type $type, ReflectionMethod $reflectionMethod, $contextClass)
     {
         if ($type instanceof Self_) {
-            return new Object_(new Fqsen('\\' . $reflectionParameter->getDeclaringClass()->getName()));
+            return new Object_(new Fqsen('\\' . $reflectionMethod->getDeclaringClass()->getName()));
         }
 
         if ($type instanceof Static_) {
@@ -87,28 +101,5 @@ final class ParameterTypeFinder
         }
 
         return $type;
-    }
-
-    /**
-     * @param ReflectionParameter $reflectionParameter
-     * @param Context             $context
-     *
-     * @return ParamTag[]
-     */
-    private function getParamTagsForParameter(ReflectionParameter $reflectionParameter, Context $context)
-    {
-        $reflectionFunction = $reflectionParameter->getDeclaringFunction();
-        $parameterName      = $reflectionParameter->getName();
-
-        return array_filter(
-            (new DocBlock(
-                $reflectionFunction,
-                new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
-            ))
-                ->getTagsByName('param'),
-            function (ParamTag $paramTag) use ($parameterName) {
-                return ltrim($paramTag->getVariableName(), '$') === $parameterName;
-            }
-        );
     }
 }
