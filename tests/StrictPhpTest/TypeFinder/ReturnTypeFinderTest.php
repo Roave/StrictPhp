@@ -44,14 +44,9 @@ class ReturnTypeFinderTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $typeCheckers = [
-            new TypeChecker\IntegerTypeChecker(),
-            new TypeChecker\CallableTypeChecker(),
             new TypeChecker\StringTypeChecker(),
-            new TypeChecker\GenericObjectTypeChecker(),
             new TypeChecker\ObjectTypeChecker(),
-            new TypeChecker\MixedTypeChecker(),
             new TypeChecker\BooleanTypeChecker(),
-            new TypeChecker\NullTypeChecker(),
         ];
 
         $typeCheckers[] = new TypeChecker\TypedTraversableChecker(...$typeCheckers);
