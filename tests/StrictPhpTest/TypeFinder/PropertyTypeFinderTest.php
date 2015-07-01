@@ -139,8 +139,8 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
                 '',
                 ClassWithImportedHintClasses::class,
                 [
-                    '\\Some\Imported\ClassName',
-                    '\\Some\Imported\NamespaceName\AnotherClassName',
+                    '\\Some\\Imported\\ClassName',
+                    '\\Some\\Imported\\NamespaceName\\AnotherClassName',
                 ],
                 new ReflectionProperty(ClassWithImportedHintClasses::class, 'property'),
             ],

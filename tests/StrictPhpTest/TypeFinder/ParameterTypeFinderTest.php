@@ -155,8 +155,8 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
                 0,
                 ClassWithImportedHintClasses::class,
                 [
-                    new Object_(new Fqsen('\\Some\Imported\ClassName')),
-                    new Object_(new Fqsen('\\Some\Imported\NamespaceName\AnotherClassName')),
+                    new Object_(new Fqsen('\\Some\\Imported\\ClassName')),
+                    new Object_(new Fqsen('\\Some\\Imported\\NamespaceName\\AnotherClassName')),
                 ],
             ],
         ];
