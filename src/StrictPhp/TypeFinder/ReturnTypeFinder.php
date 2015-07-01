@@ -57,14 +57,11 @@ final class ReturnTypeFinder
      */
     public function __invoke(AbstractMethodInvocation $methodInvocation, $contextClass)
     {
-        $reflectionMethod = $methodInvocation->getMethod();
-
         $typeResolver     = new TypeResolver();
-        $context          = (new ContextFactory())->createFromReflector($reflectionMethod);
+        $context          = (new ContextFactory())->createFromReflector($methodInvocation->getMethod());
 
         return array_map(
             function (Tag $argument) use ($typeResolver, $methodInvocation, $contextClass, $context) {
-
                 $applyTypeChecks  = $this->applyTypeChecks;
 
                 $applyTypeChecks(array_map(
@@ -82,7 +79,7 @@ final class ReturnTypeFinder
                 );
             },
             (new DocBlock(
-                $reflectionMethod,
+                $methodInvocation->getMethod(),
                 new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
             ))
                 ->getTagsByName('return')
