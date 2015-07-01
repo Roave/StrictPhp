@@ -206,7 +206,7 @@ This prevents consumers of your APIs to design their code against non-API method
 StrictPhp also provides a way to check parameters types in more detail during
 public method calls.
 
-Specifically, the following code will work in PHP
+Specifically, the following code will work in PHP:
 
 ```php
 final class Invoice
@@ -220,10 +220,10 @@ final class Invoice
     }
 }
 
-(new Invoice(['foo', 'bar']));
+$invoice = new Invoice(['foo', 'bar']);
 ```
 
-But it will crash on StrictPhp due to the type mismatch in `$lineItems` (which
+This code will crash in StrictPhp due to the type mismatch in `$lineItems` (which
 should be a collection of `LineItem` objects instead).
 
 ## Current limitations
