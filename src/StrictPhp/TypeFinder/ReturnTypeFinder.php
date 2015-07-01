@@ -65,11 +65,11 @@ final class ReturnTypeFinder
                 $applyTypeChecks  = $this->applyTypeChecks;
 
                 $applyTypeChecks(array_map(
-                        function ($type) use ($typeResolver, $contextClass, $methodInvocation) {
+                        function (Type $type) use ($typeResolver, $contextClass, $methodInvocation) {
                             return $this->expandSelfAndStaticTypes($type, $methodInvocation->getMethod(), $contextClass);
                         },
                         array_map(
-                            function ($type) use ($typeResolver, $context) {
+                            function (Type $type) use ($typeResolver, $context) {
                                 return $typeResolver->resolve($type, $context);
                             },
                             $argument->getTypes()
