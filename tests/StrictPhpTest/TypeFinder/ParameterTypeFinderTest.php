@@ -26,6 +26,7 @@ use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
+use StrictPhpTestAsset\ClassWithMethodWithNoHints;
 use StrictPhpTestAsset\ClassWithMultipleParamsTypedMethodAnnotation;
 
 /**
@@ -95,12 +96,20 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
             'method with simple parameter' => [
                 ClassWithMultipleParamsTypedMethodAnnotation::class,
                 'method',
-                1,
+                2,
                 ClassWithMultipleParamsTypedMethodAnnotation::class,
                 [
                     new Boolean(),
                 ],
             ],
+            'method with non hinted parameter' => [
+                ClassWithMethodWithNoHints::class,
+                'methodWithNonHintedParameter',
+                0,
+                ClassWithMethodWithNoHints::class,
+                [
+                ],
+            ]
         ];
     }
 }
