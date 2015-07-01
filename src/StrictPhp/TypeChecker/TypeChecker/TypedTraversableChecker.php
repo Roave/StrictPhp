@@ -80,20 +80,15 @@ final class TypedTraversableChecker implements TypeCheckerInterface
             ));
         }
 
-        $subType = $type->getValueType();
-
         if (! $value instanceof \Traversable) {
-
-            if (!is_array($value) && !$subType instanceof Mixed) {
-                return;
-            }
-
             $callback = function (array $value) {
                 return $value;
             };
 
             $callback($value);
         }
+
+        $subType = $type->getValueType();
 
         array_map(
             function (TypeCheckerInterface $typeChecker) use ($value, $subType) {
