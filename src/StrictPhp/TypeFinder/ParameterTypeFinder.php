@@ -35,7 +35,7 @@ final class ParameterTypeFinder
      * @param ReflectionParameter $reflectionParameter
      * @param string              $contextClass
      *
-     * @return \phpDocumentor\Reflection\Type[]
+     * @return Type[]
      */
     public function __invoke(ReflectionParameter $reflectionParameter, $contextClass)
     {
