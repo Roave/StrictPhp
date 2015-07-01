@@ -26,6 +26,7 @@ use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
+use StrictPhpTestAsset\ClassWithImportedHintClasses;
 use StrictPhpTestAsset\ClassWithMethodWithNoHints;
 use StrictPhpTestAsset\ClassWithMethodWithSelfHint;
 use StrictPhpTestAsset\ClassWithMethodWithStaticHint;
@@ -146,6 +147,16 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
                 ClassWithMethodWithStaticHint::class,
                 [
                     new Object_(new Fqsen('\\' . ClassWithMethodWithStaticHint::class)),
+                ],
+            ],
+            'parameter with imported class hint' => [
+                ClassWithImportedHintClasses::class,
+                'method',
+                0,
+                ClassWithImportedHintClasses::class,
+                [
+                    new Object_(new Fqsen('\\Some\\Imported\\ClassName')),
+                    new Object_(new Fqsen('\\Some\\Imported\\NamespaceName\\AnotherClassName')),
                 ],
             ],
         ];

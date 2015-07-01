@@ -24,6 +24,7 @@ use ReflectionProperty;
 use StrictPhp\TypeFinder\PropertyTypeFinder;
 use StrictPhpTestAsset\ClassWithGenericNonTypedProperty;
 use StrictPhpTestAsset\ClassWithGenericStringTypedProperty;
+use StrictPhpTestAsset\ClassWithImportedHintClasses;
 use StrictPhpTestAsset\ClassWithSameTypedProperty;
 use StrictPhpTestAsset\ClassWithSelfTypedProperty;
 use StrictPhpTestAsset\ClassWithStaticTypedProperty;
@@ -133,6 +134,15 @@ class PropertyTypeFinderTest extends \PHPUnit_Framework_TestCase
                 ClassWithSameTypedProperty::class,
                 ['\\' . ClassWithSameTypedProperty::class],
                 new ReflectionProperty(ClassWithSameTypedProperty::class, 'property'),
+            ],
+            'property with imported class hint' => [
+                '',
+                ClassWithImportedHintClasses::class,
+                [
+                    '\\Some\\Imported\\ClassName',
+                    '\\Some\\Imported\\NamespaceName\\AnotherClassName',
+                ],
+                new ReflectionProperty(ClassWithImportedHintClasses::class, 'property'),
             ],
         ];
     }
