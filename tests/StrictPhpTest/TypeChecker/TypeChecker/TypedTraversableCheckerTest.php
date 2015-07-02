@@ -134,6 +134,7 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
         $array->expects($this->never())->method('getIterator');
 
         $this->typedCheck->validate($array, new Array_());
+        $this->typedCheck->simulateFailure($array, new Array_());
     }
 
     /**
