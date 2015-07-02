@@ -67,7 +67,7 @@ class ReturnTypeCheckerTest extends \PHPUnit_Framework_TestCase
 
         $reflectionMethod = new ReflectionMethod(ClassWithReturnTypeMethod::class, 'expectString');
 
-        $method->expects($this->once())->method('getMethod')->willReturn($reflectionMethod);
+        $method->expects($this->exactly(2))->method('getMethod')->willReturn($reflectionMethod);
 
         $parameterCheck = $this->parameterCheck;
 
@@ -96,7 +96,7 @@ class ReturnTypeCheckerTest extends \PHPUnit_Framework_TestCase
 
         $reflectionMethod = new ReflectionMethod(ClassWithReturnTypeMethod::class, 'expectMixedDataCollection');
 
-        $method->expects($this->once())->method('getMethod')->willReturn($reflectionMethod);
+        $method->expects($this->exactly(2))->method('getMethod')->willReturn($reflectionMethod);
 
         $expected = [
             new Array_(new Array_(new String_())),
