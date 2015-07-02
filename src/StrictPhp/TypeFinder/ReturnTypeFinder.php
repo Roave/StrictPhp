@@ -18,8 +18,6 @@
 
 namespace StrictPhp\TypeFinder;
 
-use Go\Aop\Framework\AbstractMethodInvocation;
-use Go\Aop\Support\AnnotatedReflectionMethod;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlock\Tag\ReturnTag;
