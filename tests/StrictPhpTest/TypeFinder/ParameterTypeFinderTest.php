@@ -26,6 +26,8 @@ use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
+use StrictPhpTestAsset\ClassHintingAgainstImportOfOwnNamespace;
+use StrictPhpTestAsset\ClassThatDependsOnHello;
 use StrictPhpTestAsset\ClassWithImportedHintClasses;
 use StrictPhpTestAsset\ClassWithMethodWithNoHints;
 use StrictPhpTestAsset\ClassWithMethodWithSelfHint;
@@ -157,6 +159,15 @@ class ParameterTypeFinderTest extends \PHPUnit_Framework_TestCase
                 [
                     new Object_(new Fqsen('\\Some\\Imported\\ClassName')),
                     new Object_(new Fqsen('\\Some\\Imported\\NamespaceName\\AnotherClassName')),
+                ],
+            ],
+            'parameter with imported namespace (partial name)' => [
+                ClassHintingAgainstImportOfOwnNamespace::class,
+                'method',
+                0,
+                ClassHintingAgainstImportOfOwnNamespace::class,
+                [
+                    new Object_(new Fqsen('\\' . ClassThatDependsOnHello::class)),
                 ],
             ],
         ];
