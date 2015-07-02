@@ -134,7 +134,7 @@ class ObjectTypeCheckerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [new StdClass,    new Object_(new Fqsen('\\' . StdClass::class)), true],
-            [new DateTime,    new Object_(new Fqsen('\\' . DateTime::class)), true],
+            [new DateTime,    new Object_(new Fqsen('\\NotActually\\DateTime')), false],
             [123,             new Object_(new Fqsen('\\' . StdClass::class)), false],
             [0x12,            new Object_(new Fqsen('\\' . StdClass::class)), false],
             ['Marco Pivetta', new Object_(new Fqsen('\\' . StdClass::class)), false],
