@@ -19,11 +19,14 @@
 namespace StrictPhp\TypeFinder;
 
 use Go\Aop\Framework\AbstractMethodInvocation;
+use Go\Aop\Support\AnnotatedReflectionMethod;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
+use phpDocumentor\Reflection\DocBlock\Tag\ReturnTag;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
+use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\Self_;
@@ -37,52 +40,34 @@ use ReflectionMethod;
 final class ReturnTypeFinder
 {
     /**
-     * @var callable
-     */
-    private $applyTypeChecks;
-
-    /**
-     * @param callable $applyTypeChecks
-     */
-    public function __construct(callable $applyTypeChecks)
-    {
-        $this->applyTypeChecks = $applyTypeChecks;
-    }
-
-    /**
-     * @param AbstractMethodInvocation $methodInvocation
+     * @param ReflectionMethod $reflectionMethod
      * @param $contextClass
-     *
-     * @return Type[]
+     * @return \phpDocumentor\Reflection\Type[]
      */
-    public function __invoke(AbstractMethodInvocation $methodInvocation, $contextClass)
+    public function __invoke(ReflectionMethod $reflectionMethod, $contextClass)
     {
-        $typeResolver     = new TypeResolver();
-        $context          = (new ContextFactory())->createFromReflector($methodInvocation->getMethod());
+        $typeResolver = new TypeResolver();
+        $context      = (new ContextFactory())->createFromReflector($reflectionMethod);
 
-        array_map(
-            function (Tag $argument) use ($typeResolver, $methodInvocation, $contextClass, $context) {
-                $applyTypeChecks  = $this->applyTypeChecks;
-
-                $applyTypeChecks(array_map(
-                        function (Type $type) use ($typeResolver, $contextClass, $methodInvocation) {
-                            return $this->expandSelfAndStaticTypes($type, $methodInvocation->getMethod(), $contextClass);
-                        },
-                        array_map(
+        return array_map(
+            function (Type $type) use ($reflectionMethod, $contextClass) {
+                return $this->expandSelfAndStaticTypes($type, $reflectionMethod, $contextClass);
+            },
+            array_unique(array_filter(array_merge(
+                [],
+                [],
+                ...array_map(
+                    function (ReturnTag $varTag) use ($typeResolver, $context) {
+                        return array_map(
                             function ($type) use ($typeResolver, $context) {
                                 return $typeResolver->resolve($type, $context);
                             },
-                            $argument->getTypes()
-                        )
-                    ),
-                    $methodInvocation->proceed()
-                );
-            },
-            (new DocBlock(
-                $methodInvocation->getMethod(),
-                new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
-            ))
-                ->getTagsByName('return')
+                            $varTag->getTypes()
+                        );
+                    },
+                    $this->getReturnTagForMethod($reflectionMethod, $context)
+                )
+            )))
         );
     }
 
@@ -91,9 +76,9 @@ final class ReturnTypeFinder
      *
      * @todo may be removed if PHPDocumentor provides a runtime version of the types VO
      *
-     * @param Type $type
+     * @param Type             $type
      * @param ReflectionMethod $reflectionMethod
-     * @param string $contextClass
+     * @param string           $contextClass
      *
      * @return Type
      */
@@ -108,5 +93,20 @@ final class ReturnTypeFinder
         }
 
         return $type;
+    }
+
+    /**
+     * @param ReflectionMethod $reflectionMethod
+     * @param Context          $context
+     *
+     * @return ReturnTag[]
+     */
+    private function getReturnTagForMethod(ReflectionMethod $reflectionMethod, Context $context)
+    {
+        return (new DocBlock(
+                $reflectionMethod,
+                new DocBlock\Context($context->getNamespace(), $context->getNamespaceAliases())
+            ))
+                ->getTagsByName('return');
     }
 }
