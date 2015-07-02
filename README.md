@@ -7,6 +7,11 @@
 StrictPhp is a development tool aimed at bringing stricter runtime assertions
 into PHP applications and libraries.
 
+## Authors
+
+- [Marco Pivetta](https://github.com/Ocramius)
+- [Jefersson Nathan](https://github.com/malukenho)
+
 ## Installation
 
 ```sh
@@ -129,7 +134,7 @@ class Example
      * @var array
      */
     private $arrayProperty;
-    
+
     public function __construct()
     {
     }
@@ -147,7 +152,7 @@ class Example
      * @var array
      */
     private $arrayProperty;
-    
+
     public function __construct()
     {
         $this->arrayProperty = ['initial status'];
@@ -181,10 +186,10 @@ class Car
         if ($sad) {
             // method not covered by interface: crash
             $horn->sadTrombone();
-            
+
             return;
         }
-        
+
         // interface respected
         $horn->honk();
     }
