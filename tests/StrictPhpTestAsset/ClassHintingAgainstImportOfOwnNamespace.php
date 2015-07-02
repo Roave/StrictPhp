@@ -20,10 +20,14 @@ namespace StrictPhpTestAsset;
 
 use StrictPhpTestAsset;
 
-class ClassHintingAgainstImportOfOwnNamespace {
+class ClassHintingAgainstImportOfOwnNamespace
+{
     /**
      * @param StrictPhpTestAsset\ClassThatDependsOnHello $value
+     *
+     * @return void
      */
-    public function method($value) {
+    public function method($value)
+    {
     }
 }
