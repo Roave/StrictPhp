@@ -19,7 +19,6 @@
 namespace StrictPhp\TypeFinder;
 
 use phpDocumentor\Reflection\DocBlock;
-use phpDocumentor\Reflection\DocBlock\Tag;
 use phpDocumentor\Reflection\DocBlock\Tag\ReturnTag;
 use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;

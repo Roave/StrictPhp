@@ -20,7 +20,6 @@ namespace StrictPhpTest\TypeFinder;
 
 use phpDocumentor\Reflection\Type;
 use ReflectionMethod;
-use StrictPhp\TypeChecker\TypeChecker;
 use StrictPhp\TypeFinder\ReturnTypeFinder;
 use StrictPhpTestAsset\ClassWithReturnTypeMethod;
 

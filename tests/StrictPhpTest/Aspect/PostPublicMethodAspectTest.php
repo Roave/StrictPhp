@@ -21,7 +21,6 @@ namespace StrictPhpTest\Aspect;
 use Go\Aop\Framework\AbstractMethodInvocation;
 use Go\Aop\Intercept\MethodInvocation;
 use StrictPhp\Aspect\PostPublicMethodAspect;
-use StrictPhp\Aspect\PrePublicMethodAspect;
 
 /**
  * Tests for {@see \StrictPhp\Aspect\PostPublicMethodAspect}
