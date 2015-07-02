@@ -49,7 +49,6 @@ final class ParameterTypeFinder
             },
             array_unique(array_filter(array_merge(
                 [],
-                [],
                 ...array_map(
                     function (ParamTag $varTag) use ($typeResolver, $context) {
                         return array_map(

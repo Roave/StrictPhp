@@ -48,7 +48,6 @@ final class PropertyTypeFinder
             },
             array_unique(array_filter(array_merge(
                 [],
-                [],
                 ...array_map(
                     function (VarTag $varTag) use ($typeResolver, $context) {
                         return array_map(

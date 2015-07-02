@@ -32,7 +32,6 @@ final class AllProperties
     {
         return array_merge(
             [],
-            [],
             ...array_map([$this, 'propertiesOfClass'], $this->allHierarchyClasses($class))
         );
     }
