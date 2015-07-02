@@ -63,10 +63,10 @@ final class ReturnTypeChecker
     }
 
     /**
-     * @param                  $contextClass
+     * @param string           $contextClass
      * @param ReflectionMethod $reflectionMethod
      *
-     * @return Type
+     * @return Type[]
      */
     private function getReturnDocblockType($contextClass, ReflectionMethod $reflectionMethod)
     {
