@@ -11,11 +11,11 @@ $object->expectThis($object);
 
 echo "OK1\n";
 
-$object->expectThis(new DateTime());
+$object->expectThis(new SplStack());
 
 echo "OK2\n";
 ?>
 --EXPECTF--
 OK1
 
-%Aatal error: Argument 1 passed to %aObjectTypeChecker%a must be an instance of StrictPhpTestAsset\ClassWithReturnTypeMethod%a instance of DateTime given%a
+%Aatal error: Argument 1 passed to %aObjectTypeChecker%a must be an instance of StrictPhpTestAsset\ClassWithReturnTypeMethod%a instance of SplStack given%a

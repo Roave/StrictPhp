@@ -11,7 +11,7 @@ $object->expectObject(new \StdClass);
 
 echo "OK1\n";
 
-$object->expectObject(new \DateTime());
+$object->expectObject(new \SplStack());
 
 echo "OK2\n";
 
