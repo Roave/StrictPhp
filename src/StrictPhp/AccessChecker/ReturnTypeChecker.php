@@ -54,7 +54,7 @@ final class ReturnTypeChecker
 
         $applyTypeChecks(
             $this->getReturnDocblockType(
-                get_class($methodInvocation->getThis()),
+                $methodInvocation->getMethod()->getDeclaringClass()->getName(),
                 $reflectionMethod
             ),
             $methodInvocation->proceed()
