@@ -80,24 +80,33 @@ final class TypedTraversableChecker implements TypeCheckerInterface
             ));
         }
 
-        if (! $value instanceof \Traversable) {
-            $callback = function (array $value) {
-                return $value;
-            };
+        if ($value instanceof \Traversable) {
+            // cannot traverse an iterator, as it may have multiple dangerous side-effects
 
-            $callback($value);
+            // @link https://github.com/Roave/StrictPhp/issues/16
+
+            return;
         }
 
-        $subType = $type->getValueType();
+        /* @var $value array */
+        $this->simulateFailuresOverArray($value, $type->getValueType());
+    }
 
-        array_map(
-            function (TypeCheckerInterface $typeChecker) use ($value, $subType) {
-                foreach ($value as $singleValue) {
-                    $typeChecker->simulateFailure($singleValue, $subType);
-                }
-            },
-            $this->getCheckersApplicableToType($subType)
-        );
+    /**
+     * @param array $value
+     * @param Type  $subType
+     *
+     * @return void
+     *
+     * @throws \ErrorException
+     */
+    private function simulateFailuresOverArray(array $value, Type $subType)
+    {
+        foreach ($this->getCheckersApplicableToType($subType) as $typeChecker) {
+            foreach ($value as $singleValue) {
+                $typeChecker->simulateFailure($singleValue, $subType);
+            }
+        }
     }
 
     /**
@@ -123,6 +132,10 @@ final class TypedTraversableChecker implements TypeCheckerInterface
      */
     private function getCheckersValidForType($values, Type $type)
     {
+        if ($values instanceof \Traversable) {
+            return [new MixedTypeChecker()];
+        }
+
         return array_filter(
             $this->getCheckersApplicableToType($type),
             function (TypeCheckerInterface $typeChecker) use ($values, $type) {
