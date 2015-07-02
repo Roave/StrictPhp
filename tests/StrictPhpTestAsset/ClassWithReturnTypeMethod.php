@@ -20,6 +20,11 @@ namespace StrictPhpTestAsset;
 
 final class ClassWithReturnTypeMethod
 {
+    public function noReturnTag($input)
+    {
+        return $input;
+    }
+
     /**
      * @return string
      */
