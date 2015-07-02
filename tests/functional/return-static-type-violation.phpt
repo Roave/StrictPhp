@@ -11,11 +11,11 @@ $object->expectStatic($object);
 
 echo "OK1\n";
 
-$object->expectStatic(new DateTime());
+$object->expectStatic(new SplStack());
 
 echo "OK2\n";
 ?>
 --EXPECTF--
 OK1
 
-%Aatal error: Argument 1 passed to %aObjectTypeChecker::{closure}() must be an instance of %aClassWithReturnTypeMethod%a instance of DateTime given%a
+%Aatal error: Argument 1 passed to %aObjectTypeChecker::{closure}() must be an instance of %aClassWithReturnTypeMethod%a instance of SplStack given%a

@@ -11,11 +11,11 @@ $object->expectStdClass(new \StdClass);
 
 echo "OK1\n";
 
-$object->expectStdClass(new DateTime());
+$object->expectStdClass(new SplStack());
 
 echo "OK2\n";
 ?>
 --EXPECTF--
 OK1
 
-%Aatal error: Argument 1 passed to StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::{closure}() must be an instance of stdClass, instance of DateTime given%a
+%Aatal error: Argument 1 passed to StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker::{closure}() must be an instance of stdClass, instance of SplStack given%a
