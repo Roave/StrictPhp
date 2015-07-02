@@ -18,7 +18,8 @@
 
 namespace StrictPhpTest\TypeFinder;
 
-use Go\Aop\Framework\DynamicReflectionMethodInvocation;
+use phpDocumentor\Reflection\Type;
+use ReflectionMethod;
 use StrictPhp\TypeChecker\TypeChecker;
 use StrictPhp\TypeFinder\ReturnTypeFinder;
 use StrictPhpTestAsset\ClassWithReturnTypeMethod;
@@ -35,110 +36,99 @@ use StrictPhpTestAsset\ClassWithReturnTypeMethod;
  */
 class ReturnTypeFinderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var ReturnTypeFinder
-     */
-    private $finder;
-
-    public function setUp()
+    public function testReflectionMethodWithoutReturnTagShouldReturnEmptyValue()
     {
-        $applyTypeChecks = $this->getMock(\stdClass::class, ['__invoke']);
-        $this->finder = new ReturnTypeFinder($applyTypeChecks);
+        $this->assertEmpty(
+            (new ReturnTypeFinder())
+                ->__invoke(new ReflectionMethod(ClassWithReturnTypeMethod::class, 'noReturnTag'), __CLASS__)
+        );
     }
 
     /**
      * @dataProvider mixedAnnotationTypes
      *
-     * @param string  $class
-     * @param string  $methodName
-     * @param mixed[] $params
+     * @param string                $annotation with annotation
+     * @param string                $contextClass
+     * @param array                 $expected
+     * @param ReflectionMethod|null $reflectionMethod
      */
-    public function testRetrievesMethodReturnTypes($class, $methodName, array $params)
-    {
-        $reflectionMethod = (new \ReflectionMethod($class, $methodName));
+    public function testValidReflectionMethodReturnExpectedValues(
+        $annotation,
+        $contextClass,
+        array $expected,
+        ReflectionMethod $reflectionMethod = null
+    ) {
+        if (! $reflectionMethod) {
+            /** @var \ReflectionMethod|\PHPUnit_Framework_MockObject_MockObject $reflectionMethod */
+            $reflectionMethod = $this->getMockBuilder(ReflectionMethod::class)
+                ->setMethods(['getDocComment', 'getDeclaringClass'])
+                ->disableOriginalConstructor()
+                ->getMock();
 
-        /** @var DynamicReflectionMethodInvocation|\PHPUnit_Framework_MockObject_MockObject $methodInvocation */
-        $methodInvocation = $this->getMockBuilder(DynamicReflectionMethodInvocation::class)->disableOriginalConstructor()->getMock();
+            $reflectionMethod
+                ->expects($this->any())
+                ->method('getDeclaringClass')
+                ->will($this->returnValue(new \ReflectionClass(ClassWithReturnTypeMethod::class)));
 
-        $methodInvocation->expects($this->atLeast(3))->method('getMethod')->willReturn($reflectionMethod);
-        $methodInvocation->expects($this->once())->method('proceed')->willReturn(
-            $reflectionMethod->invoke(new ClassWithReturnTypeMethod(), $params)[0]
+            $reflectionMethod
+                ->expects($this->once())
+                ->method('getDocComment')
+                ->will($this->returnValue($annotation));
+        }
+
+        $this->assertSame(
+            $expected,
+            array_map(
+                function (Type $type) {
+                    return (string) $type;
+                },
+                (new ReturnTypeFinder())
+                    ->__invoke($reflectionMethod, $contextClass)
+            )
         );
-
-        $finder = $this->finder;
-        $finder($methodInvocation, $class);
     }
 
     /**
-     * @return mixed[][] - string with class name
-     *                   - string with method name
-     *                   - array with parameter
+     * @return mixed[][] - string with annotation declaration
+     *                   - array with result expected
      */
     public function mixedAnnotationTypes()
     {
         return [
+            ['/** */', __CLASS__, []],
+            ['/** @return */', __CLASS__, []],
+            ['/** @return string */', __CLASS__, ['string']],
+            ['/** @return integer */', __CLASS__, ['int']],
+            ['/** @return int */', __CLASS__, ['int']],
+            ['/** @return bool */', __CLASS__, ['bool']],
+            ['/** @return boolean */', __CLASS__, ['bool']],
+            ['/** @return array */', __CLASS__, ['array']],
+            ['/** @return string[] */', __CLASS__, ['string[]']],
+            ['/** @return null */', __CLASS__, ['null']],
+            ['/** @return StdClass */', __CLASS__, ['\StrictPhpTestAsset\StdClass']],
+            ['/** @return \StdClass */', __CLASS__, ['\StdClass']],
+            ['/** @return \StdClass[] */', __CLASS__, ['\StdClass[]']],
+            ['/** @return \StdClass|null|array */', __CLASS__, ['\StdClass', 'null', 'array']],
+            ['/** @return \StdClass|AnotherClass */', __CLASS__, ['\StdClass', '\StrictPhpTestAsset\AnotherClass']],
+            ['/** @return \My\Collection|\Some\Thing[] */', __CLASS__, ['\My\Collection', '\Some\Thing[]']],
+            ['/** @return mixed */', __CLASS__, ['mixed']],
             [
+                '/** @return self */',
                 ClassWithReturnTypeMethod::class,
-                'expectString',
-                [
-                    'Heya :D',
-                ],
+                ['\\' . ClassWithReturnTypeMethod::class],
+                new ReflectionMethod(ClassWithReturnTypeMethod::class, 'expectSelf'),
             ],
             [
+                '/** @return static */',
                 ClassWithReturnTypeMethod::class,
-                'expectObject',
-                [
-                    new \DateTime(),
-                ],
+                ['\\' . ClassWithReturnTypeMethod::class],
+                new ReflectionMethod(ClassWithReturnTypeMethod::class, 'expectStatic'),
             ],
             [
+                '/** @return \\' . ClassWithReturnTypeMethod::class . ' */',
                 ClassWithReturnTypeMethod::class,
-                'expectMixedDataCollection',
-                [
-                    [
-                        true,
-                        false,
-                    ],
-                ],
-            ],
-            [
-                ClassWithReturnTypeMethod::class,
-                'expectMixedDataCollection',
-                [
-                    [
-                        [
-                            'heya',
-                        ],
-                    ],
-                ],
-            ],
-            [
-                ClassWithReturnTypeMethod::class,
-                'expectStdClass',
-                [
-                    new \StdClass
-                ],
-            ],
-            [
-                ClassWithReturnTypeMethod::class,
-                'expectSelf',
-                [
-                    new ClassWithReturnTypeMethod(),
-                ],
-            ],
-            [
-                ClassWithReturnTypeMethod::class,
-                'expectStatic',
-                [
-                    new ClassWithReturnTypeMethod(),
-                ],
-            ],
-            [
-                ClassWithReturnTypeMethod::class,
-                'expectThis',
-                [
-                    new ClassWithReturnTypeMethod(),
-                ],
+                ['\\' . ClassWithReturnTypeMethod::class],
+                new ReflectionMethod(ClassWithReturnTypeMethod::class, 'expectThis'),
             ],
         ];
     }
