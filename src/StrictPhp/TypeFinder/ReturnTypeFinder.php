@@ -39,8 +39,9 @@ final class ReturnTypeFinder
 {
     /**
      * @param ReflectionMethod $reflectionMethod
-     * @param $contextClass
-     * @return \phpDocumentor\Reflection\Type[]
+     * @param string           $contextClass
+     *
+     * @return Type[]
      */
     public function __invoke(ReflectionMethod $reflectionMethod, $contextClass)
     {
