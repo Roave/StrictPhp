@@ -122,6 +122,20 @@ class TypedTraversableCheckerTest extends \PHPUnit_Framework_TestCase
         $this->typedCheck->validate('foo', new String_());
     }
 
+    public function testWillNotIterateOverArray()
+    {
+        $array = $this->getMock(\ArrayObject::class);
+
+        $array->expects($this->never())->method('key');
+        $array->expects($this->never())->method('valid');
+        $array->expects($this->never())->method('current');
+        $array->expects($this->never())->method('next');
+        $array->expects($this->never())->method('rewind');
+        $array->expects($this->never())->method('getIterator');
+
+        $this->typedCheck->validate($array, new Array_());
+    }
+
     /**
      * @return mixed[][] - mixed data type
      *                   - name of class to tests against
