@@ -18,7 +18,6 @@
 
 namespace StrictPhp\AccessChecker;
 
-use Go\Lang\Annotation as Go;
 use ReflectionClass;
 use ReflectionProperty;
 use StrictPhp\Reflection\AllProperties;

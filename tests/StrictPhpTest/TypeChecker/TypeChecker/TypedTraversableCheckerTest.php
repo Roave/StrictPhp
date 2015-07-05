@@ -28,7 +28,6 @@ use phpDocumentor\Reflection\Types\Null_;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 use stdClass;
-use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;

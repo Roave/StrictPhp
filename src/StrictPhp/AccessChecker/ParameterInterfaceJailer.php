@@ -20,7 +20,6 @@ namespace StrictPhp\AccessChecker;
 
 use Closure;
 use Go\Aop\Framework\AbstractMethodInvocation;
-use Go\Lang\Annotation as Go;
 use InterNations\Component\TypeJail\Exception\ExceptionInterface;
 use InterNations\Component\TypeJail\Exception\HierarchyException;
 use InterNations\Component\TypeJail\Factory\JailFactoryInterface;
