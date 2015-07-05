@@ -27,7 +27,6 @@ use phpDocumentor\Reflection\Types\Mixed;
 use phpDocumentor\Reflection\Types\Null_;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
-use StrictPhp\TypeChecker\TypeChecker\ArrayTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
 
 /**

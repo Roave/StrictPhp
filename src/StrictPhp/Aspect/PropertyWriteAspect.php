@@ -21,7 +21,6 @@ namespace StrictPhp\Aspect;
 use Go\Aop\Aspect;
 use Go\Aop\Intercept\FieldAccess;
 use Go\Lang\Annotation as Go;
-use phpDocumentor\Reflection\DocBlock;
 
 final class PropertyWriteAspect implements Aspect
 {

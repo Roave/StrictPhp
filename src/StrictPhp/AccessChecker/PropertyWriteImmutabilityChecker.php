@@ -19,7 +19,6 @@
 namespace StrictPhp\AccessChecker;
 
 use Go\Aop\Intercept\FieldAccess;
-use Go\Lang\Annotation as Go;
 use phpDocumentor\Reflection\DocBlock;
 
 final class PropertyWriteImmutabilityChecker

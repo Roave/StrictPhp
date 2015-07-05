@@ -19,10 +19,7 @@
 namespace StrictPhp\AccessChecker;
 
 use Go\Aop\Intercept\MethodInvocation;
-use Go\Lang\Annotation as Go;
-use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
-use ReflectionParameter;
 use StrictPhp\TypeFinder\ParameterTypeFinder;
 
 final class ParameterTypeChecker
