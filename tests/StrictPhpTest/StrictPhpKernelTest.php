@@ -37,8 +37,7 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testIfAspectsWasRegisteredProperly()
     {
-        $strictPhp = StrictPhpKernel::getInstance();
-        $strictPhp->init([
+        $strictPhp = StrictPhpKernel::bootstrap([
             'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
             'includePaths' => [
                 __DIR__,
