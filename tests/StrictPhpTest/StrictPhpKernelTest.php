@@ -18,7 +18,10 @@
 
 namespace StrictPhpTest;
 
+use Go\Core\AspectContainer;
 use StrictPhp\Aspect\PostConstructAspect;
+use StrictPhp\Aspect\PostPublicMethodAspect;
+use StrictPhp\Aspect\PrePublicMethodAspect;
 use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\StrictPhpKernel;
 
@@ -34,8 +37,10 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers \StrictPhp\StrictPhpKernel::configureAop
+     *
+     * @runInSeparateProcess
      */
-    public function testIfAspectsWasRegisteredProperly()
+    public function testRegisteredDefaultAspects()
     {
         $strictPhp = StrictPhpKernel::bootstrap([
             'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
@@ -47,5 +52,42 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
         $container = $strictPhp->getContainer();
         $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
         $this->assertInstanceOf(PostConstructAspect::class, $container->getAspect(PostConstructAspect::class));
+    }
+
+    /**
+     * @covers \StrictPhp\StrictPhpKernel::configureAop
+     *
+     * @runInSeparateProcess
+     */
+    public function testWillAllowDisablingAllAspects()
+    {
+        $strictPhp = StrictPhpKernel::bootstrap(
+            [
+                'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
+                'includePaths' => [__DIR__],
+            ],
+            []
+        );
+
+        $container = $strictPhp->getContainer();
+
+        $this->assertInstanceOf(AspectContainer::class, $container);
+
+        $nonRegisteredAspects = [
+            PostConstructAspect::class,
+            PrePublicMethodAspect::class,
+            PostPublicMethodAspect::class,
+            PropertyWriteAspect::class,
+        ];
+
+        foreach ($nonRegisteredAspects as $aspectName) {
+            try {
+                $container->getAspect($aspectName);
+
+                $this->fail('No exception was thrown');
+            } catch (\OutOfBoundsException $exception) {
+                // empty catch, on purpose
+            }
+        }
     }
 }
