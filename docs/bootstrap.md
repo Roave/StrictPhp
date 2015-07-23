@@ -1,3 +1,7 @@
+---
+currentMenu: bootstrap
+---
+
 # Enabling StrictPhp
 
 To bootstrap `StrictPhp`, we initialize the `StrictPhp\StrictPhpKernel` singleton:

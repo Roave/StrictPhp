@@ -1,3 +1,7 @@
+---
+currentMenu: immutable
+---
+
 # Immutability
 
 We also provided a `@immutable` annotation, which works pretty much as constant, ideal to use on values objects, not mutable.
@@ -27,3 +31,5 @@ $sushi->price = 2.0;
 $sushi->price = 1.9; // Exception is raised
 
 ```
+
+**Next step:** [Public constructor property initialization checks](public-constructor-property-initialization-checks.md)

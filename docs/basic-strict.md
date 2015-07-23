@@ -1,3 +1,7 @@
+---
+currentMenu: basic-usage
+---
+
 # Basic strict property typing
 
 With a configured bootstrap, we use annotations on the properties to make your app operate in strict mode.
@@ -73,4 +77,4 @@ instance of `Invoice` we will get an `Exception`.
 - *Class|Interfaces names*
 - `[]` - *collection*
 
-**Next step:** [Immutability](immutability.md)
+**Next step:** [Property type checks](property-type-checks.md)

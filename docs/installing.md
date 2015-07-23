@@ -1,3 +1,7 @@
+---
+currentMenu: install
+---
+
 # Installing
 
 Do you have to use `[composer](https://getcomposer.org)` to install this library.
