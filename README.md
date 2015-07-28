@@ -90,6 +90,40 @@ $object->integer = '123';
 Please note that this kind of feature currently only works with public and 
 protected properties.
 
+#### Return type checks
+
+Quite similar to above functionality, this feature will prevent your application 
+from **return** illegal values from methods that are type-hinted (via docblock) 
+differently. As an example, consider following method:
+
+```php
+class Example
+{
+    /**
+     * @return string
+     */
+    public function dummyReturn($value)
+    {
+        return $value;
+    }
+}
+```
+
+Following code will work:
+
+```php
+(new Example())->dummyReturn('string');
+```
+
+Following code will crash:
+
+```php
+(new Example())->dummyReturn(123);
+```
+
+Please note that this kind of feature currently only works with public and 
+protected properties.
+
 #### immutable properties
 
 This feature will prevent your application from overwriting object properties
