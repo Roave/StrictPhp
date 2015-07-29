@@ -51,6 +51,22 @@ and throw an exception or a catchable fatal error.
 Please remember to execute this code **before** any code that may autoload any of
 the classes that should be checked.
 
+## Configuration
+
+The `StrictPhp\StrictPhpKernel` can be initialized with a set of [options to be passed
+to go-aop-php](http://go.aopphp.com/docs/initial-configuration/) and a set of feature
+flags:
+
+ - `StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_CONSTRUCTOR_CALL`
+ - `StrictPhp\StrictPhpKernel::JAIL_PUBLIC_METHOD_PARAMETERS`
+ - `StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_PUBLIC_METHOD_CALL`
+ - `StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_PARAMETER_TYPE`
+ - `StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_RETURN_TYPE`
+ - `StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_IMMUTABILITY`
+ - `StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_TYPE`
+ 
+Each of these features are described below.
+
 ## Features
 
 `StrictPhp` currently supports following features:
