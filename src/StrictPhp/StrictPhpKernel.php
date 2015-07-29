@@ -76,12 +76,9 @@ final class StrictPhpKernel extends AspectKernel
         $options = [],
         $features = [
             self::CHECK_STATE_AFTER_CONSTRUCTOR_CALL,
-            self::JAIL_PUBLIC_METHOD_PARAMETERS,
             self::CHECK_STATE_AFTER_PUBLIC_METHOD_CALL,
             self::CHECK_PUBLIC_METHOD_PARAMETER_TYPE,
             self::CHECK_PUBLIC_METHOD_RETURN_TYPE,
-            self::CHECK_PROPERTY_WRITE_IMMUTABILITY,
-            self::CHECK_PROPERTY_WRITE_TYPE,
         ]
     ) {
         $enabled = array_flip($features);
