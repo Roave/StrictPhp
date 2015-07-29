@@ -110,6 +110,30 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     */
+    public function testWillEnablePropertyWriteTypeChecks()
+    {
+        $container = $this->buildContainer([
+            StrictPhpKernel::CHECK_PROPERTY_WRITE_TYPE,
+        ]);
+
+        $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testWillEnablePropertyWriteImmutabilityChecks()
+    {
+        $container = $this->buildContainer([
+            StrictPhpKernel::CHECK_PROPERTY_WRITE_IMMUTABILITY,
+        ]);
+
+        $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
+    }
+
+    /**
      * @param string[] $enabled
      *
      * @return AspectContainer
