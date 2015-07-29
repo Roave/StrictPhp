@@ -35,7 +35,7 @@ After installing `StrictPhp`, point it at the directory to be checked at runtime
 (the code that you are writing) via following code:
 
 ```php
-\StrictPhp\StrictPhpKernel::getInstance()->init([
+\StrictPhp\StrictPhpKernel::bootstrap([
     'debug'        => true,
     // change this if you use this tool on multiple projects:
     'cacheDir'     => sys_get_temp_dir(),
