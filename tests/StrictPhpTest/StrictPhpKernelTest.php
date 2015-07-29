@@ -59,7 +59,6 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->baseConfig = [
-            'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
             'includePaths' => [__DIR__],
         ];
     }
