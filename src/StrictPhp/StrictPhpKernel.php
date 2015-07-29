@@ -58,6 +58,13 @@ final class StrictPhpKernel extends AspectKernel
     const CHECK_PROPERTY_WRITE_IMMUTABILITY    = 'CHECK_PROPERTY_WRITE_IMMUTABILITY';
     const CHECK_PROPERTY_WRITE_TYPE            = 'CHECK_PROPERTY_WRITE_TYPE';
 
+    const DEFAULT_FEATURES = [
+        self::CHECK_STATE_AFTER_CONSTRUCTOR_CALL,
+        self::CHECK_STATE_AFTER_PUBLIC_METHOD_CALL,
+        self::CHECK_PUBLIC_METHOD_PARAMETER_TYPE,
+        self::CHECK_PUBLIC_METHOD_RETURN_TYPE,
+    ];
+
     /**
      * {@inheritDoc}
      */
@@ -72,15 +79,8 @@ final class StrictPhpKernel extends AspectKernel
      *
      * @return self
      */
-    public static function bootstrap(
-        $options = [],
-        $features = [
-            self::CHECK_STATE_AFTER_CONSTRUCTOR_CALL,
-            self::CHECK_STATE_AFTER_PUBLIC_METHOD_CALL,
-            self::CHECK_PUBLIC_METHOD_PARAMETER_TYPE,
-            self::CHECK_PUBLIC_METHOD_RETURN_TYPE,
-        ]
-    ) {
+    public static function bootstrap($options = [], $features = self::DEFAULT_FEATURES)
+    {
         $enabled = array_flip($features);
         $kernel  = self::getInstance();
 
