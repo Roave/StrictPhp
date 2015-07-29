@@ -98,6 +98,18 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     */
+    public function testWillEnableJailingPublicMethods()
+    {
+        $container = $this->buildContainer([
+            StrictPhpKernel::JAIL_PUBLIC_METHOD_PARAMETERS,
+        ]);
+
+        $this->assertInstanceOf(PrePublicMethodAspect::class, $container->getAspect(PrePublicMethodAspect::class));
+    }
+
+    /**
      * @param string[] $enabled
      *
      * @return AspectContainer
