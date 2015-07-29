@@ -70,8 +70,12 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
     {
         $container = $this->buildContainer();
 
-        $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
         $this->assertInstanceOf(PostConstructAspect::class, $container->getAspect(PostConstructAspect::class));
+        $this->assertInstanceOf(PrePublicMethodAspect::class, $container->getAspect(PrePublicMethodAspect::class));
+        $this->assertInstanceOf(PostPublicMethodAspect::class, $container->getAspect(PostPublicMethodAspect::class));
+
+        $this->setExpectedException(\OutOfBoundsException::class);
+        $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
     }
 
     /**
