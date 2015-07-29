@@ -92,8 +92,8 @@ protected properties.
 
 #### Return type checks
 
-Quite similar to above functionality, this feature will prevent your application 
-from **return** illegal values from methods that are type-hinted (via docblock) 
+Quite similar to the above functionality, this feature will prevent your application 
+from **returning** illegal values from methods that are type-hinted (via docblock) 
 differently. As an example, consider following method:
 
 ```php
@@ -122,7 +122,7 @@ Following code will crash:
 ```
 
 Please note that this kind of feature currently only works with public and 
-protected properties.
+protected methods.
 
 #### immutable properties
 
