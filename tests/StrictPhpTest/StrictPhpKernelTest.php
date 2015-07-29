@@ -36,20 +36,40 @@ use StrictPhp\StrictPhpKernel;
 class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var array
+     */
+    private $baseConfig = [];
+
+    /**
+     * @var string[]
+     */
+    private $allExpectedAspects = [
+        PostConstructAspect::class,
+        PrePublicMethodAspect::class,
+        PostPublicMethodAspect::class,
+        PropertyWriteAspect::class,
+    ];
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp()
+    {
+        $this->baseConfig = [
+            //'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
+            'includePaths' => [__DIR__],
+        ];
+    }
+
+    /**
      * @covers \StrictPhp\StrictPhpKernel::configureAop
      *
      * @runInSeparateProcess
      */
     public function testRegisteredDefaultAspects()
     {
-        $strictPhp = StrictPhpKernel::bootstrap([
-            'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
-            'includePaths' => [
-                __DIR__,
-            ],
-        ]);
+        $container = $this->buildContainer();
 
-        $container = $strictPhp->getContainer();
         $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
         $this->assertInstanceOf(PostConstructAspect::class, $container->getAspect(PostConstructAspect::class));
     }
@@ -61,26 +81,9 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
      */
     public function testWillAllowDisablingAllAspects()
     {
-        $strictPhp = StrictPhpKernel::bootstrap(
-            [
-                'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
-                'includePaths' => [__DIR__],
-            ],
-            []
-        );
+        $container = $this->buildContainer([]);
 
-        $container = $strictPhp->getContainer();
-
-        $this->assertInstanceOf(AspectContainer::class, $container);
-
-        $nonRegisteredAspects = [
-            PostConstructAspect::class,
-            PrePublicMethodAspect::class,
-            PostPublicMethodAspect::class,
-            PropertyWriteAspect::class,
-        ];
-
-        foreach ($nonRegisteredAspects as $aspectName) {
+        foreach ($this->allExpectedAspects as $aspectName) {
             try {
                 $container->getAspect($aspectName);
 
@@ -89,5 +92,26 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
                 // empty catch, on purpose
             }
         }
+    }
+
+    /**
+     * @param string[] $enabled
+     *
+     * @return AspectContainer
+     */
+    private function buildContainer(array $enabled = null)
+    {
+        if (is_array($enabled)) {
+            $strictPhp = StrictPhpKernel::bootstrap($this->baseConfig, $enabled);
+        } else {
+            $strictPhp = StrictPhpKernel::bootstrap($this->baseConfig);
+        }
+
+        $container = $strictPhp->getContainer();
+
+        $this->assertInstanceOf(AspectContainer::class, $container);
+        $this->assertArraySubset($this->baseConfig, $strictPhp->getOptions());
+
+        return $container;
     }
 }
