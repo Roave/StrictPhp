@@ -32,6 +32,9 @@ use StrictPhp\StrictPhpKernel;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\StrictPhpKernel
+ *
  */
 class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
 {
@@ -62,8 +65,6 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \StrictPhp\StrictPhpKernel::configureAop
-     *
      * @runInSeparateProcess
      */
     public function testRegisteredDefaultAspects()
@@ -79,8 +80,6 @@ class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \StrictPhp\StrictPhpKernel::configureAop
-     *
      * @runInSeparateProcess
      */
     public function testWillAllowDisablingAllAspects()
