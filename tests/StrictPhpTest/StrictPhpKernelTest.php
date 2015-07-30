@@ -18,7 +18,10 @@
 
 namespace StrictPhpTest;
 
+use Go\Core\AspectContainer;
 use StrictPhp\Aspect\PostConstructAspect;
+use StrictPhp\Aspect\PostPublicMethodAspect;
+use StrictPhp\Aspect\PrePublicMethodAspect;
 use StrictPhp\Aspect\PropertyWriteAspect;
 use StrictPhp\StrictPhpKernel;
 
@@ -29,24 +32,124 @@ use StrictPhp\StrictPhpKernel;
  * @license MIT
  *
  * @group Coverage
+ *
+ * @covers \StrictPhp\StrictPhpKernel
+ *
  */
 class StrictPhpKernelTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \StrictPhp\StrictPhpKernel::configureAop
+     * @var array
      */
-    public function testIfAspectsWasRegisteredProperly()
+    private $baseConfig = [];
+
+    /**
+     * @var string[]
+     */
+    private $allExpectedAspects = [
+        PostConstructAspect::class,
+        PrePublicMethodAspect::class,
+        PostPublicMethodAspect::class,
+        PropertyWriteAspect::class,
+    ];
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp()
     {
-        $strictPhp = StrictPhpKernel::getInstance();
-        $strictPhp->init([
-            'cacheDir' => realpath(__DIR__ . '/..') . '/integration-tests-go-cache/',
-            'includePaths' => [
-                __DIR__,
-            ],
+        $this->baseConfig = [
+            'includePaths' => [__DIR__],
+        ];
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testRegisteredDefaultAspects()
+    {
+        $container = $this->buildContainer();
+
+        $this->assertInstanceOf(PostConstructAspect::class, $container->getAspect(PostConstructAspect::class));
+        $this->assertInstanceOf(PrePublicMethodAspect::class, $container->getAspect(PrePublicMethodAspect::class));
+        $this->assertInstanceOf(PostPublicMethodAspect::class, $container->getAspect(PostPublicMethodAspect::class));
+
+        $this->setExpectedException(\OutOfBoundsException::class);
+        $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testWillAllowDisablingAllAspects()
+    {
+        $container = $this->buildContainer([]);
+
+        foreach ($this->allExpectedAspects as $aspectName) {
+            try {
+                $container->getAspect($aspectName);
+
+                $this->fail('No exception was thrown');
+            } catch (\OutOfBoundsException $exception) {
+                // empty catch, on purpose
+            }
+        }
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testWillEnableJailingPublicMethods()
+    {
+        $container = $this->buildContainer([
+            StrictPhpKernel::JAIL_PUBLIC_METHOD_PARAMETERS,
         ]);
 
-        $container = $strictPhp->getContainer();
+        $this->assertInstanceOf(PrePublicMethodAspect::class, $container->getAspect(PrePublicMethodAspect::class));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testWillEnablePropertyWriteTypeChecks()
+    {
+        $container = $this->buildContainer([
+            StrictPhpKernel::CHECK_PROPERTY_WRITE_TYPE,
+        ]);
+
         $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
-        $this->assertInstanceOf(PostConstructAspect::class, $container->getAspect(PostConstructAspect::class));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testWillEnablePropertyWriteImmutabilityChecks()
+    {
+        $container = $this->buildContainer([
+            StrictPhpKernel::CHECK_PROPERTY_WRITE_IMMUTABILITY,
+        ]);
+
+        $this->assertInstanceOf(PropertyWriteAspect::class, $container->getAspect(PropertyWriteAspect::class));
+    }
+
+    /**
+     * @param string[] $enabled
+     *
+     * @return AspectContainer
+     */
+    private function buildContainer(array $enabled = null)
+    {
+        if (is_array($enabled)) {
+            $strictPhp = StrictPhpKernel::bootstrap($this->baseConfig, $enabled);
+        } else {
+            $strictPhp = StrictPhpKernel::bootstrap($this->baseConfig);
+        }
+
+        $container = $strictPhp->getContainer();
+
+        $this->assertInstanceOf(AspectContainer::class, $container);
+        $this->assertArraySubset($this->baseConfig, $strictPhp->getOptions());
+
+        return $container;
     }
 }

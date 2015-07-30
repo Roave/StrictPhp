@@ -35,7 +35,7 @@ After installing `StrictPhp`, point it at the directory to be checked at runtime
 (the code that you are writing) via following code:
 
 ```php
-\StrictPhp\StrictPhpKernel::getInstance()->init([
+\StrictPhp\StrictPhpKernel::bootstrap([
     'debug'        => true,
     // change this if you use this tool on multiple projects:
     'cacheDir'     => sys_get_temp_dir(),
@@ -51,11 +51,29 @@ and throw an exception or a catchable fatal error.
 Please remember to execute this code **before** any code that may autoload any of
 the classes that should be checked.
 
+## Configuration
+
+The `StrictPhp\StrictPhpKernel` can be initialized with a set of [options to be passed
+to go-aop-php](http://go.aopphp.com/docs/initial-configuration/) and a set of feature
+flags:
+
+ - `StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_CONSTRUCTOR_CALL`
+ - `StrictPhp\StrictPhpKernel::JAIL_PUBLIC_METHOD_PARAMETERS`
+ - `StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_PUBLIC_METHOD_CALL`
+ - `StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_PARAMETER_TYPE`
+ - `StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_RETURN_TYPE`
+ - `StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_IMMUTABILITY`
+ - `StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_TYPE`
+ 
+Each of these features are described below.
+
 ## Features
 
 `StrictPhp` currently supports following features:
 
 #### Per-property type checks
+
+Enabled via flag `StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_TYPE`.
 
 This feature will prevent your application from assigning illegal values to
 properties that are type-hinted (via docblock) differently. As an example,
@@ -126,6 +144,8 @@ protected methods.
 
 #### immutable properties
 
+Enabled via flag `StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_IMMUTABILITY`.
+
 This feature will prevent your application from overwriting object properties
 that are marked as `@immutable`. As an example, consider following class:
 
@@ -155,6 +175,8 @@ Please note that this kind of feature currently only works with public and
 protected properties.
 
 #### Public constructor property initialization checks
+
+Enabled via flag `StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_CONSTRUCTOR_CALL`.
 
 This feature of StrictPhp allows checking whether a public constructor of
 a class fully initialized an object.
@@ -195,6 +217,8 @@ class Example
 ```
 
 #### Parameter interface jailing
+
+Enabled via flag `StrictPhp\StrictPhpKernel::JAIL_PUBLIC_METHOD_PARAMETERS`.
 
 This feature of StrictPhp "jails" (restricts) calls to non-interfaced methods
 whenever an interface is used as a type-hint.
@@ -241,6 +265,8 @@ $car->honk($horn, true); // crashes
 This prevents consumers of your APIs to design their code against non-API methods.
 
 #### Parameter checking
+
+Enabled via flag `StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_PARAMETER_TYPE`.
 
 StrictPhp also provides a way to check parameters types in more detail during
 public method calls.
