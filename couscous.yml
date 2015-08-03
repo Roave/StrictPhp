@@ -11,20 +11,38 @@ exclude:
     - src
     - tests
 
-# The left menu bar
 menu:
-    sections:
-        main:
-            name: Main documentation
-            items:
-                home:
-                    text: Home page
-                    # You can use relative urls
-                    relativeUrl: index.html
-                foo:
-                    text: Another link
-                    # Or absolute urls
-                    absoluteUrl: https://example.com
-        other:
-            name: Other topics
-            items:
+    items:
+        home:
+            text: Home page
+            relativeUrl: index.html
+        install:
+            text: Installing
+            relativeUrl: docs/installing.html
+        bootstrap:
+            text: Enabling
+            relativeUrl: docs/bootstrap.html
+        basic-usage:
+            text: Basic usage
+            relativeUrl: docs/basic-strict.html
+        property-type-checks:
+            text: Property Type checks
+            relativeUrl: docs/property-type-checks.html
+        return-type-checks:
+            text: Return Type checks
+            relativeUrl: docs/return-type-checks.html
+        immutability:
+            text: Immutability
+            relativeUrl: docs/Immutability.html
+        public-constructor-property-initialization-checks:
+            text: Public constructor property initialization checks
+            relativeUrl: docs/public-constructor-property-initialization-checks.html
+        parameter-interface-jailing:
+            text: Parameter interface jailing
+            relativeUrl: docs/parameter-interface-jailing.html
+        parameter-checking:
+            text: Parameter checking
+            relativeUrl: docs/parameter-checking.html
+        current-limitation:
+            text: Current limitation
+            relativeUrl: docs/current-limitation.html
