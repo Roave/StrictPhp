@@ -8,6 +8,7 @@ subTitle: An AOP-based strict type checks for PHP
 baseUrl: http://roave.github.io/StrictPhp
 
 exclude:
+    - vendor
     - src
     - tests
 
