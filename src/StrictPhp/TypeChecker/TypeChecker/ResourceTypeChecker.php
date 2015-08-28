@@ -19,17 +19,17 @@
 namespace StrictPhp\TypeChecker\TypeChecker;
 
 use phpDocumentor\Reflection\Type;
-use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Resource;
 use StrictPhp\TypeChecker\TypeCheckerInterface;
 
-final class BooleanTypeChecker implements TypeCheckerInterface
+final class ResourceTypeChecker implements TypeCheckerInterface
 {
     /**
      * {@inheritDoc}
      */
     public function canApplyToType(Type $type)
     {
-        return $type instanceof Boolean;
+        return $type instanceof Resource;
     }
 
     /**
@@ -39,15 +39,15 @@ final class BooleanTypeChecker implements TypeCheckerInterface
      */
     public function validate($value, Type $type)
     {
-        if (! $type instanceof Boolean) {
+        if (! $type instanceof Resource) {
             throw new \InvalidArgumentException(sprintf(
                 'Unsupported type "%s" given, expecting "%s"',
                 get_class($type),
-                Boolean::class
+                Resource::class
             ));
         }
 
-        return is_bool($value);
+        return is_resource($value);
     }
 
     /**
@@ -56,8 +56,11 @@ final class BooleanTypeChecker implements TypeCheckerInterface
     public function simulateFailure($value, Type $type)
     {
         if (! $this->validate($value, $type)) {
-            // @TODO bump to PHP 7 and use strict scalar types + a closure.
-            throw new \ErrorException('NOPE');
+            throw new \ErrorException(sprintf(
+                'Unsupported type "%s" given, expecting "%s"',
+                gettype($type),
+                'resource'
+            ));
         }
     }
 }
