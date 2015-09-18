@@ -39,6 +39,7 @@ use StrictPhp\TypeChecker\TypeChecker\IntegerTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\MixedTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\NullTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\ObjectTypeChecker;
+use StrictPhp\TypeChecker\TypeChecker\ResourceTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\StringTypeChecker;
 use StrictPhp\TypeChecker\TypeChecker\TypedTraversableChecker;
 use StrictPhp\TypeFinder\PropertyTypeFinder;
@@ -194,6 +195,7 @@ final class StrictPhpKernel extends AspectKernel
             new ObjectTypeChecker(),
             new MixedTypeChecker(),
             new BooleanTypeChecker(),
+            new ResourceTypeChecker(),
             new NullTypeChecker(),
         ];
 
