@@ -1,5 +1,5 @@
 --TEST--
-Verifies that method is called only ont time
+Verifies that method is called only one time
 --FILE--
 <?php
 
