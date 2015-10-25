@@ -7,10 +7,10 @@ php:
 
 env:
   global:
-    - GIT_NAME:  "'Marco Pivetta'"
-    - GIT_EMAIL: ocramius@gmail.com
-    - GH_REF:    github.com/Roave/StrictPhp
-    - secure:    "missing generated key"
+   - GIT_NAME: "'Marco Pivetta'"
+   - GIT_EMAIL: ocramius@gmail.com
+   - GH_REF: github.com/Roave/StrictPhp
+   - secure: Zcnyy45DPmxCq5s3mJLAM07WC09cZLNioYBUtuN89wnTqUW+28BnU6BMIUlHSNIUA1j0TvvtCeI/E8mI9HHRcWy4tsH2hm2JnCJay0hR1CZegsP34xuieBR6KB8Uw6effZzcOVqbZAJacW0bI815rdVpRIEPDTgmucNCOLH8QYgtTzad720XPLoJOg8JT9ydcmR6sY3p096gxvaoNl3rJyXMdgp5zuf/AqkaxLLvLepGmszypkmXgVxHYds369iS26F6pA2sdqIEDuJjhVreoYyY1sJA9Eisqg0WTLkuClmfJ8t47WGZxWgkgPkz9hXYsnrdoG9NbyVZsKurgvAHDVsSnFBXzg3MIBsuVS8x6SHgsf35AI0RzH29n03k/eQGFY9fz6q1BB10NFYhpgp2n1IA4clyf91ozyXxDWF15LgGNdYjKOeD/9AMqr9RH6Z7pBWihTWOa1qg7bxzgeC6yuvhvawQNJq0nYW2FhvXK6vI5fjRqfRfD9xUzqcpo9MkrTSIxTC+LMUqq1vEczNQyq1p/jPOhRURCDLdMXg4Tmm7oolS41CC4GHeODO1JY0t9ZkIUd2H/pa3wPIrImDkm6ZiwXEsdKc0vNq1g0SyBpPpSn1rct5H6U6GPKHUUFBgAhzqDI23syuaqwUhToYZJZaZkMZ+7sm/pTs/hG+vqcc=
 
 before_script:
   - composer update
@@ -27,9 +27,5 @@ after_script:
   - if [ $TRAVIS_PHP_VERSION = '5.6' ]; then wget https://scrutinizer-ci.com/ocular.phar; php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
   - ./vendor/bin/couscous travis-auto-deploy --php-version=7
 
-env:
-  global:
-   - GIT_NAME: "'Marco Pivetta'"
-   - GIT_EMAIL: ocramius@gmail.com
-   - GH_REF: github.com/Roave/StrictPhp
-   - secure: Zcnyy45DPmxCq5s3mJLAM07WC09cZLNioYBUtuN89wnTqUW+28BnU6BMIUlHSNIUA1j0TvvtCeI/E8mI9HHRcWy4tsH2hm2JnCJay0hR1CZegsP34xuieBR6KB8Uw6effZzcOVqbZAJacW0bI815rdVpRIEPDTgmucNCOLH8QYgtTzad720XPLoJOg8JT9ydcmR6sY3p096gxvaoNl3rJyXMdgp5zuf/AqkaxLLvLepGmszypkmXgVxHYds369iS26F6pA2sdqIEDuJjhVreoYyY1sJA9Eisqg0WTLkuClmfJ8t47WGZxWgkgPkz9hXYsnrdoG9NbyVZsKurgvAHDVsSnFBXzg3MIBsuVS8x6SHgsf35AI0RzH29n03k/eQGFY9fz6q1BB10NFYhpgp2n1IA4clyf91ozyXxDWF15LgGNdYjKOeD/9AMqr9RH6Z7pBWihTWOa1qg7bxzgeC6yuvhvawQNJq0nYW2FhvXK6vI5fjRqfRfD9xUzqcpo9MkrTSIxTC+LMUqq1vEczNQyq1p/jPOhRURCDLdMXg4Tmm7oolS41CC4GHeODO1JY0t9ZkIUd2H/pa3wPIrImDkm6ZiwXEsdKc0vNq1g0SyBpPpSn1rct5H6U6GPKHUUFBgAhzqDI23syuaqwUhToYZJZaZkMZ+7sm/pTs/hG+vqcc=
+after_success:
+  - ./vendor/bin/couscous travis-auto-deploy --php-version=5.6
