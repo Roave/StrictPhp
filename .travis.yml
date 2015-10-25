@@ -5,6 +5,13 @@ php:
   - 7
   - hhvm
 
+env:
+  global:
+    - GIT_NAME:  "'Marco Pivetta'"
+    - GIT_EMAIL: ocramius@gmail.com
+    - GH_REF:    github.com/Roave/StrictPhp
+    - secure:    "missing generated key"
+
 before_script:
   - composer update
 
@@ -20,6 +27,7 @@ matrix:
 
 after_script:
   - if [ $TRAVIS_PHP_VERSION = '5.6' ]; then wget https://scrutinizer-ci.com/ocular.phar; php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
+  - ./vendor/bin/couscous travis-auto-deploy --php-version=7
 
 env:
   global:

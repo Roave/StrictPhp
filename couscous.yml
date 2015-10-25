@@ -1,0 +1,49 @@
+github:
+    user: Roave
+    repo: StrictPhp
+
+title: StrictPhp
+subTitle: An AOP-based strict type checks for PHP
+
+baseUrl: http://roave.github.io/StrictPhp
+
+exclude:
+    - vendor
+    - src
+    - tests
+
+menu:
+    items:
+        home:
+            text: Home page
+            relativeUrl: index.html
+        install:
+            text: Installing
+            relativeUrl: docs/installing.html
+        bootstrap:
+            text: Enabling
+            relativeUrl: docs/bootstrap.html
+        basic-usage:
+            text: Basic usage
+            relativeUrl: docs/basic-strict.html
+        property-type-checks:
+            text: Property Type checks
+            relativeUrl: docs/property-type-checks.html
+        return-type-checks:
+            text: Return Type checks
+            relativeUrl: docs/return-type-checks.html
+        immutability:
+            text: Immutability
+            relativeUrl: docs/Immutability.html
+        public-constructor-property-initialization-checks:
+            text: Public constructor property initialization checks
+            relativeUrl: docs/public-constructor-property-initialization-checks.html
+        parameter-interface-jailing:
+            text: Parameter interface jailing
+            relativeUrl: docs/parameter-interface-jailing.html
+        parameter-checking:
+            text: Parameter checking
+            relativeUrl: docs/parameter-checking.html
+        current-limitation:
+            text: Current limitation
+            relativeUrl: docs/current-limitation.html
