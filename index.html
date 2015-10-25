@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>StrictPhp</title>
+
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://roave.github.io/StrictPhp/">
+                StrictPhp
+                <small class="hidden-xs hidden-sm">
+                    An AOP-based strict type checks for PHP
+                </small>
+            </a>
+
+                            <a href="https://github.com/Roave/StrictPhp">
+                    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+                </a>
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/index.html">
+                                        Home page
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/installing.html">
+                                        Installing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/bootstrap.html">
+                                        Enabling
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/basic-strict.html">
+                                        Basic usage
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/property-type-checks.html">
+                                        Property Type checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/return-type-checks.html">
+                                        Return Type checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/Immutability.html">
+                                        Immutability
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/public-constructor-property-initialization-checks.html">
+                                        Public constructor property initialization checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/parameter-interface-jailing.html">
+                                        Parameter interface jailing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/parameter-checking.html">
+                                        Parameter checking
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/current-limitation.html">
+                                        Current limitation
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="strictphp">StrictPhp</h1>
+<p><a href="https://travis-ci.org/Roave/StrictPhp"><img src="https://travis-ci.org/Roave/StrictPhp.svg" alt="Build Status" /></a>
+<a href="https://scrutinizer-ci.com/g/Roave/StrictPhp/?branch=master"><img src="https://scrutinizer-ci.com/g/Roave/StrictPhp/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality" /></a>
+<a href="https://scrutinizer-ci.com/g/Roave/StrictPhp/?branch=master"><img src="https://scrutinizer-ci.com/g/Roave/StrictPhp/badges/coverage.png?b=master" alt="Code Coverage" /></a></p>
+<p>StrictPhp is a development tool aimed at bringing stricter runtime assertions
+into PHP applications and libraries.</p>
+<h2 id="authors">Authors</h2>
+<ul>
+<li><a href="https://github.com/Ocramius">Marco Pivetta</a></li>
+<li><a href="https://github.com/malukenho">Jefersson Nathan</a></li>
+</ul>
+<h2 id="installation">Installation</h2>
+<pre><code class="language-sh">$ composer require roave/strict-php</code></pre>
+<p>Please note that the current version has unstable dependencies.</p>
+<p>In order to install those dependencies, you can set <code>"minimum-stability"</code> in
+your <code>composer.json</code>:</p>
+<pre><code class="language-json">{
+    "minimum-stability": "dev"
+}</code></pre>
+<h2 id="usage">Usage</h2>
+<p>After installing <code>StrictPhp</code>, point it at the directory to be checked at runtime
+(the code that you are writing) via following code:</p>
+<pre><code class="language-php">\StrictPhp\StrictPhpKernel::bootstrap([
+    'debug'        =&gt; true,
+    // change this if you use this tool on multiple projects:
+    'cacheDir'     =&gt; sys_get_temp_dir(),
+    'includePaths' =&gt; [
+        __DIR__ . '/path/to/your/sources',
+    ],
+]);</code></pre>
+<p>StrictPhp will then intercept any runtime operations that are considered &quot;illegal&quot;
+and throw an exception or a catchable fatal error.</p>
+<p>Please remember to execute this code <strong>before</strong> any code that may autoload any of
+the classes that should be checked.</p>
+<h2 id="configuration">Configuration</h2>
+<p>The <code>StrictPhp\StrictPhpKernel</code> can be initialized with a set of <a href="http://go.aopphp.com/docs/initial-configuration/">options to be passed
+to go-aop-php</a> and a set of feature
+flags:</p>
+<ul>
+<li><code>StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_CONSTRUCTOR_CALL</code></li>
+<li><code>StrictPhp\StrictPhpKernel::JAIL_PUBLIC_METHOD_PARAMETERS</code></li>
+<li><code>StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_PUBLIC_METHOD_CALL</code></li>
+<li><code>StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_PARAMETER_TYPE</code></li>
+<li><code>StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_RETURN_TYPE</code></li>
+<li><code>StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_IMMUTABILITY</code></li>
+<li><code>StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_TYPE</code></li>
+</ul>
+<p>Each of these features are described below.</p>
+<h2 id="features">Features</h2>
+<p><code>StrictPhp</code> currently supports following features:</p>
+<h4 id="per-property-type-checks">Per-property type checks</h4>
+<p>Enabled via flag <code>StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_TYPE</code>.</p>
+<p>This feature will prevent your application from assigning illegal values to
+properties that are type-hinted (via docblock) differently. As an example,
+consider following class:</p>
+<pre><code class="language-php">class Example
+{
+    /**
+     * @var int|null
+     */
+    public $integer;
+}</code></pre>
+<p>Following code will work:</p>
+<pre><code class="language-php">$object = new Example();
+
+$object-&gt;integer = 123;</code></pre>
+<p>Following code will crash:</p>
+<pre><code class="language-php">$object = new Example();
+
+$object-&gt;integer = '123';</code></pre>
+<p>Please note that this kind of feature currently only works with public and
+protected properties.</p>
+<h4 id="return-type-checks">Return type checks</h4>
+<p>Quite similar to the above functionality, this feature will prevent your application
+from <strong>returning</strong> illegal values from methods that are type-hinted (via docblock)
+differently. As an example, consider following method:</p>
+<pre><code class="language-php">class Example
+{
+    /**
+     * @return string
+     */
+    public function dummyReturn($value)
+    {
+        return $value;
+    }
+}</code></pre>
+<p>Following code will work:</p>
+<pre><code class="language-php">(new Example())-&gt;dummyReturn('string');</code></pre>
+<p>Following code will crash:</p>
+<pre><code class="language-php">(new Example())-&gt;dummyReturn(123);</code></pre>
+<p>Please note that this kind of feature currently only works with public and
+protected methods.</p>
+<h4 id="immutable-properties">immutable properties</h4>
+<p>Enabled via flag <code>StrictPhp\StrictPhpKernel::CHECK_PROPERTY_WRITE_IMMUTABILITY</code>.</p>
+<p>This feature will prevent your application from overwriting object properties
+that are marked as <code>@immutable</code>. As an example, consider following class:</p>
+<pre><code class="language-php">class Example
+{
+    /**
+     * @immutable
+     */
+    public $immutableProperty;
+}</code></pre>
+<p>Following code will crash:</p>
+<pre><code class="language-php">$object = new Example();
+
+$object-&gt;immutableProperty = 'a value';
+
+echo 'Works till here!';
+
+$object-&gt;immutableProperty = 'another value'; // crash</code></pre>
+<p>Please note that this kind of feature currently only works with public and
+protected properties.</p>
+<h4 id="public-constructor-property-initialization-checks">Public constructor property initialization checks</h4>
+<p>Enabled via flag <code>StrictPhp\StrictPhpKernel::CHECK_STATE_AFTER_CONSTRUCTOR_CALL</code>.</p>
+<p>This feature of StrictPhp allows checking whether a public constructor of
+a class fully initialized an object.</p>
+<p>Following code will make StrictPhp crash your application:</p>
+<pre><code class="language-php">class Example
+{
+    /**
+     * @var array
+     */
+    private $arrayProperty;
+
+    public function __construct()
+    {
+    }
+}</code></pre>
+<p>In order to make this code work, you have to either annotate <code>$arrayProperty</code>
+with <code>@var array|null</code>, or make the constructor initialize the property
+correctly:</p>
+<pre><code class="language-php">class Example
+{
+    /**
+     * @var array
+     */
+    private $arrayProperty;
+
+    public function __construct()
+    {
+        $this-&gt;arrayProperty = ['initial status'];
+    }
+}</code></pre>
+<h4 id="parameter-interface-jailing">Parameter interface jailing</h4>
+<p>Enabled via flag <code>StrictPhp\StrictPhpKernel::JAIL_PUBLIC_METHOD_PARAMETERS</code>.</p>
+<p>This feature of StrictPhp &quot;jails&quot; (restricts) calls to non-interfaced methods
+whenever an interface is used as a type-hint.</p>
+<p>Following example will work, but will crash if StrictPhp is enabled:</p>
+<pre><code class="language-php">interface HornInterface
+{
+    public function honk();
+}
+
+class TheUsualHorn implements HornInterface
+{
+    public function honk() { var_dump('honk'); }
+    public function sadTrombone() { var_dump('pooapooapooapoaaaa'); }
+}
+
+class Car
+{
+    public function honk(HornInterface $horn, $sad = false)
+    {
+        if ($sad) {
+            // method not covered by interface: crash
+            $horn-&gt;sadTrombone();
+
+            return;
+        }
+
+        // interface respected
+        $horn-&gt;honk();
+    }
+}</code></pre>
+<pre><code class="language-php">$car  = new Car();
+$horn = new TheUsualHorn();
+
+$car-&gt;honk($horn, false); // works
+$car-&gt;honk($horn, true); // crashes</code></pre>
+<p>This prevents consumers of your APIs to design their code against non-API methods.</p>
+<h4 id="parameter-checking">Parameter checking</h4>
+<p>Enabled via flag <code>StrictPhp\StrictPhpKernel::CHECK_PUBLIC_METHOD_PARAMETER_TYPE</code>.</p>
+<p>StrictPhp also provides a way to check parameters types in more detail during
+public method calls.</p>
+<p>Specifically, the following code will work in PHP:</p>
+<pre><code class="language-php">final class Invoice
+{
+    /**
+     * @param LineItem[] $lineItems
+     */
+    public function __construct(array $lineItems)
+    {
+        // ...
+    }
+}
+
+$invoice = new Invoice(['foo', 'bar']);</code></pre>
+<p>This code will crash in StrictPhp due to the type mismatch in <code>$lineItems</code> (which
+should be a collection of <code>LineItem</code> objects instead).</p>
+<h2 id="current-limitations">Current limitations</h2>
+<p>This package uses <a href="http://ocramius.github.io/voodoo-php/">voodoo magic</a> to
+operate, specifically <a href="https://github.com/lisachenko/go-aop-php">go-aop-php</a>.</p>
+<p>Go AOP PHP has some limitations when it comes to intercepting access to
+private class members, so please be aware that it has limited scope (for now).</p>
+<p>This package only works against autoloaded classes; classes that aren't handled by
+an autoloader cannot be rectified by StrictPhp.</p>
+<h2 id="license">License</h2>
+<p>This package is released under the <a href="LICENSE">MIT license</a>.</p>
+<h2 id="contributing">Contributing</h2>
+<p>If you wish to contribute to the project, please read the <a href="contributing.html">CONTRIBUTING notes</a>.</p>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

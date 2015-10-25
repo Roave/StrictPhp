@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>StrictPhp</title>
+
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://roave.github.io/StrictPhp/">
+                StrictPhp
+                <small class="hidden-xs hidden-sm">
+                    An AOP-based strict type checks for PHP
+                </small>
+            </a>
+
+                            <a href="https://github.com/Roave/StrictPhp">
+                    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+                </a>
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/index.html">
+                                        Home page
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/installing.html">
+                                        Installing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/bootstrap.html">
+                                        Enabling
+                                    </a>
+                                </li>
+                                                            <li class="active">
+                                    <a href="http://roave.github.io/StrictPhp/docs/basic-strict.html">
+                                        Basic usage
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/property-type-checks.html">
+                                        Property Type checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/return-type-checks.html">
+                                        Return Type checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/Immutability.html">
+                                        Immutability
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/public-constructor-property-initialization-checks.html">
+                                        Public constructor property initialization checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/parameter-interface-jailing.html">
+                                        Parameter interface jailing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/parameter-checking.html">
+                                        Parameter checking
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/current-limitation.html">
+                                        Current limitation
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h1 id="basic-strict-property-typing">Basic strict property typing</h1>
+<p>With a configured bootstrap, we use annotations on the properties to make your app operate in strict mode.</p>
+<p><code>StrictPhp</code> uses PhpDocumentor compatible annotations.</p>
+<p>Take a look at the following class.</p>
+<pre><code class="language-php">class Sushi
+{
+    /**
+     * @var float
+     */
+    public $price;
+}</code></pre>
+<p>In this way, <code>StrictPhp</code> knows that we can only set a <strong>float</strong> value for the <code>Sushi#price</code> property.</p>
+<p>Let's try setting a float value.</p>
+<pre><code class="language-php">$sushi = new Sushi;
+$sushi-&gt;price = 2.0;</code></pre>
+<p>That works perfectly fine.</p>
+<p>Let's try assigning a wrong data type to the property.</p>
+<pre><code class="language-php">$sushi = new Sushi;
+$sushi-&gt;price = '2';</code></pre>
+<p>We will get an exception:</p>
+<pre><code>Fatal error: Uncaught exception 'ErrorException' ...</code></pre>
+<p>This is the most basic functionality of <code>StrictPhp</code></p>
+<h2 id="working-with-collections">Working with collections</h2>
+<p><code>StrictPhp</code> provide a way to work strictly with a collection of a data type.</p>
+<p>We can have a collection of a type marking the property with something like <code>string[]</code>, also we can have more levels <code>string[][]</code> and soon.</p>
+<pre><code class="language-php">/**
+ * @var Invoice[]
+ */
+public $invoice;</code></pre>
+<p>This can receive <em>only</em> a collection of <code>Invoice</code> objects. If any element on the array assigned to <code>$invoice</code> is not an
+instance of <code>Invoice</code> we will get an <code>Exception</code>.</p>
+<h2 id="supported-annotation-types">Supported annotation types</h2>
+<ul>
+<li>null</li>
+<li>int|integer</li>
+<li>mixed</li>
+<li>float</li>
+<li>string</li>
+<li>array</li>
+<li>callable</li>
+<li>object</li>
+<li>self</li>
+<li>static</li>
+<li><em>Class|Interfaces names</em></li>
+<li><code>[]</code> - <em>collection</em></li>
+</ul>
+<p><strong>Next step:</strong> <a href="property-type-checks.html">Property type checks</a></p>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>

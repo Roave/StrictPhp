@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>StrictPhp</title>
+
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/highlight.dark.css">
+        <link rel="stylesheet" href="http://roave.github.io/StrictPhp/css/main.css">
+    </head>
+    <body>
+
+        <header class="navbar navbar-default navbar-fixed-top">
+
+            <a class="navbar-brand" href="http://roave.github.io/StrictPhp/">
+                StrictPhp
+                <small class="hidden-xs hidden-sm">
+                    An AOP-based strict type checks for PHP
+                </small>
+            </a>
+
+                            <a href="https://github.com/Roave/StrictPhp">
+                    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+                </a>
+            
+        </header>
+
+        <main class="container-fluid">
+            <div class="row">
+
+                
+                    <nav id="sidebar" class="col-sm-3 col-lg-2" role="navigation">
+
+                        <ul class="nav nav-pills nav-stacked">
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/index.html">
+                                        Home page
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/installing.html">
+                                        Installing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/bootstrap.html">
+                                        Enabling
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/basic-strict.html">
+                                        Basic usage
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/property-type-checks.html">
+                                        Property Type checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/return-type-checks.html">
+                                        Return Type checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/Immutability.html">
+                                        Immutability
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/public-constructor-property-initialization-checks.html">
+                                        Public constructor property initialization checks
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/parameter-interface-jailing.html">
+                                        Parameter interface jailing
+                                    </a>
+                                </li>
+                                                            <li class="">
+                                    <a href="http://roave.github.io/StrictPhp/docs/parameter-checking.html">
+                                        Parameter checking
+                                    </a>
+                                </li>
+                                                            <li class="active">
+                                    <a href="http://roave.github.io/StrictPhp/docs/current-limitation.html">
+                                        Current limitation
+                                    </a>
+                                </li>
+                                                    </ul>
+
+                    </nav>
+
+                
+                <section id="content" class="col-sm-offset-3 col-lg-offset-2 col-sm-9 col-lg-10">
+                    <h2 id="current-limitations">Current limitations</h2>
+<p>This package uses <a href="http://ocramius.github.io/voodoo-php/">voodoo magic</a> to
+operate, specifically <a href="https://github.com/lisachenko/go-aop-php">go-aop-php</a>.</p>
+<p>Go AOP PHP has some limitations when it comes to intercepting access to
+private class members, so please be aware that it has limited scope (for now).</p>
+<p>This package only works against autoloaded classes; classes that aren't handled by
+an autoloader cannot be rectified by StrictPhp.</p>
+                </section>
+
+            </div>
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <p class="text-muted">
+                    website generated with <a href="http://couscous.io" title="Markdown website generator">Couscous</a>
+                </p>
+            </div>
+        </footer>
+
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+        <script src="//yastatic.net/highlightjs/8.2/highlight.min.js"></script>
+
+        <script>
+            $(function() {
+                $("section>h1").wrap('<div class="page-header" />');
+                // Syntax highlighting
+                hljs.initHighlightingOnLoad();
+            });
+        </script>
+
+    </body>
+</html>
