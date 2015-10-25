@@ -26,7 +26,4 @@ matrix:
 
 after_script:
   - if [ $TRAVIS_PHP_VERSION = '5.6' ]; then wget https://scrutinizer-ci.com/ocular.phar; php ocular.phar code-coverage:upload --format=php-clover clover.xml; fi
-  - ./vendor/bin/couscous travis-auto-deploy --php-version=7
-
-after_success:
   - ./vendor/bin/couscous travis-auto-deploy --php-version=5.6
