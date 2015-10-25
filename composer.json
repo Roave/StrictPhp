@@ -32,8 +32,8 @@
         "internations/type-jail":            "0.4.*"
     },
     "require-dev": {
-        "phpunit/phpunit":   "~4.7",
-        "couscous/couscous": "dev-master@DEV"
+        "phpunit/phpunit": "~4.7",
+        "couscous/couscous": "dev-master"
     },
     "autoload": {
         "psr-4": {
