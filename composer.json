@@ -28,7 +28,7 @@
         "php":                               "~5.6|~7.0",
         "goaop/framework":                   "~1.0.0@ALPHA",
         "phpdocumentor/reflection-docblock": "~2.0",
-        "phpdocumentor/type-resolver":       "dev-master",
+        "phpdocumentor/type-resolver":       "^0.1.5",
         "internations/type-jail":            "0.4.*"
     },
     "require-dev": {
