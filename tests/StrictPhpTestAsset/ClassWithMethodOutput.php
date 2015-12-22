@@ -16,44 +16,15 @@
  * and is licensed under the MIT license.
  */
 
-namespace StrictPhp\Aspect;
+namespace StrictPhpTestAsset;
 
-use Go\Aop\Aspect;
-use Go\Aop\Intercept\FieldAccess;
-use Go\Lang\Annotation as Go;
-
-final class PropertyWriteAspect implements Aspect
+/**
+ * @uthor Jefersson Nathan <malukenho@phpse.net>
+ */
+class ClassWithMethodOutput
 {
-    /**
-     * @var callable[]
-     */
-    private $propertyWriteCheckers;
-
-    /**
-     * @param callable[] $propertyWriteCheckers
-     */
-    public function __construct(callable ...$propertyWriteCheckers)
+    public function hello()
     {
-        $this->propertyWriteCheckers = $propertyWriteCheckers;
-    }
-
-    /**
-     * @Go\Before("access(public|protected **->*)")
-     *
-     * @param FieldAccess $access
-     *
-     * @return mixed
-     */
-    public function beforePropertyAccess(FieldAccess $access)
-    {
-        if (FieldAccess::WRITE !== $access->getAccessType()) {
-            return $access->proceed();
-        }
-
-        foreach ($this->propertyWriteCheckers as $checker) {
-            $checker($access);
-        }
-
-        return $access->proceed();
+        echo 'Hello';
     }
 }

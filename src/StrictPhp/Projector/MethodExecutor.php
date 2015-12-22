@@ -16,48 +16,46 @@
  * and is licensed under the MIT license.
  */
 
-namespace StrictPhp\Aspect;
+namespace StrictPhp\Projector;
 
-use Go\Aop\Aspect;
-use Go\Aop\Intercept\MethodInvocation;
-use Go\Lang\Annotation as Go;
-
-final class PostConstructAspect implements Aspect
+/**
+ * @author Jefersson Nathan <malukenho@phpse.net>
+ */
+class MethodExecutor
 {
     /**
-     * @var callable[]
+     * @var mixed[]
      */
-    private $stateCheckers;
+    public static $executionResults = [];
 
     /**
-     * @param callable[] $stateCheckers
+     * @param string $key
+     * @param mixed  $value
      */
-    public function __construct(callable ...$stateCheckers)
+    public static function store($key, $value)
     {
-        $this->stateCheckers = $stateCheckers;
+        static::$executionResults[$key] = $value;
     }
 
     /**
-     * @Go\After("execution(public **->__construct(*))")
+     * @param string $key
      *
-     * @param MethodInvocation $constructorInvocation
-     *
-     * @return mixed
-     *
-     * @throws \ErrorException|\Exception
+     * @return mixed|null
      */
-    public function postConstruct(MethodInvocation $constructorInvocation)
+    public static function retrieve($key)
     {
-        $that  = $constructorInvocation->getThis();
-        $scope = $constructorInvocation->getMethod()->getDeclaringClass()->getName();
+        return static::has($key)
+            ? static::$executionResults[$key]
+            : null;
+    }
 
-        array_map(
-            function (callable $checker) use ($that, $scope) {
-                $checker($that, $scope);
-            },
-            $this->stateCheckers
-        );
-
-        return $constructorInvocation->proceed();
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public static function has($key)
+    {
+        return array_key_exists($key, static::$executionResults);
     }
 }

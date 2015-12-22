@@ -21,6 +21,7 @@ namespace StrictPhp\Aspect;
 use Go\Aop\Aspect;
 use Go\Aop\Framework\AbstractMethodInvocation;
 use Go\Lang\Annotation as Go;
+use StrictPhp\Projector\MethodExecutor;
 
 final class PrePublicMethodAspect implements Aspect
 {
@@ -30,7 +31,7 @@ final class PrePublicMethodAspect implements Aspect
     private $interceptors;
 
     /**
-     * @param callable ...$interceptors
+     * @param callable[] $interceptors
      */
     public function __construct(callable ...$interceptors)
     {
@@ -46,10 +47,21 @@ final class PrePublicMethodAspect implements Aspect
      */
     public function prePublicMethod(AbstractMethodInvocation $methodInvocation)
     {
+        $methodName = $methodInvocation->getMethod()->getName();
+
         foreach ($this->interceptors as $interceptor) {
             $interceptor($methodInvocation);
         }
 
-        return $methodInvocation->proceed();
+        // TODO: find a better approach to deal with it
+        if (! MethodExecutor::has($methodName)) {
+            ob_start();
+            $methodReturn = $methodInvocation->proceed();
+            ob_clean();
+
+            MethodExecutor::store($methodName, $methodReturn);
+        }
+
+        return MethodExecutor::retrieve($methodName);
     }
 }

@@ -28,7 +28,7 @@ final class ApplyTypeChecks
     private $typeCheckers;
 
     /**
-     * @param TypeCheckerInterface ...$typeCheckers
+     * @param TypeCheckerInterface[] $typeCheckers
      */
     public function __construct(TypeCheckerInterface ...$typeCheckers)
     {

@@ -21,6 +21,7 @@ namespace StrictPhp\AccessChecker;
 use Go\Aop\Intercept\MethodInvocation;
 use phpDocumentor\Reflection\Type;
 use ReflectionMethod;
+use StrictPhp\Projector\MethodExecutor;
 use StrictPhp\TypeFinder\ReturnTypeFinder;
 
 /**
@@ -52,13 +53,18 @@ final class ReturnTypeChecker
     {
         $reflectionMethod = $methodInvocation->getMethod();
         $applyTypeChecks  = $this->applyTypeChecks;
+        $methodName       = $methodInvocation->getMethod()->getName();
+
+        if (! MethodExecutor::has($methodName)) {
+            MethodExecutor::store($methodName, $methodInvocation->proceed());
+        }
 
         $applyTypeChecks(
             $this->getReturnDocblockType(
                 $methodInvocation->getMethod()->getDeclaringClass()->getName(),
                 $reflectionMethod
             ),
-            $methodInvocation->proceed()
+            MethodExecutor::retrieve($methodName)
         );
     }
 
