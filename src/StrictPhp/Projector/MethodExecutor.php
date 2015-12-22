@@ -7,7 +7,7 @@ class MethodExecutor
     /**
      * @var mixed[]
      */
-    private static $executionResults = [];
+    public static $executionResults = [];
 
     /**
      * @param string $key
@@ -25,7 +25,7 @@ class MethodExecutor
      */
     public static function retrieve($key)
     {
-        return isset(static::$executionResults[$key])
+        return static::has($key)
             ? static::$executionResults[$key]
             : null;
     }
@@ -37,6 +37,6 @@ class MethodExecutor
      */
     public static function has($key)
     {
-        return isset(static::$executionResults[$key]) && static::$executionResults[$key];
+        return array_key_exists($key, static::$executionResults);
     }
 }

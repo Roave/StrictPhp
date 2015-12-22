@@ -21,6 +21,7 @@ namespace StrictPhp\Aspect;
 use Go\Aop\Aspect;
 use Go\Aop\Framework\AbstractMethodInvocation;
 use Go\Lang\Annotation as Go;
+use StrictPhp\Projector\MethodExecutor;
 
 /**
  * @author Jefersson Nathan <malukenho@phpse.net>
@@ -33,7 +34,7 @@ final class PostPublicMethodAspect implements Aspect
     private $interceptors;
 
     /**
-     * @param callable ...$interceptors
+     * @param callable[] $interceptors
      */
     public function __construct(callable ...$interceptors)
     {
@@ -49,12 +50,17 @@ final class PostPublicMethodAspect implements Aspect
      */
     public function postPublicMethod(AbstractMethodInvocation $methodInvocation)
     {
-        $scope = get_class($methodInvocation->getThis());
+        $scope      = get_class($methodInvocation->getThis());
+        $methodName = $methodInvocation->getMethod()->getName();
 
         foreach ($this->interceptors as $interceptor) {
             $interceptor($methodInvocation, $scope);
         }
 
-        return $methodInvocation->proceed();
+        if (! MethodExecutor::has($methodName)) {
+            MethodExecutor::store($methodName, $methodInvocation->proceed());
+        }
+
+        return MethodExecutor::retrieve($methodName);
     }
 }

@@ -30,7 +30,7 @@ final class PostConstructAspect implements Aspect
     private $stateCheckers;
 
     /**
-     * @param callable ...$stateCheckers
+     * @param callable[] $stateCheckers
      */
     public function __construct(callable ...$stateCheckers)
     {

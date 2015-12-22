@@ -30,7 +30,7 @@ final class PropertyWriteAspect implements Aspect
     private $propertyWriteCheckers;
 
     /**
-     * @param callable ...$propertyWriteCheckers
+     * @param callable[] $propertyWriteCheckers
      */
     public function __construct(callable ...$propertyWriteCheckers)
     {
